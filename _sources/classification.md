@@ -11,7 +11,7 @@ kernelspec:
 
 ## Extracting signal from fMRI volumes
 
-```{figure} ../images/masking.jpg
+```{figure} images/masking.jpg
 ---
 height: 450px
 name: masking
@@ -25,7 +25,7 @@ Since our Nifti images are 4D files, we can’t overlay a single grid – instea
 These are reflected in the shape of the matrix !
 You can check this by checking the number of positive voxels in our brain mask.
 
-++
+## An example classification problem
 
 This example compares different kinds of functional connectivity between
 regions of interest: correlation, partial correlation, and tangent space
@@ -41,6 +41,7 @@ for a careful study.
 We study only 30 subjects from the dataset, to save computation time.
 
 ```{code-cell} python3
+:tags: [hide-output]
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -146,7 +147,7 @@ plotting.plot_connectome(mean_correlation_matrix, msdl_coords,
                          title='mean correlation over all children')
 ```
 
-# Studying partial correlations
+## Studying partial correlations
 
 We can also study **direct connections**, revealed by partial correlation
 coefficients. We just change the `ConnectivityMeasure` kind
