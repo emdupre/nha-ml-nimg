@@ -5,6 +5,8 @@ jupytext:
 kernelspec:
   display_name: Python 3
   name: python3
+repository:
+  url: https://github.com/emdupre/nha2020-nilearn
 ---
 
 # Classification of age groups using functional connectivity
@@ -21,7 +23,9 @@ Masking fMRI data.
 
 Essentially, we can think about overlaying a 3D grid on an image.
 Then, our mask tells us which cubes or “voxels” (like 3D pixels) to sample from.
-Since our Nifti images are 4D files, we can’t overlay a single grid – instead, we use a series of 3D grids (one for each volume in the 4D file), so we can get a measurement for each voxel at each timepoint.
+Since our Nifti images are 4D files, we can’t overlay a single grid –
+instead, we use a series of 3D grids (one for each volume in the 4D file),
+so we can get a measurement for each voxel at each timepoint.
 These are reflected in the shape of the matrix !
 You can check this by checking the number of positive voxels in our brain mask.
 
