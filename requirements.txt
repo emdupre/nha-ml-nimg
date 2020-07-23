@@ -1,0 +1,7 @@
+ghp-import
+jupyter-book
+jupytext
+numpy
+matplotlib
+sklearn
+nilearn
