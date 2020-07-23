@@ -58,14 +58,15 @@ from nilearn.connectome import ConnectivityMeasure
 from nilearn import input_data
 from nilearn import datasets
 
-development_dataset = datasets.fetch_development_fmri(n_subjects=30,
-                                                      data_dir='~/data')
+# for NHA env, will need to update to include `data_dir='~/data'`
+development_dataset = datasets.fetch_development_fmri(n_subjects=30)
 ```
 
 We use probabilistic regions of interest (ROIs) from the MSDL atlas.
 
 ```{code-cell} python3
-msdl_data = datasets.fetch_atlas_msdl(data_dir='~/data')
+# for NHA env, will need to update to include `data_dir='~/data'`
+msdl_data = datasets.fetch_atlas_msdl()
 msdl_coords = msdl_data.region_coords
 n_regions = len(msdl_coords)
 print('MSDL has {0} ROIs, part of the following networks :\n{1}.'.format(
