@@ -9,7 +9,73 @@ repository:
   url: https://github.com/emdupre/nha2020-nilearn
 ---
 
-# Classification of age groups using functional connectivity
+# An introduction to [_nilearn_](http://nilearn.github.io)
+
+In this tutorial, we'll see how the Python library _nilearn_ allows us to easily perform machine learning analyses with neuroimaging data, specifically MRI and fMRI.
+
+You may notice that the name _nilearn_ is reminiscent of [_scikit-learn_](https://scikit-learn.org),
+a popular Python library for machine learning.
+This is no accident!
+Nilearn and scikit-learn were created by the same team, and nilearn is designed to bring machine LEARNing to the NeuroImaging (NI) domain.
+
+With that in mind, let's briefly consider why we might want specialized tools for working with neuroimaging data.
+When performing a machine learning analysis, our data often look something like this:
+
+NB: update to Tal's example once uploaded !
+
+```{code-cell} python3
+from sklearn import datasets
+
+diabetes = datasets.load_diabetes(as_frame=True)
+diabetes.data.head()
+```
+
+This data is clearly structured in a tabular format.
+This makes it easier to consider issues such as: which features would we like to predict?
+Or, how do we handle cross-validation?
+
+By contrast, neuroimaging data has a very different structure.
+Neuroimaging data has both spatial and temporal dependencies between successive data points.
+That is, knowing _where_ and _when_ something was measured tells you information about the surrounding data points.
+We also know that neuroimaging data contains a lot of noise that's not blood-oxygen-level dependent (BOLD), such as head motion.
+Since we don't think that these other noise sources are related to neuronal firing,
+we often need to consider how we can make sure that our analyses are not driven by these noise sources.
+These are all considerations that most machine learning software libraries are not designed to deal with !
+Nilearn therefore plays a crucial role in bringing machine learning concepts to the neuroimaging domain.
+
+To get a sense of the problem, the quickest method is to just look at some neuroimaging data.
+You may have your own data locally that you'd like to work with.
+Nilearn also provides access to several neuroimaging data sets and atlases (we'll talk about these a bit later).
+These data sets (and atlases) are only accessible because research groups chose to make their collected data publicly available.
+We owe them a huge thank you for this !
+The data set we'll use today was originally collected by Rebecca Saxe's group at MIT and hosted on [OpenNeuro](https://openneuro.org).
+
+The nilearn team preprocessed the data set with [fMRIPrep](https://fmriprep.readthedocs.io) and downsampled it to a lower resolution,
+so it'd be easier to work with.
+We can learn a lot about this data set directly [from the Nilearn documentation](https://nilearn.github.io/modules/generated/nilearn.datasets.fetch_development_fmri.html)!
+For example, we can see that this data set contains over 150 children and adults watching a short Pixar film.
+Let's download the first 30 participants.
+
+```{code-cell} python3
+:tags: [hide-output]
+from nilearn import datasets
+
+development_dataset = datasets.fetch_development_fmri(n_subjects=30)
+```
+
+Now, this `development_dataset` object has several attributes which provide access to the relevant information.
+For example, `development_dataset.phenotypic` provides access to information about the participants, such as whether they were children or adults.
+We can use `development_dataset.func` to access the functional MRI (fMRI) data.
+
+Nilearn also provides many methods for plotting this kind of data.
+For example, we can use `nilearn.plotting.view_img` to launch at interactive viewer.
+
+```{code-cell} python3
+import maatplotlib.pyplot as plt
+from nilearn import plotting
+
+plotting.view_img(development_dataset.func[0], threshold=None, cmap='viridis')
+```
 
 ## Extracting signal from fMRI volumes
 
