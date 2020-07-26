@@ -94,9 +94,15 @@ plotting.view_img(mean_image, threshold=None)
 
 ## Extracting signal from fMRI volumes
 
+As you can see, this data is decidedly not tabular !
+What we'd like is to extract and transform relevant features from this data into a tabular format that we can more easily work with.
+To do this, we'll use nilearn's Masker objects.
+What are the masker objects ?
+First, let's think about what masking fMRI data is doing:
+
 ```{figure} images/masking.jpg
 ---
-height: 300px
+height: 350px
 name: masking
 ---
 Masking fMRI data.
@@ -107,8 +113,6 @@ Then, our mask tells us which cubes or “voxels” (like 3D pixels) to sample f
 Since our Nifti images are 4D files, we can’t overlay a single grid –
 instead, we use a series of 3D grids (one for each volume in the 4D file),
 so we can get a measurement for each voxel at each timepoint.
-These are reflected in the shape of the matrix !
-You can check this by checking the number of positive voxels in our brain mask.
 
 ## An example classification problem
 
