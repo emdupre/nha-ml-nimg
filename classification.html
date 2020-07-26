@@ -183,6 +183,14 @@
                 
   <div class="section" id="an-introduction-to-nilearn">
 <h1>An introduction to <a class="reference external" href="http://nilearn.github.io"><code class="docutils literal notranslate"><span class="pre">nilearn</span></code></a><a class="headerlink" href="#an-introduction-to-nilearn" title="Permalink to this headline">¶</a></h1>
+<div class="cell tag_hide-cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p>In this tutorial, we’ll see how the Python library <em>nilearn</em> allows us to easily perform machine learning analyses with neuroimaging data, specifically MRI and fMRI.</p>
 <p>You may notice that the name <code class="docutils literal notranslate"><span class="pre">nilearn</span></code> is reminiscent of <a class="reference external" href="https://scikit-learn.org"><code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code></a>,
 a popular Python library for machine learning.
@@ -345,7 +353,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 16041 of 16041 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 16041 of 16041 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3df4712b400183b7092/ ...
@@ -366,14 +374,14 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 67851 of 67851 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 67851 of 67851 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e32286e80018c3e42c/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 4946416 of 4946416 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 4946416 of 4946416 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e4a743a9001760814f/ ...
@@ -485,7 +493,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6118892 of 6118892 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6118892 of 6118892 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3822286e80018c3e37b/ ...
@@ -513,14 +521,14 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6176491 of 6176491 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6176491 of 6176491 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3842286e80017c419e0/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68630 of 68630 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68630 of 68630 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3854712b4001a3b5568/ ...
@@ -541,7 +549,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6232787 of 6232787 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6232787 of 6232787 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3872286e80017c419ea/ ...
@@ -618,7 +626,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68479 of 68479 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68479 of 68479 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e92a3bc970019f0717f/ ...
@@ -639,7 +647,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6384587 of 6384587 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6384587 of 6384587 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47016a3bc970017efe44f/ ...
@@ -653,7 +661,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 5934622 of 5934622 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 5934622 of 5934622 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb470413992690018133d8c/ ...
@@ -681,14 +689,14 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6020576 of 6020576 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6020576 of 6020576 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4702a353c58001b9cb5ae/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68275 of 68275 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68275 of 68275 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e9b39926900190fad5c/ ...
@@ -723,7 +731,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6752586 of 6752586 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6752586 of 6752586 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3912286e80018c3e393/ ...
@@ -765,7 +773,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6031594 of 6031594 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6031594 of 6031594 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 </div>
@@ -868,13 +876,14 @@ we’ll use the MSDL (multi-subject dictionary learning; <a class="bibtex refere
 which defines a set of <em>probabilistic</em> regions of interest (ROIs) across the brain.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msdl_atlas</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_atlas_msdl</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">msdl_atlas</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_atlas_msdl</span><span class="p">()</span>
 
 <span class="n">msdl_coords</span> <span class="o">=</span> <span class="n">msdl_atlas</span><span class="o">.</span><span class="n">region_coords</span>
 <span class="n">n_regions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">msdl_coords</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;MSDL has </span><span class="si">{0}</span><span class="s1"> ROIs, part of the following networks :</span><span class="se">\n</span><span class="si">{1}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-    <span class="n">n_regions</span><span class="p">,</span> <span class="n">msdl_atlas</span><span class="o">.</span><span class="n">networks</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;MSDL has </span><span class="si">{</span><span class="n">n_regions</span><span class="si">}</span><span class="s1"> ROIs, part of the following networks :</span><span class="se">\n</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">msdl_atlas</span><span class="o">.</span><span class="n">networks</span><span class="p">)</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -886,14 +895,14 @@ Downloading data from https://team.inria.fr/parietal/files/2015/01/MSDL_rois.zip
 </pre></div>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>MSDL has 39 ROIs, part of the following networks :
-[b&#39;Aud&#39;, b&#39;Aud&#39;, b&#39;Striate&#39;, b&#39;DMN&#39;, b&#39;DMN&#39;, b&#39;DMN&#39;, b&#39;DMN&#39;, b&#39;Occ post&#39;, b&#39;Motor&#39;, b&#39;R V Att&#39;, b&#39;R V Att&#39;, b&#39;R V Att&#39;, b&#39;R V Att&#39;, b&#39;Basal&#39;, b&#39;L V Att&#39;, b&#39;L V Att&#39;, b&#39;L V Att&#39;, b&#39;D Att&#39;, b&#39;D Att&#39;, b&#39;Vis Sec&#39;, b&#39;Vis Sec&#39;, b&#39;Vis Sec&#39;, b&#39;Salience&#39;, b&#39;Salience&#39;, b&#39;Salience&#39;, b&#39;Temporal&#39;, b&#39;Temporal&#39;, b&#39;Language&#39;, b&#39;Language&#39;, b&#39;Language&#39;, b&#39;Language&#39;, b&#39;Language&#39;, b&#39;Cereb&#39;, b&#39;Dors PCC&#39;, b&#39;Cing-Ins&#39;, b&#39;Cing-Ins&#39;, b&#39;Cing-Ins&#39;, b&#39;Ant IPS&#39;, b&#39;Ant IPS&#39;].
+[b&#39;Ant IPS&#39; b&#39;Aud&#39; b&#39;Basal&#39; b&#39;Cereb&#39; b&#39;Cing-Ins&#39; b&#39;D Att&#39; b&#39;DMN&#39;
+ b&#39;Dors PCC&#39; b&#39;L V Att&#39; b&#39;Language&#39; b&#39;Motor&#39; b&#39;Occ post&#39; b&#39;R V Att&#39;
+ b&#39;Salience&#39; b&#39;Striate&#39; b&#39;Temporal&#39; b&#39;Vis Sec&#39;].
 </pre></div>
 </div>
 <div class="stderr docutils container">
 <pre class="stderr literal-block">Downloaded 209734 of 209734 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 Extracting data from /home/runner/nilearn_data/msdl_atlas/5d25e157f36214b8ca9a12fd417aac1c/MSDL_rois.zip..... done.
-/opt/hostedtoolcache/Python/3.7.8/x64/lib/python3.7/site-packages/numpy/lib/npyio.py:2349: VisibleDeprecationWarning: Reading unicode strings without specifying the encoding argument is deprecated. Set the encoding, use None for the system default.
-  output = genfromtxt(fname, **kwargs)
 </pre>
 </div>
 </div>
@@ -906,15 +915,10 @@ Extracting data from /home/runner/nilearn_data/msdl_atlas/5d25e157f36214b8ca9a12
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="stderr docutils container">
-<pre class="stderr literal-block">/opt/hostedtoolcache/Python/3.7.8/x64/lib/python3.7/site-packages/nilearn/plotting/displays.py:99: UserWarning: No contour levels were found within the data range.
-  **kwargs)
-</pre>
-</div>
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoSlicer at 0x7f7d54036890&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoSlicer at 0x7f3e482abfd0&gt;
 </pre></div>
 </div>
-<img alt="_images/classification_9_2.png" src="_images/classification_9_2.png" />
+<img alt="_images/classification_11_1.png" src="_images/classification_11_1.png" />
 </div>
 </div>
 <p>We’d like to supply these ROIs to a Masker object.
@@ -930,9 +934,8 @@ Because we’re working with “soft” or probabilistic ROIs,
 we can instead supply these ROIs to <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.input_data.NiftiMapsMasker.html"><code class="docutils literal notranslate"><span class="pre">nilearn.input_data.NiftiMapsMasker</span></code></a>.</p>
 <p>For a full list of the available Masker objects,
 see <a class="reference external" href="https://nilearn.github.io/modules/reference.html#module-nilearn.input_data">the Nilearn documentation</a>.</p>
-<p>To the <code class="docutils literal notranslate"><span class="pre">NiftiMapsMasker</span></code> object,
-we can supply our MSDL atlas-defined ROIs,
-as well as resampling, filtering, and detrending options.</p>
+<p>We can supply our MSDL atlas-defined ROIs to the <code class="docutils literal notranslate"><span class="pre">NiftiMapsMasker</span></code> object,
+along with resampling, filtering, and detrending parameters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">input_data</span>
@@ -946,7 +949,8 @@ as well as resampling, filtering, and detrending options.</p>
 </div>
 </div>
 <p>One thing you might notice from the above code is that immediately after defining the masker object,
-we call the <code class="docutils literal notranslate"><span class="pre">.fit</span></code> method on it.</p>
+we call the <code class="docutils literal notranslate"><span class="pre">.fit</span></code> method on it.
+This method may look familiar if you’ve previously worked with scikit-learn estimators!</p>
 <p>They also allow us to perform other operations,
 like correcting for measured signals of no interest (e.g., head motion).
 Our <code class="docutils literal notranslate"><span class="pre">development_dataset</span></code> also includes several of these signals of no interest that were generated by fMRIPrep pre-processing.
@@ -1108,20 +1112,11 @@ for a careful study.</p>
 <p>We study only 30 subjects from the dataset, to save computation time.</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedShuffleSplit</span>
 <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
 
-<span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">plotting</span>
 <span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">ConnectivityMeasure</span>
-<span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">input_data</span>
-<span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">datasets</span>
-
-<span class="c1"># for NHA env, will need to update to include `data_dir=&#39;~/data&#39;`</span>
-<span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1219,7 +1214,7 @@ estimate it using :class:<code class="docutils literal notranslate"><span class=
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/classification_27_0.png" src="_images/classification_27_0.png" />
+<img alt="_images/classification_31_0.png" src="_images/classification_31_0.png" />
 </div>
 </div>
 <p>The blocks structure that reflect functional networks are visible.</p>
@@ -1232,10 +1227,10 @@ estimate it using :class:<code class="docutils literal notranslate"><span class=
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoProjector at 0x7f7d4ab3d710&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoProjector at 0x7f3e46eb2cd0&gt;
 </pre></div>
 </div>
-<img alt="_images/classification_29_1.png" src="_images/classification_29_1.png" />
+<img alt="_images/classification_33_1.png" src="_images/classification_33_1.png" />
 </div>
 </div>
 </div>
@@ -1263,7 +1258,7 @@ coefficients. We just change the <code class="docutils literal notranslate"><spa
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/classification_33_0.png" src="_images/classification_33_0.png" />
+<img alt="_images/classification_37_0.png" src="_images/classification_37_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1275,10 +1270,10 @@ coefficients. We just change the <code class="docutils literal notranslate"><spa
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoProjector at 0x7f7d45692fd0&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoProjector at 0x7f3e41a823d0&gt;
 </pre></div>
 </div>
-<img alt="_images/classification_34_1.png" src="_images/classification_34_1.png" />
+<img alt="_images/classification_38_1.png" src="_images/classification_38_1.png" />
 </div>
 </div>
 </div>
@@ -1319,7 +1314,7 @@ coefficients can not be interpreted as anticorrelated regions.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/classification_40_0.png" src="_images/classification_40_0.png" />
+<img alt="_images/classification_44_0.png" src="_images/classification_44_0.png" />
 </div>
 </div>
 <p>The average tangent matrix cannot be interpreted, as individual matrices
@@ -1380,7 +1375,7 @@ test set.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/classification_44_0.png" src="_images/classification_44_0.png" />
+<img alt="_images/classification_48_0.png" src="_images/classification_48_0.png" />
 </div>
 </div>
 <p>This is a small example to showcase nilearn features. In practice such

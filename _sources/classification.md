@@ -11,6 +11,13 @@ repository:
 
 # An introduction to [`nilearn`](http://nilearn.github.io)
 
+```{code-cell} python3
+:tags: [hide-cell]
+
+import warnings
+warnings.filterwarnings("ignore")
+```
+
 In this tutorial, we'll see how the Python library _nilearn_ allows us to easily perform machine learning analyses with neuroimaging data, specifically MRI and fMRI.
 
 You may notice that the name `nilearn` is reminiscent of [`scikit-learn`](https://scikit-learn.org),
@@ -127,13 +134,14 @@ we'll use the MSDL (multi-subject dictionary learning; {cite}`Varoquaux_2011`) a
 which defines a set of _probabilistic_ regions of interest (ROIs) across the brain.
 
 ```{code-cell} python3
+import numpy as np
+
 msdl_atlas = datasets.fetch_atlas_msdl()
 
 msdl_coords = msdl_atlas.region_coords
 n_regions = len(msdl_coords)
 
-print('MSDL has {0} ROIs, part of the following networks :\n{1}.'.format(
-    n_regions, msdl_atlas.networks))
+print(f'MSDL has {n_regions} ROIs, part of the following networks :\n{np.unique(msdl_atlas.networks)}.')
 ```
 
 Nilearn also provides us with an easy way to view this atlas directly:
@@ -159,9 +167,8 @@ we can instead supply these ROIs to [`nilearn.input_data.NiftiMapsMasker`](https
 For a full list of the available Masker objects,
 see [the Nilearn documentation](https://nilearn.github.io/modules/reference.html#module-nilearn.input_data).
 
-To the `NiftiMapsMasker` object,
-we can supply our MSDL atlas-defined ROIs,
-as well as resampling, filtering, and detrending options.
+We can supply our MSDL atlas-defined ROIs to the `NiftiMapsMasker` object,
+along with resampling, filtering, and detrending parameters.
 
 ```{code-cell} python3
 from nilearn import input_data
@@ -174,7 +181,10 @@ masker = input_data.NiftiMapsMasker(
 
 One thing you might notice from the above code is that immediately after defining the masker object,
 we call the `.fit` method on it.
+This method may look familiar if you've previously worked with scikit-learn estimators!
 
+```{code-cell} python3
+```
 
 They also allow us to perform other operations,
 like correcting for measured signals of no interest (e.g., head motion).
@@ -207,20 +217,11 @@ We study only 30 subjects from the dataset, to save computation time.
 
 ```{code-cell} python3
 :tags: [hide-output]
-import numpy as np
-from matplotlib import pyplot as plt
-
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.svm import LinearSVC
 
-from nilearn import plotting
 from nilearn.connectome import ConnectivityMeasure
-from nilearn import input_data
-from nilearn import datasets
-
-# for NHA env, will need to update to include `data_dir='~/data'`
-development_dataset = datasets.fetch_development_fmri(n_subjects=30)
 ```
 
 ## Region signals extraction
