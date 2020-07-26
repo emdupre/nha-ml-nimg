@@ -177,9 +177,9 @@
               <div>
                 
   <div class="section" id="an-introduction-to-nilearn">
-<h1>An introduction to <a class="reference external" href="http://nilearn.github.io"><em>nilearn</em></a><a class="headerlink" href="#an-introduction-to-nilearn" title="Permalink to this headline">¶</a></h1>
+<h1>An introduction to <a class="reference external" href="http://nilearn.github.io"><code class="docutils literal notranslate"><span class="pre">nilearn</span></code></a><a class="headerlink" href="#an-introduction-to-nilearn" title="Permalink to this headline">¶</a></h1>
 <p>In this tutorial, we’ll see how the Python library <em>nilearn</em> allows us to easily perform machine learning analyses with neuroimaging data, specifically MRI and fMRI.</p>
-<p>You may notice that the name <em>nilearn</em> is reminiscent of <a class="reference external" href="https://scikit-learn.org"><em>scikit-learn</em></a>,
+<p>You may notice that the name <code class="docutils literal notranslate"><span class="pre">nilearn</span></code> is reminiscent of <a class="reference external" href="https://scikit-learn.org"><code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code></a>,
 a popular Python library for machine learning.
 This is no accident!
 Nilearn and scikit-learn were created by the same team,
@@ -315,7 +315,7 @@ You may have your own data locally that you’d like to work with.
 Nilearn also provides access to several neuroimaging data sets and atlases (we’ll talk about these a bit later).
 These data sets (and atlases) are only accessible because research groups chose to make their collected data publicly available.
 We owe them a huge thank you for this !
-The data set we’ll use today was originally collected by Rebecca Saxe’s group at MIT and hosted on <a class="reference external" href="https://openneuro.org">OpenNeuro</a>.</p>
+The data set we’ll use today was originally collected by <a class="reference external" href="https://mcgovern.mit.edu/profile/rebecca-saxe/">Rebecca Saxe</a>’s group at MIT and hosted on <a class="reference external" href="https://openneuro.org/datasets/ds000228/versions/1.1.0">OpenNeuro</a>.</p>
 <p>The nilearn team preprocessed the data set with <a class="reference external" href="https://fmriprep.readthedocs.io">fMRIPrep</a> and downsampled it to a lower resolution,
 so it’d be easier to work with.
 We can learn a lot about this data set directly <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.datasets.fetch_development_fmri.html">from the Nilearn documentation</a>!
@@ -340,14 +340,14 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 16041 of 16041 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 16041 of 16041 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3df4712b400183b7092/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68285 of 68285 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68285 of 68285 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e04712b400193b5bdf/ ...
@@ -361,14 +361,14 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 67851 of 67851 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 67851 of 67851 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e32286e80018c3e42c/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 4946416 of 4946416 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 4946416 of 4946416 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e4a743a9001760814f/ ...
@@ -403,14 +403,14 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68189 of 68189 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68189 of 68189 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e82286e80018c3e443/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6522229 of 6522229 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6522229 of 6522229 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ea4712b400183b70b7/ ...
@@ -424,21 +424,21 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6139107 of 6139107 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6139107 of 6139107 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff37da743a90018606df1/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68468 of 68468 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68468 of 68468 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff37c2286e80019c3c102/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6293165 of 6293165 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6293165 of 6293165 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4701e3992690018133d4f/ ...
@@ -459,7 +459,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68340 of 68340 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68340 of 68340 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff37d4712b400183b7011/ ...
@@ -515,7 +515,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68630 of 68630 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68630 of 68630 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3854712b4001a3b5568/ ...
@@ -557,14 +557,14 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68894 of 68894 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68894 of 68894 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3884712b400193b5b5c/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6586819 of 6586819 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6586819 of 6586819 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff389a743a9001660a016/ ...
@@ -634,7 +634,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6384587 of 6384587 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6384587 of 6384587 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47016a3bc970017efe44f/ ...
@@ -648,7 +648,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 5934622 of 5934622 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 5934622 of 5934622 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb470413992690018133d8c/ ...
@@ -683,14 +683,14 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 68275 of 68275 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 68275 of 68275 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e9b39926900190fad5c/ ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6551822 of 6551822 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6551822 of 6551822 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff391a743a900176080a9/ ...
@@ -704,7 +704,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6116459 of 6116459 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6116459 of 6116459 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47023353c58001c9ac02b/ ...
@@ -718,7 +718,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6752586 of 6752586 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6752586 of 6752586 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3912286e80018c3e393/ ...
@@ -732,7 +732,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6023997 of 6023997 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6023997 of 6023997 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47045a3bc970019f073a0/ ...
@@ -746,7 +746,7 @@ Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
 <div class="stderr docutils container">
-<pre class="stderr literal-block">Downloaded 6312316 of 6312316 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<pre class="stderr literal-block">Downloaded 6312316 of 6312316 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
 </pre>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47052f2be3c0017057069/ ...
@@ -792,6 +792,10 @@ which allows us to take the mean 3D image over time.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="stderr docutils container">
+<pre class="stderr literal-block">Matplotlib is building the font cache; this may take a moment.
+</pre>
+</div>
 <div class="output text_html"><iframe srcdoc="&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -845,11 +849,157 @@ First, let’s think about what masking fMRI data is doing:</p>
 <a class="reference internal image-reference" href="_images/masking.jpg"><img alt="_images/masking.jpg" src="_images/masking.jpg" style="height: 350px;" /></a>
 <p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Masking fMRI data.</span><a class="headerlink" href="#masking" title="Permalink to this image">¶</a></p>
 </div>
-<p>Essentially, we can think about overlaying a 3D grid on an image.
+<p>Essentially, we can imagine overlaying a 3D grid on an image.
 Then, our mask tells us which cubes or “voxels” (like 3D pixels) to sample from.
 Since our Nifti images are 4D files, we can’t overlay a single grid –
 instead, we use a series of 3D grids (one for each volume in the 4D file),
 so we can get a measurement for each voxel at each timepoint.</p>
+<p>Masker objects allow us to define and apply these grids !
+They also allow us to perform other operations,
+like correcting for measured signals of no interest (e.g., head motion).
+Our <code class="docutils literal notranslate"><span class="pre">development_dataset</span></code> also includes several of these signals of no interest that were generated by fMRIPrep pre-processing.
+We can access these with the <code class="docutils literal notranslate"><span class="pre">confounds</span></code> attribute,
+using <code class="docutils literal notranslate"><span class="pre">development_dataset.confounds</span></code>.</p>
+<p>Let’s quickly check what these look like for our first participant:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">development_dataset</span><span class="o">.</span><span class="n">confounds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>trans_x</th>
+      <th>trans_y</th>
+      <th>trans_z</th>
+      <th>rot_x</th>
+      <th>rot_y</th>
+      <th>rot_z</th>
+      <th>framewise_displacement</th>
+      <th>a_comp_cor_00</th>
+      <th>a_comp_cor_01</th>
+      <th>a_comp_cor_02</th>
+      <th>a_comp_cor_03</th>
+      <th>a_comp_cor_04</th>
+      <th>a_comp_cor_05</th>
+      <th>csf</th>
+      <th>white_matter</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.000233</td>
+      <td>-0.076885</td>
+      <td>0.062321</td>
+      <td>0.000732</td>
+      <td>0.000352</td>
+      <td>0.000841</td>
+      <td>0.000000</td>
+      <td>-0.099871</td>
+      <td>-0.007286</td>
+      <td>0.001780</td>
+      <td>-0.008073</td>
+      <td>0.030945</td>
+      <td>-0.022393</td>
+      <td>439.699409</td>
+      <td>451.645460</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.006187</td>
+      <td>-0.078395</td>
+      <td>0.056773</td>
+      <td>0.000112</td>
+      <td>0.000187</td>
+      <td>0.000775</td>
+      <td>0.055543</td>
+      <td>-0.019437</td>
+      <td>-0.042308</td>
+      <td>0.016735</td>
+      <td>-0.012099</td>
+      <td>0.088777</td>
+      <td>-0.006171</td>
+      <td>439.471640</td>
+      <td>451.103437</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.000227</td>
+      <td>-0.069893</td>
+      <td>0.083102</td>
+      <td>0.000143</td>
+      <td>0.000364</td>
+      <td>0.000716</td>
+      <td>0.054112</td>
+      <td>0.009096</td>
+      <td>-0.053206</td>
+      <td>-0.030388</td>
+      <td>-0.052925</td>
+      <td>0.019922</td>
+      <td>0.014776</td>
+      <td>439.744498</td>
+      <td>450.981505</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.002492</td>
+      <td>-0.074707</td>
+      <td>0.060337</td>
+      <td>0.000202</td>
+      <td>0.000818</td>
+      <td>0.000681</td>
+      <td>0.057667</td>
+      <td>0.060195</td>
+      <td>-0.083195</td>
+      <td>0.003578</td>
+      <td>-0.037011</td>
+      <td>0.026946</td>
+      <td>0.002505</td>
+      <td>440.772620</td>
+      <td>450.600261</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.000226</td>
+      <td>-0.084204</td>
+      <td>0.085079</td>
+      <td>0.000183</td>
+      <td>0.000548</td>
+      <td>0.000682</td>
+      <td>0.051438</td>
+      <td>0.049833</td>
+      <td>-0.089819</td>
+      <td>-0.020825</td>
+      <td>-0.079329</td>
+      <td>0.008516</td>
+      <td>-0.000938</td>
+      <td>440.115442</td>
+      <td>450.678959</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
 </div>
 <div class="section" id="an-example-classification-problem">
 <h2>An example classification problem<a class="headerlink" href="#an-example-classification-problem" title="Permalink to this headline">¶</a></h2>
@@ -1018,7 +1168,7 @@ estimate it using :class:<code class="docutils literal notranslate"><span class=
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/classification_23_0.png" src="_images/classification_23_0.png" />
+<img alt="_images/classification_25_0.png" src="_images/classification_25_0.png" />
 </div>
 </div>
 <p>The blocks structure that reflect functional networks are visible.</p>
@@ -1031,10 +1181,10 @@ estimate it using :class:<code class="docutils literal notranslate"><span class=
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoProjector at 0x7f99d3c30c10&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoProjector at 0x7efda73cd390&gt;
 </pre></div>
 </div>
-<img alt="_images/classification_25_1.png" src="_images/classification_25_1.png" />
+<img alt="_images/classification_27_1.png" src="_images/classification_27_1.png" />
 </div>
 </div>
 </div>
@@ -1062,7 +1212,7 @@ coefficients. We just change the <code class="docutils literal notranslate"><spa
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/classification_29_0.png" src="_images/classification_29_0.png" />
+<img alt="_images/classification_31_0.png" src="_images/classification_31_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1074,10 +1224,10 @@ coefficients. We just change the <code class="docutils literal notranslate"><spa
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoProjector at 0x7f99d1740490&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;nilearn.plotting.displays.OrthoProjector at 0x7efda4e13850&gt;
 </pre></div>
 </div>
-<img alt="_images/classification_30_1.png" src="_images/classification_30_1.png" />
+<img alt="_images/classification_32_1.png" src="_images/classification_32_1.png" />
 </div>
 </div>
 </div>
@@ -1118,7 +1268,7 @@ coefficients can not be interpreted as anticorrelated regions.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/classification_36_0.png" src="_images/classification_36_0.png" />
+<img alt="_images/classification_38_0.png" src="_images/classification_38_0.png" />
 </div>
 </div>
 <p>The average tangent matrix cannot be interpreted, as individual matrices
@@ -1179,7 +1329,7 @@ test set.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/classification_40_0.png" src="_images/classification_40_0.png" />
+<img alt="_images/classification_42_0.png" src="_images/classification_42_0.png" />
 </div>
 </div>
 <p>This is a small example to showcase nilearn features. In practice such
