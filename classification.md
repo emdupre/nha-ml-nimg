@@ -71,7 +71,7 @@ Nilearn also provides many methods for plotting this kind of data.
 For example, we can use `nilearn.plotting.view_img` to launch at interactive viewer.
 
 ```{code-cell} python3
-import maatplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from nilearn import plotting
 
 plotting.view_img(development_dataset.func[0], threshold=None, cmap='viridis')
