@@ -16,7 +16,8 @@ In this tutorial, we'll see how the Python library _nilearn_ allows us to easily
 You may notice that the name _nilearn_ is reminiscent of [_scikit-learn_](https://scikit-learn.org),
 a popular Python library for machine learning.
 This is no accident!
-Nilearn and scikit-learn were created by the same team, and nilearn is designed to bring machine LEARNing to the NeuroImaging (NI) domain.
+Nilearn and scikit-learn were created by the same team,
+and nilearn is designed to bring machine **LEARN**ing to the NeuroImaging (**NI**) domain.
 
 With that in mind, let's briefly consider why we might want specialized tools for working with neuroimaging data.
 When performing a machine learning analysis, our data often look something like this:
@@ -33,6 +34,8 @@ diabetes.data.head()
 This data is clearly structured in a tabular format.
 This makes it easier to consider issues such as: which features would we like to predict?
 Or, how do we handle cross-validation?
+
+## Neuroimaging data
 
 By contrast, neuroimaging data has a very different structure.
 Neuroimaging data has both spatial and temporal dependencies between successive data points.
@@ -67,11 +70,16 @@ Now, this `development_dataset` object has several attributes which provide acce
 For example, `development_dataset.phenotypic` provides access to information about the participants, such as whether they were children or adults.
 We can use `development_dataset.func` to access the functional MRI (fMRI) data.
 
+## Getting into the data: subsetting and viewing
+
 Nilearn also provides many methods for plotting this kind of data.
-For example, we can use `nilearn.plotting.view_img` to launch at interactive viewer.
+For example, we can use [`nilearn.plotting.view_img`](https://nilearn.github.io/modules/generated/nilearn.plotting.view_img.html) to launch at interactive viewer.
 Because each fMRI run is a 4D time series (three spatial dimensions plus time),
 we'll also need to subset the data when we plot it, so that we can look at a single 3D image.
-Nilearn provides (at least) two ways to do this: with `nilearn.image.index_img`, which allows us to index a particular frame--or several frames--of a time series, and `nilearn.image.mean_img`, which allows us to take the mean 3D image over time.
+Nilearn provides (at least) two ways to do this: with [`nilearn.image.index_img`](https://nilearn.github.io/modules/generated/nilearn.image.index_img.html),
+which allows us to index a particular frame--or several frames--of a time series,
+and [`nilearn.image.mean_img`](https://nilearn.github.io/modules/generated/nilearn.image.mean_img.html),
+which allows us to take the mean 3D image over time.
 
 Putting these together, we can interatively view the mean image of the first participant using:
 
@@ -81,7 +89,7 @@ from nilearn import image
 from nilearn import plotting
 
 mean_image = image.mean_img(development_dataset.func[0])
-plotting.view_img(mean_image, threshold=None, cmap='viridis')
+plotting.view_img(mean_image, threshold=None)
 ```
 
 ## Extracting signal from fMRI volumes
