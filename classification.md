@@ -69,12 +69,19 @@ We can use `development_dataset.func` to access the functional MRI (fMRI) data.
 
 Nilearn also provides many methods for plotting this kind of data.
 For example, we can use `nilearn.plotting.view_img` to launch at interactive viewer.
+Because each fMRI run is a 4D time series (three spatial dimensions plus time),
+we'll also need to subset the data when we plot it, so that we can look at a single 3D image.
+Nilearn provides (at least) two ways to do this: with `nilearn.image.index_img`, which allows us to index a particular frame--or several frames--of a time series, and `nilearn.image.mean_img`, which allows us to take the mean 3D image over time.
+
+Putting these together, we can interatively view the mean image of the first participant using:
 
 ```{code-cell} python3
 import matplotlib.pyplot as plt
+from nilearn import image
 from nilearn import plotting
 
-plotting.view_img(development_dataset.func[0], threshold=None, cmap='viridis')
+mean_image = image.mean_img(development_dataset.func[0])
+plotting.view_img(mean_image, threshold=None, cmap='viridis')
 ```
 
 ## Extracting signal from fMRI volumes
