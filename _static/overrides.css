@@ -1,3 +1,7 @@
+div.bd-toc {
+    display: none;
+}
+
 @media print {
 
     div.topbar {
