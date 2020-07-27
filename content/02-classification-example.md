@@ -36,12 +36,20 @@ for a careful study.
 
 ## Load brain development fMRI dataset and MSDL atlas
 
-
 ```{code-cell} python3
 :tags: [hide-output]
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.svm import LinearSVC
+import numpy as np
+import matplotlib.pyplot as plt
+from nilearn import (datasets, input_data, plotting)
+from nilearn.connectome import ConnectivityMeasure
+
+development_dataset = datasets.fetch_development_fmri(n_subjects=30)
+msdl_atlas = datasets.fetch_atlas_msdl()
+
+masker = input_data.NiftiMapsMasker(
+    msdl_atlas.maps, resampling_target="data",
+    t_r=2, detrend=True,
+    low_pass=0.1, high_pass=0.01).fit()
 ```
 
 ## Region signals extraction
@@ -181,6 +189,10 @@ StratifiedShuffleSplit allows preserving the proportion of children in the
 test set.
 
 ```{code-cell} python3
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.svm import LinearSVC
+
 kinds = ['correlation', 'partial correlation', 'tangent']
 _, classes = np.unique(groups, return_inverse=True)
 cv = StratifiedShuffleSplit(n_splits=15, random_state=0, test_size=5)
