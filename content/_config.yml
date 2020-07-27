@@ -42,7 +42,7 @@ launch_buttons:
 repository:
   url                       : https://github.com/emdupre/nha2020-nilearn  # The URL to your book's repository
   path_to_book              : "content"  # A path to your book's folder, relative to the repository root.
-  branch                    : gh-pages  # Which branch of the repository should be used when creating links
+  branch                    : master  # Which branch of the repository should be used when creating links
 
 #######################################################################################
 # Advanced and power-user settings
