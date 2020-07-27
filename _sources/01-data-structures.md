@@ -18,13 +18,6 @@ import warnings
 warnings.filterwarnings("ignore")
 ```
 
-```{figure} ../images/tutorial-img.png
----
-height: 350px
-name: banner
----
-```
-
 In this tutorial,
 we'll see how the Python library `nilearn` allows us to easily perform machine learning analyses with neuroimaging data,
 specifically MRI and fMRI.
@@ -38,7 +31,7 @@ and nilearn is designed to bring machine **LEARN**ing to the NeuroImaging (**NI*
 With that in mind, let's briefly consider why we might want specialized tools for working with neuroimaging data.
 When performing a machine learning analysis, our data often look something like this:
 
-NB: update to Tal's example once uploaded !
+NB: update to Tal's example once uploaded!
 
 ```{code-cell} python3
 from sklearn import datasets
@@ -59,14 +52,14 @@ That is, knowing _where_ and _when_ something was measured tells you information
 We also know that neuroimaging data contains a lot of noise that's not blood-oxygen-level dependent (BOLD), such as head motion.
 Since we don't think that these other noise sources are related to neuronal firing,
 we often need to consider how we can make sure that our analyses are not driven by these noise sources.
-These are all considerations that most machine learning software libraries are not designed to deal with !
+These are all considerations that most machine learning software libraries are not designed to deal with!
 Nilearn therefore plays a crucial role in bringing machine learning concepts to the neuroimaging domain.
 
 To get a sense of the problem, the quickest method is to just look at some neuroimaging data.
 You may have your own data locally that you'd like to work with.
 Nilearn also provides access to several neuroimaging data sets and atlases (we'll talk about these a bit later).
 These data sets (and atlases) are only accessible because research groups chose to make their collected data publicly available.
-We owe them a huge thank you for this !
+We owe them a huge thank you for this!
 The data set we'll use today was originally collected by [Rebecca Saxe](https://mcgovern.mit.edu/profile/rebecca-saxe/)'s group at MIT and hosted on [OpenNeuro](https://openneuro.org/datasets/ds000228/versions/1.1.0).
 
 The nilearn team preprocessed the data set with [fMRIPrep](https://fmriprep.readthedocs.io) and downsampled it to a lower resolution,
@@ -121,7 +114,7 @@ plotting.view_img(mean_image, threshold=None)
 
 ## Extracting signal from fMRI volumes
 
-As you can see, this data is decidedly not tabular !
+As you can see, this data is decidedly not tabular!
 What we'd like is to extract and transform meaningful features from this data,
 and store it in a format that we can easily work with.
 Importantly, we _could_ work with the full time series directly.
@@ -146,7 +139,7 @@ Since our Nifti images are 4D files, we can’t overlay a single grid –
 instead, we use a series of 3D grids (one for each volume in the 4D file),
 so we can get a measurement for each voxel at each timepoint.
 
-Masker objects allow us to apply these masks !
+Masker objects allow us to apply these masks!
 To start, we need to define a mask (or masks) that we'd like to apply.
 This could correspond to one or many regions of interest.
 Nilearn provides methods to define your own functional parcellation (using clustering algorithms such as _k-means_),
@@ -210,7 +203,7 @@ masker = input_data.NiftiMapsMasker(
 
 One thing you might notice from the above code is that immediately after defining the masker object,
 we call the `.fit` method on it.
-This method may look familiar if you've previously worked with scikit-learn estimators !
+This method may look familiar if you've previously worked with scikit-learn estimators!
 
 You'll note that we're not supplying any data to this `.fit` method;
 that's because we're fitting the Masker to the provided ROIs, rather than to our data.
@@ -226,7 +219,7 @@ roi_time_series.shape
 
 If you'll remember, when we first looked at the data its original dimensions were (50, 59, 50, 168).
 Now, it has a shape of (168, 39).
-What happened ?!
+What happened?!
 
 Rather than providing information on every voxel within our original 3D grid,
 we're now only considering those voxels that fall in our 39 regions of interest provided by the MSDL atlas and aggregating across voxels within those ROIS.
@@ -237,6 +230,16 @@ You'll also see that the "dimensions flipped;"
 that is, that we've transposed the matrix such that time is now the first rather than second dimension.
 This follows the scikit-learn convention that rows in a data matrix are _samples_,
 and columns in a data matrix are _features_.
+
+```{figure} ../images/samples-features.png
+---
+height: 250px
+name: samples-features
+---
+The scikit-learn conventions for feature and target matrices.
+From Jake VanderPlas's _Python Data Science Handbook_.
+```
+
 One of the nice things about working with nilearn is that it will impose this convention for you,
 so you don't accidentally flip your dimensions when using a scikit-learn model !
 
@@ -264,7 +267,7 @@ plotting.plot_matrix(correlation_matrix, labels=msdl_atlas.labels,
 Or view it as an embedded connectome:
 
 ```{code-cell} python3
-plotting.view_connectome(correlation_matrix,
+plotting.view_connectome(correlation_matrix, edge_threshold=0.2,
                          node_coords=msdl_atlas.region_coords)
 ```
 
@@ -284,6 +287,12 @@ import pandas as pd
 pd.read_table(development_dataset.confounds[0]).head()
 ```
 
+We can see that there are several different kinds of noise sources included!
+This is actually a subset of all possible fMRIPrep generated confounds that the Nilearn developers have pre-selected.
+We could access the full list by passing the argument `reduce_confounds=False` to our original call downloading the `development_dataset`.
+For most analyses, this list of confounds is reasonable, so we'll use these Nilearn provided defaults.
+For your own analyses, make sure to check which confounds you're using!
+
 ```{code-cell} python3
 corrected_roi_time_series = masker.transform(
     development_dataset.func[0], confounds=development_dataset.confounds[0])
@@ -294,10 +303,17 @@ plotting.plot_matrix(corrected_correlation_matrix, labels=msdl_atlas.labels,
                      vmax=0.8, vmin=-0.8, colorbar=True)
 ```
 
+As before, we can also view this functional connectivity matrix as a connectome:
+
 ```{code-cell} python3
-plotting.view_connectome(corrected_correlation_matrix,
+plotting.view_connectome(corrected_correlation_matrix, edge_threshold=0.2,
                          node_coords=msdl_atlas.region_coords)
 ```
+
+In both the matrix and connectome forms,
+we can see a big difference when including the confounds!
+This is an important reminder to make sure that your data are cleaned of any possible sources of noise _before_ running a machine learning analysis.
+Otherwise, you might be classifying participants on e.g. amount of head motion rather than a feature of interest!
 
 ```{bibliography} references.bib
 :style: unsrt
