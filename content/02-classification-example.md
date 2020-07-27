@@ -116,7 +116,7 @@ The blocks structure that reflect functional networks are visible.
 Now we display as a connectome the mean correlation matrix over all children.
 
 ```{code-cell} python3
-plotting.plot_connectome(mean_correlation_matrix, msdl_coords,
+plotting.plot_connectome(mean_correlation_matrix, msdl_atlas.region_coords,
                          title='mean correlation over all children')
 ```
 
@@ -142,7 +142,7 @@ for i, (matrix, ax) in enumerate(zip(partial_correlation_matrices, axes)):
 
 ```{code-cell} python3
 plotting.plot_connectome(
-    partial_correlation_measure.mean_, msdl_coords,
+    partial_correlation_measure.mean_, msdl_atlas.region_coords,
     title='mean partial correlation over all children')
 ```
 
