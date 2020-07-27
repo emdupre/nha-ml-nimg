@@ -18,7 +18,7 @@ import warnings
 warnings.filterwarnings("ignore")
 ```
 
-```{figure} images/tutorial-img.png
+```{figure} ../images/tutorial-img.png
 ---
 height: 350px
 name: banner
@@ -50,6 +50,7 @@ masker = input_data.NiftiMapsMasker(
     msdl_atlas.maps, resampling_target="data",
     t_r=2, detrend=True,
     low_pass=0.1, high_pass=0.01).fit()
+correlation_measure = ConnectivityMeasure(kind='correlation')
 ```
 
 ## Region signals extraction

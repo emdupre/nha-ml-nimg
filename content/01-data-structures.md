@@ -18,7 +18,7 @@ import warnings
 warnings.filterwarnings("ignore")
 ```
 
-```{figure} images/tutorial-img.png
+```{figure} ../images/tutorial-img.png
 ---
 height: 350px
 name: banner
@@ -132,7 +132,7 @@ To do this, we'll use nilearn's Masker objects.
 What are the masker objects ?
 First, let's think about what masking fMRI data is doing:
 
-```{figure} images/masking.jpg
+```{figure} ../images/masking.jpg
 ---
 height: 350px
 name: masking
