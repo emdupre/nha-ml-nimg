@@ -1,4 +1,4 @@
-name: deploy-page
+name: deploy-book
 
 # Only run this when the master branch changes
 on:
@@ -10,11 +10,11 @@ on:
     # folder has been modified.
     #
     # paths:
-    # - some-subfolder/**
+    # - content/**
 
 # This job installs dependencies, build the book, and pushes it to `gh-pages`
 jobs:
-  deploy-page:
+  deploy-book:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
     # Build the page
     - name: Build the book
       run: |
-        jupyter-book build classification.md
+        jupyter-book build content/
 
     # Push the book's HTML to github-pages
     - name: GitHub Pages action
