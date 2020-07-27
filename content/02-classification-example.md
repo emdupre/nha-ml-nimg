@@ -18,23 +18,27 @@ import warnings
 warnings.filterwarnings("ignore")
 ```
 
-```{figure} ../images/tutorial-img.png
----
-height: 350px
-name: banner
----
-```
+Now that we've seen how to create a connectome for an individual subject,
+we're ready to think about how we can use this connectome in a machine learning analysis.
+We'll keep working with the same `development_dataset`,
+but now we'd like to see if we can predict age group
+(i.e. whether a participant is a child or adult) based on their connectome,
+as defined by the functional connectivity matrix.
 
-This example compares different kinds of functional connectivity between
-regions of interest: correlation, partial correlation, and tangent space
-embedding.
+We'll also explore whether we're more or less accurate in our predictions based on how we define functional connectivity.
+In this example, we'll consider three different different ways to define functional connectivity
+between our Multi-Subject Dictional Learning (MSDL) regions of interest (ROIs):
+correlation, partial correlation, and tangent space embedding.
 
-The resulting connectivity coefficients can be used to
-discriminate children from adults. In general, the tangent space embedding
-**outperforms** the standard correlations: see {cite}`Dadi_2019`
-for a careful study.
+To learn more about tangent space embedding, and how it compares to standard correlations,
+we recommend {cite}`Dadi_2019`.
 
 ## Load brain development fMRI dataset and MSDL atlas
+
+First, we need to set up our minimal environment.
+This will include all the dependencies from the last notebook,
+loading the relevant data using our `nilearn` data set fetchers,
+and instantiated our `NiftiMapsMasker` and `ConnectivityMeasure` objects.
 
 ```{code-cell} python3
 :tags: [hide-output]
@@ -53,9 +57,17 @@ masker = input_data.NiftiMapsMasker(
 correlation_measure = ConnectivityMeasure(kind='correlation')
 ```
 
+Now we should have a much better idea what each line above is doing!
+Let's see how we can use these objects across many subjects,
+not just the first one.
+
 ## Region signals extraction
 
-Then we compute region signals and extract useful phenotypic informations.
+First, we can loop through the 30 participants and extract a few relevant pieces of information,
+including their functional scan, their confounds file, and whether they were a child or adult at the time of their scan.
+Using this information, we can then transform their data using the `NiftiMapsMasker` we created above.
+As we learned last time, it's really important to correct for known sources of noise!
+So we'll also pass the relevant confounds file directly to the `masker` object to clean up each subject's data.
 
 ```{code-cell} python3
 children = []
@@ -66,64 +78,84 @@ for func_file, confound_file, phenotypic in zip(
         development_dataset.func,
         development_dataset.confounds,
         development_dataset.phenotypic):
+
     time_series = masker.transform(func_file, confounds=confound_file)
     pooled_subjects.append(time_series)
+
     if phenotypic['Child_Adult'] == 'child':
         children.append(time_series)
+
     groups.append(phenotypic['Child_Adult'])
 
 print('Data has {0} children.'.format(len(children)))
 ```
 
+We can see that this data set has 24 children.
+This is roughly proportional to the original participant pool,
+which had 122 children and 33 adults.
+
+We've also created a list in `pooled_subjects` containing all of the cleaned data.
+Remember that each entry of that list should have a shape of (168, 39).
+We can quickly confirm that this is true:
+
+```{code-cell} python3
+print(pooled_subjects[0].shape)
+```
+
 ## ROI-to-ROI correlations of children
 
-The simpler and most commonly used kind of connectivity is correlation. It
-models the full (marginal) connectivity between pairwise ROIs. We can
-estimate it using :class:`nilearn.connectome.ConnectivityMeasure`.
+First, we'll use the most common kind of connectivity--and the one we used in the last section--correlation.
+It models the full (marginal) connectivity between pairwise ROIs.
 
-From the list of ROIs time-series for children, the
-`correlation_measure` computes individual correlation matrices.
+`correlation_measure` expects a list of time series,
+so we can directly supply the list of ROI time series we just created.
+It will then compute individual correlation matrices for each subject.
+First, let's just look at the correlation matrices for our 24 children,
+since we expect these matrices to be similar:
 
 ```{code-cell} python3
 correlation_matrices = correlation_measure.fit_transform(children)
 ```
 
-All individual coefficients are stacked in a unique 2D matrix.
+Now, all individual coefficients are stacked in a unique 2D matrix.
 
 ```{code-cell} python3
 print('Correlations of children are stacked in an array of shape {0}'
       .format(correlation_matrices.shape))
 ```
 
-as well as the average correlation across all fitted subjects.
+We can also directly access the average correlation across all fitted subjects using the `mean_` attribute.
 
 ```{code-cell} python3
 mean_correlation_matrix = correlation_measure.mean_
 print('Mean correlation has shape {0}.'.format(mean_correlation_matrix.shape))
 ```
 
-We display the connectome matrices of the first 3 children
+Let's display the functional connectivity matrices of the first 3 children:
 
 ```{code-cell} python3
 _, axes = plt.subplots(1, 3, figsize=(15, 5))
 for i, (matrix, ax) in enumerate(zip(correlation_matrices, axes)):
-    plotting.plot_matrix(matrix, tri='lower', colorbar=False, axes=ax,
+    plotting.plot_matrix(matrix, colorbar=False, axes=ax,
+                         vmin=-0.8, vmax=0.8,
                          title='correlation, child {}'.format(i))
 ```
 
-The blocks structure that reflect functional networks are visible.
-
-Now we display as a connectome the mean correlation matrix over all children.
+Just as before, we can also display connectome on the brain.
+Here, let's show the mean connectome over all 24 children.
 
 ```{code-cell} python3
-plotting.plot_connectome(mean_correlation_matrix, msdl_atlas.region_coords,
-                         title='mean correlation over all children')
+plotting.view_connectome(mean_correlation_matrix, msdl_atlas.region_coords,
+                         edge_threshold=0.2,
+                         title='mean connectome over all children')
 ```
 
 ## Studying partial correlations
 
-We can also study **direct connections**, revealed by partial correlation
-coefficients. We just change the `ConnectivityMeasure` kind
+Rather than looking at the correlation-defined functional connectivity matrix,
+we can also study **direct connections** as revealed by partial correlation coefficients.
+
+To do this, we can use exactly the same procedure as above, just changing the `ConnectivityMeasure` kind:
 
 ```{code-cell} python3
 partial_correlation_measure = ConnectivityMeasure(kind='partial correlation')
@@ -131,26 +163,32 @@ partial_correlation_matrices = partial_correlation_measure.fit_transform(
     children)
 ```
 
-Most of direct connections are weaker than full connections.
+Right away, we can see that most of direct connections are weaker than full connections for the first three children:
 
 ```{code-cell} python3
 _, axes = plt.subplots(1, 3, figsize=(15, 5))
 for i, (matrix, ax) in enumerate(zip(partial_correlation_matrices, axes)):
-    plotting.plot_matrix(matrix, tri='lower', colorbar=False, axes=ax,
+    plotting.plot_matrix(matrix, colorbar=False, axes=ax,
+                         vmin=-0.8, vmax=0.8,
                          title='partial correlation, child {}'.format(i))
 ```
 
+This is also visible when we display the mean partial correlation connectome:
+
 ```{code-cell} python3
-plotting.plot_connectome(
+plotting.view_connectome(
     partial_correlation_measure.mean_, msdl_atlas.region_coords,
+    edge_threshold=0.2,
     title='mean partial correlation over all children')
 ```
 
-## Extract subjects variabilities around a group connectivity
+## Using tangent space embedding
 
-We can use **both** correlations and partial correlations to capture
+An alternative method to both correlations and partial correlation is tangent space embedding.
+Tangent space embedding uses **both** correlations and partial correlations to capture
 reproducible connectivity patterns at the group-level.
-This is done by the tangent space embedding.
+
+Using this method is as easy as changing the kind of `ConnectivityMeasure`
 
 ```{code-cell} python3
 tangent_measure = ConnectivityMeasure(kind='tangent')
@@ -173,21 +211,24 @@ coefficients can not be interpreted as anticorrelated regions.
 ```{code-cell} python3
 _, axes = plt.subplots(1, 3, figsize=(15, 5))
 for i, (matrix, ax) in enumerate(zip(tangent_matrices, axes)):
-    plotting.plot_matrix(matrix, tri='lower', colorbar=False, axes=ax,
+    plotting.plot_matrix(matrix, colorbar=False, axes=ax,
+                         vmin=-0.8, vmax=0.8,
                          title='tangent offset, child {}'.format(i))
 ```
 
-The average tangent matrix cannot be interpreted, as individual matrices
-represent deviations from the mean, which is set to 0.
+We don't show the mean connectome here as average tangent matrix cannot be interpreted,
+since individual matrices represent deviations from the mean, which is set to 0.
 
-## What kind of connectivity is most powerful for classification?
+## Using connectivity in a classification analysis
 
-We will use connectivity matrices as features to distinguish children from
-adults. We use cross-validation and measure classification accuracy to
-compare the different kinds of connectivity matrices.
-We use random splits of the subjects into training/testing sets.
-StratifiedShuffleSplit allows preserving the proportion of children in the
-test set.
+We can use these connectivity matrices as features in a classification analysis to distinguish children from adults.
+This classification analysis can be implmented directly in scikit-learn,
+including all of the important considerations like cross-validation and measuring classification accuracy.
+
+First, we'll randomly split participants into training and testing sets 15 times.
+`StratifiedShuffleSplit` allows us to preserve the proportion of children-to-adults in the test set.
+We'll also compute classification accuracies for each of the kinds of functional connectivity we've identified:
+correlation, partial correlation, and tangent space embedding.
 
 ```{code-cell} python3
 from sklearn.metrics import accuracy_score
@@ -198,7 +239,13 @@ kinds = ['correlation', 'partial correlation', 'tangent']
 _, classes = np.unique(groups, return_inverse=True)
 cv = StratifiedShuffleSplit(n_splits=15, random_state=0, test_size=5)
 pooled_subjects = np.asarray(pooled_subjects)
+```
 
+Now, we can train the scikit-learn `LinearSVC` estimator to on our training set of participants
+and apply the trained classifier on our testing set,
+storing accuracy scores after each cross-validation fold:
+
+```{code-cell} python3
 scores = {}
 for kind in kinds:
     scores[kind] = []
@@ -217,7 +264,7 @@ for kind in kinds:
         scores[kind].append(accuracy_score(classes[test], predictions))
 ```
 
-display the results
+After we've done this for all of the folds, we can display the results!
 
 ```{code-cell} python3
 mean_scores = [np.mean(scores[kind]) for kind in kinds]
@@ -240,6 +287,11 @@ comparisons need to be performed on much larger cohorts and several
 datasets.
 {cite}`Dadi_2019` showed that across many cohorts and clinical questions,
 the tangent kind should be preferred.
+
+Combining nilearn and scikit-learn can allow us to perform many (many) kinds of machine learning analyses,
+not just classification!
+We encourage you to explore the [Examples](http://nilearn.github.io/auto_examples/index.html) and
+[User Guides](http://nilearn.github.io/user_guide.html) on [the Nilearn website](http://nilearn.github.io) to learn more!
 
 ```{bibliography} references.bib
 :style: unsrt
