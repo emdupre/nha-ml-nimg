@@ -18,7 +18,16 @@ import warnings
 warnings.filterwarnings("ignore")
 ```
 
-In this tutorial, we'll see how the Python library _nilearn_ allows us to easily perform machine learning analyses with neuroimaging data, specifically MRI and fMRI.
+```{figure} images/tutorial-img.png
+---
+height: 350px
+name: banner
+---
+```
+
+In this tutorial,
+we'll see how the Python library `nilearn` allows us to easily perform machine learning analyses with neuroimaging data,
+specifically MRI and fMRI.
 
 You may notice that the name `nilearn` is reminiscent of [`scikit-learn`](https://scikit-learn.org),
 a popular Python library for machine learning.
@@ -77,6 +86,18 @@ Now, this `development_dataset` object has several attributes which provide acce
 For example, `development_dataset.phenotypic` provides access to information about the participants, such as whether they were children or adults.
 We can use `development_dataset.func` to access the functional MRI (fMRI) data.
 
+Let's use the [nibabel library](https://nipy.org/nibabel/) to learn a little bit about this data:
+
+```{code-cell} python3
+import nibabel as nib
+
+img = nib.load(development_dataset.func[0])
+data = img.get_fdata()
+data.shape
+```
+
+This means that there are 168 volumes, each with a 3D structure of (50, 59, 50).
+
 ## Getting into the data: subsetting and viewing
 
 Nilearn also provides many methods for plotting this kind of data.
@@ -102,7 +123,12 @@ plotting.view_img(mean_image, threshold=None)
 ## Extracting signal from fMRI volumes
 
 As you can see, this data is decidedly not tabular !
-What we'd like is to extract and transform relevant features from this data into a tabular format that we can more easily work with.
+What we'd like is to extract and transform meaningful features from this data,
+and store it in a format that we can easily work with.
+Importantly, we _could_ work with the full time series directly.
+But we often want to reduce the dimensionality of our data in a structured way.
+That is, we may only want to consider signal within certain learned or pre-defined regions of interest (ROIs),
+and when taking into account known sources of noise.
 To do this, we'll use nilearn's Masker objects.
 What are the masker objects ?
 First, let's think about what masking fMRI data is doing:
@@ -124,14 +150,14 @@ so we can get a measurement for each voxel at each timepoint.
 Masker objects allow us to apply these masks !
 To start, we need to define a mask (or masks) that we'd like to apply.
 This could correspond to one or many regions of interest.
-Nilearn provides methods to define your own functional parcellation (using clustering algorithms such as k-means),
+Nilearn provides methods to define your own functional parcellation (using clustering algorithms such as _k-means_),
 and it also provides access to other atlases that have previously been defined by researchers.
 
 ## Choosing regions of interest
 
 In this tutorial,
 we'll use the MSDL (multi-subject dictionary learning; {cite}`Varoquaux_2011`) atlas,
-which defines a set of _probabilistic_ regions of interest (ROIs) across the brain.
+which defines a set of _probabilistic_ ROIs across the brain.
 
 ```{code-cell} python3
 import numpy as np
@@ -150,6 +176,8 @@ Nilearn also provides us with an easy way to view this atlas directly:
 plotting.plot_prob_atlas(msdl_atlas.maps)
 ```
 
+## A quick side-note on the NiftiMasker zoo
+
 We'd like to supply these ROIs to a Masker object.
 All Masker objects share the same basic structure and functionality,
 but each is designed to work with a different kind of ROI.
@@ -167,6 +195,8 @@ we can instead supply these ROIs to [`nilearn.input_data.NiftiMapsMasker`](https
 For a full list of the available Masker objects,
 see [the Nilearn documentation](https://nilearn.github.io/modules/reference.html#module-nilearn.input_data).
 
+## Applying a Masker object
+
 We can supply our MSDL atlas-defined ROIs to the `NiftiMapsMasker` object,
 along with resampling, filtering, and detrending parameters.
 
@@ -181,10 +211,65 @@ masker = input_data.NiftiMapsMasker(
 
 One thing you might notice from the above code is that immediately after defining the masker object,
 we call the `.fit` method on it.
-This method may look familiar if you've previously worked with scikit-learn estimators!
+This method may look familiar if you've previously worked with scikit-learn estimators !
+
+You'll note that we're not supplying any data to this `.fit` method;
+that's because we're fitting the Masker to the provided ROIs, rather than to our data.
+
+## Dimensions, dimensions
+
+We can use this fitted masker to transform our data.
 
 ```{code-cell} python3
+roi_time_series = masker.transform(development_dataset.func[0])
+roi_time_series.shape
 ```
+
+If you'll remember, when we first looked at the data its original dimensions were (50, 59, 50, 168).
+Now, it has a shape of (168, 39).
+What happened ?!
+
+Rather than providing information on every voxel within our original 3D grid,
+we're now only considering those voxels that fall in our 39 regions of interest provided by the MSDL atlas and aggregating across voxels within those ROIS.
+This reduces each 3D volume from a dimensionality of (50, 59, 50) to just 39,
+for our 39 provided ROIs.
+
+You'll also see that the "dimensions flipped;"
+that is, that we've transposed the matrix such that time is now the first rather than second dimension.
+This follows the scikit-learn convention that rows in a data matrix are _samples_,
+and columns in a data matrix are _features_.
+One of the nice things about working with nilearn is that it will impose this convention for you,
+so you don't accidentally flip your dimensions when using a scikit-learn model !
+
+## Creating and viewing a connectome
+
+The simpler and most commonly used kind of connectivity is correlation.
+It models the full (marginal) connectivity between pairwise ROIs.
+We can estimate it using [`nilearn.connectome.ConnectivityMeasure`](https://nilearn.github.io/modules/generated/nilearn.connectome.ConnectivityMeasure.html).
+
+```{code-cell} python3
+from nilearn.connectome import ConnectivityMeasure
+
+correlation_measure = ConnectivityMeasure(kind='correlation')
+correlation_matrix = correlation_measure.fit_transform([roi_time_series])[0]
+```
+
+We can then plot this functional connectivity matrix:
+
+```{code-cell} python3
+np.fill_diagonal(correlation_matrix, 0)
+plotting.plot_matrix(correlation_matrix, labels=msdl_atlas.labels,
+                     vmax=0.8, vmin=-0.8, colorbar=True)
+```
+
+Or view it as an embedded connectome:
+
+```{code-cell} python3
+plotting.view_connectome(correlation_matrix,
+                         node_coords=msdl_atlas.region_coords)
+```
+
+## Accounting for noise sources
 
 They also allow us to perform other operations,
 like correcting for measured signals of no interest (e.g., head motion).
@@ -200,6 +285,21 @@ import pandas as pd
 pd.read_table(development_dataset.confounds[0]).head()
 ```
 
+```{code-cell} python3
+corrected_roi_time_series = masker.transform(
+    development_dataset.func[0], confounds=development_dataset.confounds[0])
+corrected_correlation_matrix = correlation_measure.fit_transform(
+    [corrected_roi_time_series])[0]
+np.fill_diagonal(corrected_correlation_matrix, 0)
+plotting.plot_matrix(corrected_correlation_matrix, labels=msdl_atlas.labels,
+                     vmax=0.8, vmin=-0.8, colorbar=True)
+```
+
+```{code-cell} python3
+plotting.view_connectome(corrected_correlation_matrix,
+                         node_coords=msdl_atlas.region_coords)
+```
+
 ## An example classification problem
 
 This example compares different kinds of functional connectivity between
@@ -213,22 +313,15 @@ for a careful study.
 
 ## Load brain development fMRI dataset and MSDL atlas
 
-We study only 30 subjects from the dataset, to save computation time.
 
 ```{code-cell} python3
 :tags: [hide-output]
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.svm import LinearSVC
-
-from nilearn.connectome import ConnectivityMeasure
 ```
 
 ## Region signals extraction
-
-To extract regions time series, we instantiate a
-:class:`nilearn.input_data.NiftiMapsMasker` object and pass the atlas the
-file name to it, as well as filtering band-width and detrending option.
 
 Then we compute region signals and extract useful phenotypic informations.
 
@@ -236,6 +329,7 @@ Then we compute region signals and extract useful phenotypic informations.
 children = []
 pooled_subjects = []
 groups = []  # child or adult
+
 for func_file, confound_file, phenotypic in zip(
         development_dataset.func,
         development_dataset.confounds,
@@ -254,10 +348,6 @@ print('Data has {0} children.'.format(len(children)))
 The simpler and most commonly used kind of connectivity is correlation. It
 models the full (marginal) connectivity between pairwise ROIs. We can
 estimate it using :class:`nilearn.connectome.ConnectivityMeasure`.
-
-```{code-cell} python3
-correlation_measure = ConnectivityMeasure(kind='correlation')
-```
 
 From the list of ROIs time-series for children, the
 `correlation_measure` computes individual correlation matrices.
