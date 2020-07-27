@@ -1,5 +1,5 @@
 ghp-import
-jupyter-book
+git+https://github.com/AakashGfude/jupyter-book.git@page-and-timeout
 jupytext
 numpy
 pandas
