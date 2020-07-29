@@ -28,43 +28,53 @@ This is no accident!
 Nilearn and scikit-learn were created by the same team,
 and nilearn is designed to bring machine **LEARN**ing to the NeuroImaging (**NI**) domain.
 
-With that in mind, let's briefly consider why we might want specialized tools for working with neuroimaging data.
+With that in mind,
+let's briefly consider why we might want specialized tools for working with neuroimaging data.
 When performing a machine learning analysis, our data often look something like this:
 
-NB: update to Tal's example once uploaded!
-
 ```{code-cell} python3
-from sklearn import datasets
+import pandas as pd
 
-diabetes = datasets.load_diabetes(as_frame=True)
-diabetes.data.head()
+# read_csv can read in just about any plain-text tabular data
+data = pd.read_csv('data/abide2.tsv', sep='\t')
+data.head()
 ```
 
-This data is clearly structured in a tabular format.
+You may recognize this data from Tal's tutorial introducing machine learning!
+
+For our purposes, what's most interesting is the structure of this data set.
+That is, the data is structured in a tabular format,
+with pre-extracted features of interest.
 This makes it easier to consider issues such as: which features would we like to predict?
-Or, how do we handle cross-validation?
+Or, how should we handle cross-validation?
+
+But if we're starting with neuroimaging data,
+how can create this kind of structured representation?
 
 ## Neuroimaging data
 
-By contrast, neuroimaging data has a very different structure.
-Neuroimaging data has both spatial and temporal dependencies between successive data points.
+Neuroimaging data does not have a tabular structure.
+Instead, it has both spatial and temporal dependencies between successive data points.
 That is, knowing _where_ and _when_ something was measured tells you information about the surrounding data points.
+
 We also know that neuroimaging data contains a lot of noise that's not blood-oxygen-level dependent (BOLD), such as head motion.
 Since we don't think that these other noise sources are related to neuronal firing,
 we often need to consider how we can make sure that our analyses are not driven by these noise sources.
+
 These are all considerations that most machine learning software libraries are not designed to deal with!
 Nilearn therefore plays a crucial role in bringing machine learning concepts to the neuroimaging domain.
 
-To get a sense of the problem, the quickest method is to just look at some neuroimaging data.
+To get a sense of the problem, the quickest method is to just look at some data.
 You may have your own data locally that you'd like to work with.
 Nilearn also provides access to several neuroimaging data sets and atlases (we'll talk about these a bit later).
+
 These data sets (and atlases) are only accessible because research groups chose to make their collected data publicly available.
 We owe them a huge thank you for this!
 The data set we'll use today was originally collected by [Rebecca Saxe](https://mcgovern.mit.edu/profile/rebecca-saxe/)'s group at MIT and hosted on [OpenNeuro](https://openneuro.org/datasets/ds000228/versions/1.1.0).
 
 The nilearn team preprocessed the data set with [fMRIPrep](https://fmriprep.readthedocs.io) and downsampled it to a lower resolution,
 so it'd be easier to work with.
-We can learn a lot about this data set directly [from the Nilearn documentation](https://nilearn.github.io/modules/generated/nilearn.datasets.fetch_development_fmri.html)!
+We can learn a lot about this data set directly [from the Nilearn documentation](https://nilearn.github.io/modules/generated/nilearn.datasets.fetch_development_fmri.html).
 For example, we can see that this data set contains over 150 children and adults watching a short Pixar film.
 Let's download the first 30 participants.
 
@@ -162,7 +172,11 @@ n_regions = len(msdl_coords)
 print(f'MSDL has {n_regions} ROIs, part of the following networks :\n{np.unique(msdl_atlas.networks)}.')
 ```
 
-Nilearn also provides us with an easy way to view this atlas directly:
+Nilearn ships with several atlases commonly used in the field,
+including the Schaefer atlas and the Harvard-Oxford atlas.
+
+It also provides us with easy ways to view these atlases directly.
+Because MSDL is a probabilistic atlas, we can view it using:
 
 ```{code-cell} python3
 plotting.plot_prob_atlas(msdl_atlas.maps)
@@ -241,12 +255,11 @@ From Jake VanderPlas's _Python Data Science Handbook_.
 ```
 
 One of the nice things about working with nilearn is that it will impose this convention for you,
-so you don't accidentally flip your dimensions when using a scikit-learn model !
+so you don't accidentally flip your dimensions when using a scikit-learn model!
 
 ## Creating and viewing a connectome
 
-The simpler and most commonly used kind of connectivity is correlation.
-It models the full (marginal) connectivity between pairwise ROIs.
+The simplest and most commonly used kind of functional connectivity is pairwise correlation between ROIs.
 We can estimate it using [`nilearn.connectome.ConnectivityMeasure`](https://nilearn.github.io/modules/generated/nilearn.connectome.ConnectivityMeasure.html).
 
 ```{code-cell} python3
@@ -273,17 +286,16 @@ plotting.view_connectome(correlation_matrix, edge_threshold=0.2,
 
 ## Accounting for noise sources
 
-They also allow us to perform other operations,
-like correcting for measured signals of no interest (e.g., head motion).
-Our `development_dataset` also includes several of these signals of no interest that were generated by fMRIPrep pre-processing.
+As we've already seen,
+maskers also allow us to perform other useful operations beyond just masking our data.
+One important processing step is correcting for measured signals of no interest (e.g., head motion).
+Our `development_dataset` also includes several of these signals of no interest that were generated during fMRIPrep pre-processing.
 We can access these with the `confounds` attribute,
 using `development_dataset.confounds`.
 
 Let's quickly check what these look like for our first participant:
 
 ```{code-cell} python3
-import pandas as pd
-
 pd.read_table(development_dataset.confounds[0]).head()
 ```
 
@@ -292,6 +304,8 @@ This is actually a subset of all possible fMRIPrep generated confounds that the 
 We could access the full list by passing the argument `reduce_confounds=False` to our original call downloading the `development_dataset`.
 For most analyses, this list of confounds is reasonable, so we'll use these Nilearn provided defaults.
 For your own analyses, make sure to check which confounds you're using!
+
+Importantly, we can pass these confounds directly to our masker object:
 
 ```{code-cell} python3
 corrected_roi_time_series = masker.transform(
