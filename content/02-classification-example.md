@@ -30,7 +30,7 @@ In this example, we'll consider three different different ways to define functio
 between our Multi-Subject Dictional Learning (MSDL) regions of interest (ROIs):
 correlation, partial correlation, and tangent space embedding.
 
-To learn more about tangent space embedding, and how it compares to standard correlations,
+To learn more about tangent space embedding and how it compares to standard correlations,
 we recommend {cite}`Dadi_2019`.
 
 ## Load brain development fMRI dataset and MSDL atlas
@@ -64,10 +64,12 @@ not just the first one.
 ## Region signals extraction
 
 First, we can loop through the 30 participants and extract a few relevant pieces of information,
-including their functional scan, their confounds file, and whether they were a child or adult at the time of their scan.
+including their functional scan, their confounds file,
+and whether they were a child or adult at the time of their scan.
+
 Using this information, we can then transform their data using the `NiftiMapsMasker` we created above.
 As we learned last time, it's really important to correct for known sources of noise!
-So we'll also pass the relevant confounds file directly to the `masker` object to clean up each subject's data.
+So we'll also pass the relevant confounds file directly to the masker object to clean up each subject's data.
 
 ```{code-cell} python3
 children = []
