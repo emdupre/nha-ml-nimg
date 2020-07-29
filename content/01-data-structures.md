@@ -33,11 +33,10 @@ let's briefly consider why we might want specialized tools for working with neur
 When performing a machine learning analysis, our data often look something like this:
 
 ```{code-cell} python3
-tags: [raises-exception]
 import pandas as pd
 
 # read_csv can read in just about any plain-text tabular data
-data = pd.read_csv('data/abide2.tsv', sep='\t')
+data = pd.read_csv('./data/abide2.tsv', sep='\t')
 data.head()
 ```
 
