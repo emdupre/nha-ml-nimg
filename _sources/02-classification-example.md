@@ -44,13 +44,13 @@ and instantiated our `NiftiMapsMasker` and `ConnectivityMeasure` objects.
 :tags: [hide-output]
 import numpy as np
 import matplotlib.pyplot as plt
-from nilearn import (datasets, input_data, plotting)
+from nilearn import (datasets, maskers, plotting)
 from nilearn.connectome import ConnectivityMeasure
 
 development_dataset = datasets.fetch_development_fmri(n_subjects=30)
 msdl_atlas = datasets.fetch_atlas_msdl()
 
-masker = input_data.NiftiMapsMasker(
+masker = maskers.NiftiMapsMasker(
     msdl_atlas.maps, resampling_target="data",
     t_r=2, detrend=True,
     low_pass=0.1, high_pass=0.01).fit()

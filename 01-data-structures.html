@@ -1,83 +1,119 @@
 
-
 <!DOCTYPE html>
 
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>An introduction to nilearn &#8212; NHA2020: Nilearn</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
-    <link href="_static/css/index.css" rel="stylesheet">
-    <link rel="stylesheet" href="_static/sphinx-book-theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="_static/overrides.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/sphinx-book-theme.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe"
-        const thebe_selector_input = "pre"
-        const thebe_selector_output = ".output"
-    </script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="An example classification problem" href="02-classification-example.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="docsearch:language" content="en">
-
-
-
+    <!-- Google Analytics -->
+    
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
     
 
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="index.html">
-  
-  <img src="_static/nilearn-logo.png" class="logo" alt="logo">
-  
-  
-  <h1 class="site-logo" id="site-title">NHA2020: Nilearn</h1>
-  
-</a>
-</div>
-
-<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/nilearn-logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">NHA2020: Nilearn</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-  <ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="#">
-   An introduction to nilearn
-  </a>
- </li>
-</ul>
-<ul class="nav sidenav_l1">
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    An introduction to nilearn
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="02-classification-example.html">
    An example classification problem
@@ -85,100 +121,200 @@
  </li>
 </ul>
 
-</nav>
-
- <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
     </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        <div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        <a class="dropdown-buttons"
-            href="_sources/01-data-structures.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/01-data-structures.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-    
-</div>
-        <!-- Source interaction buttons -->
-
-
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
-
-        <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/emdupre/nha2020-nilearn/master?urlpath=tree/content/01-data-structures.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        <a class="jupyterhub-button" href="https://hub.neurohackademy.org/hub/user-redirect/git-pull?repo=https://github.com/emdupre/nha2020-nilearn&urlpath=tree/nha2020-nilearn/content/01-data-structures.md&branch=master"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch JupyterHub" data-toggle="tooltip"
-                data-placement="left"><img class="jupyterhub-button-logo"
-                    src="_static/images/logo_jupyterhub.svg"
-                    alt="Interact on JupyterHub">JupyterHub</button></a>
-        
-        
-        
-    </div>
-</div>
-
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
         </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/emdupre/nha2020-nilearn/master?urlpath=tree/content/01-data-structures.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://hub.neurohackademy.org/hub/user-redirect/git-pull?repo=https%3A//github.com/emdupre/nha2020-nilearn&urlpath=tree/nha2020-nilearn/content/01-data-structures.md&branch=master"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on JupyterHub"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_jupyterhub.svg">
+  </span>
+<span class="headerbtn__text-container">JupyterHub</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/01-data-structures.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="_sources/01-data-structures.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#neuroimaging-data">
    Neuroimaging data
@@ -226,16 +362,80 @@
  </li>
 </ul>
 
-        </nav>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>An introduction to nilearn</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#neuroimaging-data">
+   Neuroimaging data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-into-the-data-subsetting-and-viewing">
+   Getting into the data: subsetting and viewing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#extracting-signal-from-fmri-volumes">
+   Extracting signal from fMRI volumes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#choosing-regions-of-interest">
+   Choosing regions of interest
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-quick-side-note-on-the-niftimasker-zoo">
+   A quick side-note on the NiftiMasker zoo
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#applying-a-masker-object">
+   Applying a Masker object
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dimensions-dimensions">
+   Dimensions, dimensions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#creating-and-viewing-a-connectome">
+   Creating and viewing a connectome
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#accounting-for-noise-sources">
+   Accounting for noise sources
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
               <div>
                 
-  <div class="section" id="an-introduction-to-nilearn">
-<h1>An introduction to <a class="reference external" href="http://nilearn.github.io"><code class="docutils literal notranslate"><span class="pre">nilearn</span></code></a><a class="headerlink" href="#an-introduction-to-nilearn" title="Permalink to this headline">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="an-introduction-to-nilearn">
+<h1>An introduction to <a class="reference external" href="http://nilearn.github.io"><code class="docutils literal notranslate"><span class="pre">nilearn</span></code></a><a class="headerlink" href="#an-introduction-to-nilearn" title="Permalink to this headline">#</a></h1>
 <div class="cell tag_hide-cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
@@ -441,8 +641,8 @@ This makes it easier to consider issues such as: which features would we like to
 Or, how should we handle cross-validation?</p>
 <p>But if we’re starting with neuroimaging data,
 how can create this kind of structured representation?</p>
-<div class="section" id="neuroimaging-data">
-<h2>Neuroimaging data<a class="headerlink" href="#neuroimaging-data" title="Permalink to this headline">¶</a></h2>
+<section id="neuroimaging-data">
+<h2>Neuroimaging data<a class="headerlink" href="#neuroimaging-data" title="Permalink to this headline">#</a></h2>
 <p>Neuroimaging data does not have a tabular structure.
 Instead, it has both spatial and temporal dependencies between successive data points.
 That is, knowing <em>where</em> and <em>when</em> something was measured tells you information about the surrounding data points.</p>
@@ -471,6 +671,10 @@ Let’s download the first 30 participants.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/nilearn/__init__.py:69: FutureWarning: Python 3.7 support is deprecated and will be removed in release 0.12 of Nilearn. Consider switching to Python 3.9 or 3.10.
+  _python_deprecation_warnings()
+</pre></div>
+</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dataset created in /home/runner/nilearn_data/development_fmri
 
 
@@ -479,166 +683,305 @@ Dataset created in /home/runner/nilearn_data/development_fmri/development_fmri
 Downloading data from https://osf.io/yr3av/download ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 16041 of 16041 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3df4712b400183b7092/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 68285 of 68285 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e04712b400193b5bdf/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 5642698 of 5642698 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e14712b400183b7097/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 67851 of 67851 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e32286e80018c3e42c/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 4946416 of 4946416 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e4a743a9001760814f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 69170 of 69170 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e54712b400183b70a5/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 5875966 of 5875966 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e52286e80018c3e439/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 68464 of 68464 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e72286e80017c41b3d/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 5845425 of 5845425 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e9a743a90017608158/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 68189 of 68189 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3e82286e80018c3e443/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 6522229 of 6522229 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ea4712b400183b70b7/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 69463 of 69463 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3eb2286e80019c3c194/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 6139107 of 6139107 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff37da743a90018606df1/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 68468 of 68468 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff37c2286e80019c3c102/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 6293165 of 6293165 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4701e3992690018133d4f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 68130 of 68130 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e6b353c58001b9cb34f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 6136523 of 6136523 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff37d4712b400193b5b54/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 68340 of 68340 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff37d4712b400183b7011/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 5837641 of 5837641 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff37e2286e80016c3c2cb/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 71331 of 71331 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3832286e80019c3c10f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 6118892 of 6118892 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3822286e80018c3e37b/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 68533 of 68533 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff382a743a90018606df8/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 6453693 of 6453693 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3814712b4001a3b5561/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 68590 of 68590 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3832286e80016c3c2d1/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 6176491 of 6176491 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3842286e80017c419e0/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 68630 of 68630 bytes (100.0%,    0.0s remaining) ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3854712b4001a3b5568/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 6225801 of 6225801 bytes (100.0%,    0.0s remaining) ...done. (2 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4702f39926900171090ee/ ...
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1741</span><span class="o">/</span><span class="mf">2236572832.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> 
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/nilearn/datasets/func.py</span> in <span class="ni">fetch_development_fmri</span><span class="nt">(n_subjects, reduce_confounds, data_dir, resume, verbose, age_group)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1626</span>                                                            <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1627</span>                                                            <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
+<span class="ne">-&gt; </span><span class="mi">1628</span>                                                            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1629</span> 
+<span class="g g-Whitespace">   </span><span class="mi">1630</span>     <span class="k">if</span> <span class="n">reduce_confounds</span><span class="p">:</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/nilearn/datasets/func.py</span> in <span class="ni">_fetch_development_fmri_functional</span><span class="nt">(participants, data_dir, url, resume, verbose)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1505</span>                       <span class="p">{</span><span class="s1">&#39;move&#39;</span><span class="p">:</span> <span class="n">func</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">participant_id</span><span class="p">)})]</span>
+<span class="g g-Whitespace">   </span><span class="mi">1506</span>         <span class="n">path_to_func</span> <span class="o">=</span> <span class="n">_fetch_files</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">func_file</span><span class="p">,</span> <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
+<span class="ne">-&gt; </span><span class="mi">1507</span>                                     <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="g g-Whitespace">   </span><span class="mi">1508</span>         <span class="n">funcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_to_func</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1509</span>     <span class="k">return</span> <span class="n">funcs</span><span class="p">,</span> <span class="n">regressors</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/nilearn/datasets/utils.py</span> in <span class="ni">_fetch_files</span><span class="nt">(data_dir, files, resume, verbose, session)</span>
+<span class="g g-Whitespace">    </span><span class="mi">730</span>             <span class="k">return</span> <span class="n">_fetch_files</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">731</span>                 <span class="n">data_dir</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
+<span class="ne">--&gt; </span><span class="mi">732</span>                 <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">733</span>     <span class="c1"># There are two working directories here:</span>
+<span class="g g-Whitespace">    </span><span class="mi">734</span>     <span class="c1"># - data_dir is the destination directory of the dataset</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/nilearn/datasets/utils.py</span> in <span class="ni">_fetch_files</span><span class="nt">(data_dir, files, resume, verbose, session)</span>
+<span class="g g-Whitespace">    </span><span class="mi">781</span>                                   <span class="n">username</span><span class="o">=</span><span class="n">opts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+<span class="g g-Whitespace">    </span><span class="mi">782</span>                                   <span class="n">password</span><span class="o">=</span><span class="n">opts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+<span class="ne">--&gt; </span><span class="mi">783</span>                                   <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">784</span>             <span class="k">if</span> <span class="s1">&#39;move&#39;</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">785</span>                 <span class="c1"># XXX: here, move is supposed to be a dir, it can be a name</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/nilearn/datasets/utils.py</span> in <span class="ni">_fetch_file</span><span class="nt">(url, data_dir, resume, overwrite, md5sum, username, password, verbose, session)</span>
+<span class="g g-Whitespace">    </span><span class="mi">618</span>             <span class="n">prepped</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare_request</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">619</span>             <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+<span class="ne">--&gt; </span><span class="mi">620</span>                     <span class="n">prepped</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_REQUESTS_TIMEOUT</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">621</span>                 <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">622</span>                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_full_name</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">send</span><span class="nt">(self, request, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">721</span>             <span class="c1"># Redirect resolving generator.</span>
+<span class="g g-Whitespace">    </span><span class="mi">722</span>             <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_redirects</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">723</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[</span><span class="n">resp</span> <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">724</span>         <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">725</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">&lt;listcomp&gt;</span><span class="nt">(.0)</span>
+<span class="g g-Whitespace">    </span><span class="mi">721</span>             <span class="c1"># Redirect resolving generator.</span>
+<span class="g g-Whitespace">    </span><span class="mi">722</span>             <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_redirects</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">723</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[</span><span class="n">resp</span> <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">724</span>         <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">725</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">resolve_redirects</span><span class="nt">(self, resp, req, stream, timeout, verify, cert, proxies, yield_requests, **adapter_kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">272</span>                     <span class="n">proxies</span><span class="o">=</span><span class="n">proxies</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">273</span>                     <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="ne">--&gt; </span><span class="mi">274</span>                     <span class="o">**</span><span class="n">adapter_kwargs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">275</span>                 <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">276</span> 
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">send</span><span class="nt">(self, request, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">699</span> 
+<span class="g g-Whitespace">    </span><span class="mi">700</span>         <span class="c1"># Send the request</span>
+<span class="ne">--&gt; </span><span class="mi">701</span>         <span class="n">r</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">702</span> 
+<span class="g g-Whitespace">    </span><span class="mi">703</span>         <span class="c1"># Total elapsed time of the request (approximately)</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/requests/adapters.py</span> in <span class="ni">send</span><span class="nt">(self, request, stream, timeout, verify, cert, proxies)</span>
+<span class="g g-Whitespace">    </span><span class="mi">497</span>                     <span class="n">decode_content</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">498</span>                     <span class="n">retries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_retries</span><span class="p">,</span>
+<span class="ne">--&gt; </span><span class="mi">499</span>                     <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">500</span>                 <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">501</span> 
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/urllib3/connectionpool.py</span> in <span class="ni">urlopen</span><span class="nt">(self, method, url, body, headers, retries, redirect, assert_same_host, timeout, pool_timeout, release_conn, chunked, body_pos, **response_kw)</span>
+<span class="g g-Whitespace">    </span><span class="mi">708</span>                 <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">709</span>                 <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+<span class="ne">--&gt; </span><span class="mi">710</span>                 <span class="n">chunked</span><span class="o">=</span><span class="n">chunked</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">711</span>             <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">712</span> 
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/urllib3/connectionpool.py</span> in <span class="ni">_make_request</span><span class="nt">(self, conn, method, url, timeout, chunked, **httplib_request_kw)</span>
+<span class="g g-Whitespace">    </span><span class="mi">447</span>                     <span class="c1"># Python 3 (including for exceptions like SystemExit).</span>
+<span class="g g-Whitespace">    </span><span class="mi">448</span>                     <span class="c1"># Otherwise it looks like a bug in the code.</span>
+<span class="ne">--&gt; </span><span class="mi">449</span>                     <span class="n">six</span><span class="o">.</span><span class="n">raise_from</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">450</span>         <span class="k">except</span> <span class="p">(</span><span class="n">SocketTimeout</span><span class="p">,</span> <span class="n">BaseSSLError</span><span class="p">,</span> <span class="n">SocketError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">451</span>             <span class="bp">self</span><span class="o">.</span><span class="n">_raise_timeout</span><span class="p">(</span><span class="n">err</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout_value</span><span class="o">=</span><span class="n">read_timeout</span><span class="p">)</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/urllib3/packages/six.py</span> in <span class="ni">raise_from</span><span class="nt">(value, from_value)</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/site-packages/urllib3/connectionpool.py</span> in <span class="ni">_make_request</span><span class="nt">(self, conn, method, url, timeout, chunked, **httplib_request_kw)</span>
+<span class="g g-Whitespace">    </span><span class="mi">442</span>                 <span class="c1"># Python 3</span>
+<span class="g g-Whitespace">    </span><span class="mi">443</span>                 <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">444</span>                     <span class="n">httplib_response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">445</span>                 <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">446</span>                     <span class="c1"># Remove the TypeError from the exception chain in</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/http/client.py</span> in <span class="ni">getresponse</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1371</span>         <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1372</span>             <span class="k">try</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1373</span>                 <span class="n">response</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">1374</span>             <span class="k">except</span> <span class="ne">ConnectionError</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1375</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/http/client.py</span> in <span class="ni">begin</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">317</span>         <span class="c1"># read until we get a non-100 response</span>
+<span class="g g-Whitespace">    </span><span class="mi">318</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">319</span>             <span class="n">version</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_status</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">320</span>             <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">CONTINUE</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">321</span>                 <span class="k">break</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/http/client.py</span> in <span class="ni">_read_status</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">278</span> 
+<span class="g g-Whitespace">    </span><span class="mi">279</span>     <span class="k">def</span> <span class="nf">_read_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">280</span>         <span class="n">line</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">(</span><span class="n">_MAXLINE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;iso-8859-1&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">281</span>         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_MAXLINE</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">282</span>             <span class="k">raise</span> <span class="n">LineTooLong</span><span class="p">(</span><span class="s2">&quot;status line&quot;</span><span class="p">)</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/socket.py</span> in <span class="ni">readinto</span><span class="nt">(self, b)</span>
+<span class="g g-Whitespace">    </span><span class="mi">587</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">588</span>             <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">589</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sock</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">590</span>             <span class="k">except</span> <span class="n">timeout</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">591</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">_timeout_occurred</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/ssl.py</span> in <span class="ni">recv_into</span><span class="nt">(self, buffer, nbytes, flags)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1069</span>                   <span class="s2">&quot;non-zero flags not allowed in calls to recv_into() on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+<span class="g g-Whitespace">   </span><span class="mi">1070</span>                   <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">1071</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1072</span>         <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1073</span>             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.15/x64/lib/python3.7/ssl.py</span> in <span class="ni">read</span><span class="nt">(self, len, buffer)</span>
+<span class="g g-Whitespace">    </span><span class="mi">927</span>         <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">928</span>             <span class="k">if</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">929</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">930</span>             <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">931</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>
@@ -658,9 +1001,9 @@ We can use <code class="docutils literal notranslate"><span class="pre">developm
 </div>
 </div>
 <p>This means that there are 168 volumes, each with a 3D structure of (50, 59, 50).</p>
-</div>
-<div class="section" id="getting-into-the-data-subsetting-and-viewing">
-<h2>Getting into the data: subsetting and viewing<a class="headerlink" href="#getting-into-the-data-subsetting-and-viewing" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="getting-into-the-data-subsetting-and-viewing">
+<h2>Getting into the data: subsetting and viewing<a class="headerlink" href="#getting-into-the-data-subsetting-and-viewing" title="Permalink to this headline">#</a></h2>
 <p>Nilearn also provides many methods for plotting this kind of data.
 For example, we can use <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.plotting.view_img.html"><code class="docutils literal notranslate"><span class="pre">nilearn.plotting.view_img</span></code></a> to launch at interactive viewer.
 Because each fMRI run is a 4D time series (three spatial dimensions plus time),
@@ -682,9 +1025,9 @@ which allows us to take the mean 3D image over time.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="extracting-signal-from-fmri-volumes">
-<h2>Extracting signal from fMRI volumes<a class="headerlink" href="#extracting-signal-from-fmri-volumes" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="extracting-signal-from-fmri-volumes">
+<h2>Extracting signal from fMRI volumes<a class="headerlink" href="#extracting-signal-from-fmri-volumes" title="Permalink to this headline">#</a></h2>
 <p>As you can see, this data is decidedly not tabular!
 What we’d like is to extract and transform meaningful features from this data,
 and store it in a format that we can easily work with.
@@ -695,10 +1038,12 @@ and when taking into account known sources of noise.
 To do this, we’ll use nilearn’s Masker objects.
 What are the masker objects ?
 First, let’s think about what masking fMRI data is doing:</p>
-<div class="figure align-default" id="masking">
+<figure class="align-default" id="masking">
 <a class="reference internal image-reference" href="_images/masking.jpg"><img alt="_images/masking.jpg" src="_images/masking.jpg" style="height: 350px;" /></a>
-<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Masking fMRI data.</span><a class="headerlink" href="#masking" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Masking fMRI data.</span><a class="headerlink" href="#masking" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <p>Essentially, we can imagine overlaying a 3D grid on an image.
 Then, our mask tells us which cubes or “voxels” (like 3D pixels) to sample from.
 Since our Nifti images are 4D files, we can’t overlay a single grid –
@@ -709,11 +1054,11 @@ To start, we need to define a mask (or masks) that we’d like to apply.
 This could correspond to one or many regions of interest.
 Nilearn provides methods to define your own functional parcellation (using clustering algorithms such as <em>k-means</em>),
 and it also provides access to other atlases that have previously been defined by researchers.</p>
-</div>
-<div class="section" id="choosing-regions-of-interest">
-<h2>Choosing regions of interest<a class="headerlink" href="#choosing-regions-of-interest" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="choosing-regions-of-interest">
+<h2>Choosing regions of interest<a class="headerlink" href="#choosing-regions-of-interest" title="Permalink to this headline">#</a></h2>
 <p>In this tutorial,
-we’ll use the MSDL (multi-subject dictionary learning; <a class="bibtex reference internal" href="02-classification-example.html#varoquaux-2011" id="id1">[1]</a>) atlas,
+we’ll use the MSDL (multi-subject dictionary learning; <a href="#id1"><span class="problematic" id="id2">:cite:`Varoquaux_2011`</span></a>) atlas,
 which defines a set of <em>probabilistic</em> ROIs across the brain.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -740,32 +1085,32 @@ Because MSDL is a probabilistic atlas, we can view it using:</p>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="a-quick-side-note-on-the-niftimasker-zoo">
-<h2>A quick side-note on the NiftiMasker zoo<a class="headerlink" href="#a-quick-side-note-on-the-niftimasker-zoo" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="a-quick-side-note-on-the-niftimasker-zoo">
+<h2>A quick side-note on the NiftiMasker zoo<a class="headerlink" href="#a-quick-side-note-on-the-niftimasker-zoo" title="Permalink to this headline">#</a></h2>
 <p>We’d like to supply these ROIs to a Masker object.
 All Masker objects share the same basic structure and functionality,
 but each is designed to work with a different kind of ROI.</p>
-<p>The canonical <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.input_data.NiftiMasker.html"><code class="docutils literal notranslate"><span class="pre">nilearn.input_data.NiftiMasker</span></code></a> works well if we want to apply a single mask to the data,
+<p>The canonical <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.maskers.NiftiMasker.html"><code class="docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiMasker</span></code></a> works well if we want to apply a single mask to the data,
 like a single region of interest.</p>
 <p>But what if we actually have several ROIs that we’d like to apply to the data all at once?
 If these ROIs are non-overlapping,
 as in “hard” or deterministic parcellations,
-then we can use <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.input_data.NiftiLabelsMasker.html"><code class="docutils literal notranslate"><span class="pre">nilearn.input_data.NiftiLabelsMasker</span></code></a>.
+then we can use <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.maskers.NiftiLabelsMasker.html"><code class="docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiLabelsMasker</span></code></a>.
 Because we’re working with “soft” or probabilistic ROIs,
-we can instead supply these ROIs to <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.input_data.NiftiMapsMasker.html"><code class="docutils literal notranslate"><span class="pre">nilearn.input_data.NiftiMapsMasker</span></code></a>.</p>
+we can instead supply these ROIs to <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.maskers.NiftiMapsMasker.html"><code class="docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiMapsMasker</span></code></a>.</p>
 <p>For a full list of the available Masker objects,
-see <a class="reference external" href="https://nilearn.github.io/modules/reference.html#module-nilearn.input_data">the Nilearn documentation</a>.</p>
-</div>
-<div class="section" id="applying-a-masker-object">
-<h2>Applying a Masker object<a class="headerlink" href="#applying-a-masker-object" title="Permalink to this headline">¶</a></h2>
+see <a class="reference external" href="https://nilearn.github.io/modules/reference.html#module-nilearn.maskers">the Nilearn documentation</a>.</p>
+</section>
+<section id="applying-a-masker-object">
+<h2>Applying a Masker object<a class="headerlink" href="#applying-a-masker-object" title="Permalink to this headline">#</a></h2>
 <p>We can supply our MSDL atlas-defined ROIs to the <code class="docutils literal notranslate"><span class="pre">NiftiMapsMasker</span></code> object,
 along with resampling, filtering, and detrending parameters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">input_data</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">maskers</span>
 
-<span class="n">masker</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">NiftiMapsMasker</span><span class="p">(</span>
+<span class="n">masker</span> <span class="o">=</span> <span class="n">maskers</span><span class="o">.</span><span class="n">NiftiMapsMasker</span><span class="p">(</span>
     <span class="n">msdl_atlas</span><span class="o">.</span><span class="n">maps</span><span class="p">,</span> <span class="n">resampling_target</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
     <span class="n">t_r</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">detrend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">low_pass</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">high_pass</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
@@ -778,9 +1123,9 @@ we call the <code class="docutils literal notranslate"><span class="pre">.fit</s
 This method may look familiar if you’ve previously worked with scikit-learn estimators!</p>
 <p>You’ll note that we’re not supplying any data to this <code class="docutils literal notranslate"><span class="pre">.fit</span></code> method;
 that’s because we’re fitting the Masker to the provided ROIs, rather than to our data.</p>
-</div>
-<div class="section" id="dimensions-dimensions">
-<h2>Dimensions, dimensions<a class="headerlink" href="#dimensions-dimensions" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="dimensions-dimensions">
+<h2>Dimensions, dimensions<a class="headerlink" href="#dimensions-dimensions" title="Permalink to this headline">#</a></h2>
 <p>We can use this fitted masker to transform our data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -801,16 +1146,18 @@ for our 39 provided ROIs.</p>
 that is, that we’ve transposed the matrix such that time is now the first rather than second dimension.
 This follows the scikit-learn convention that rows in a data matrix are <em>samples</em>,
 and columns in a data matrix are <em>features</em>.</p>
-<div class="figure align-default" id="samples-features">
+<figure class="align-default" id="samples-features">
 <a class="reference internal image-reference" href="_images/samples-features.png"><img alt="_images/samples-features.png" src="_images/samples-features.png" style="height: 250px;" /></a>
-<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">The scikit-learn conventions for feature and target matrices.
-From Jake VanderPlas’s <em>Python Data Science Handbook</em>.</span><a class="headerlink" href="#samples-features" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">The scikit-learn conventions for feature and target matrices.
+From Jake VanderPlas’s <em>Python Data Science Handbook</em>.</span><a class="headerlink" href="#samples-features" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <p>One of the nice things about working with nilearn is that it will impose this convention for you,
 so you don’t accidentally flip your dimensions when using a scikit-learn model!</p>
-</div>
-<div class="section" id="creating-and-viewing-a-connectome">
-<h2>Creating and viewing a connectome<a class="headerlink" href="#creating-and-viewing-a-connectome" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="creating-and-viewing-a-connectome">
+<h2>Creating and viewing a connectome<a class="headerlink" href="#creating-and-viewing-a-connectome" title="Permalink to this headline">#</a></h2>
 <p>The simplest and most commonly used kind of functional connectivity is pairwise correlation between ROIs.
 We can estimate it using <a class="reference external" href="https://nilearn.github.io/modules/generated/nilearn.connectome.ConnectivityMeasure.html"><code class="docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a>.</p>
 <div class="cell docutils container">
@@ -842,9 +1189,9 @@ We can estimate it using <a class="reference external" href="https://nilearn.git
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="accounting-for-noise-sources">
-<h2>Accounting for noise sources<a class="headerlink" href="#accounting-for-noise-sources" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="accounting-for-noise-sources">
+<h2>Accounting for noise sources<a class="headerlink" href="#accounting-for-noise-sources" title="Permalink to this headline">#</a></h2>
 <p>As we’ve already seen,
 maskers also allow us to perform other useful operations beyond just masking our data.
 One important processing step is correcting for measured signals of no interest (e.g., head motion).
@@ -891,16 +1238,10 @@ For your own analyses, make sure to check which confounds you’re using!</p>
 we can see a big difference when including the confounds!
 This is an important reminder to make sure that your data are cleaned of any possible sources of noise <em>before</em> running a machine learning analysis.
 Otherwise, you might be classifying participants on e.g. amount of head motion rather than a feature of interest!</p>
-<p id="bibtex-bibliography-01-data-structures-0"><dl class="citation">
-<dt class="bibtex label" id="varoquaux-2011"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Gael Varoquaux, Alexandre Gramfort, Fabian Pedregosa, Vincent Michel, and Bertrand Thirion. Multi-subject dictionary learning to segment an atlas of brain spontaneous activity. In <em>Information Processing in Medical Imaging</em>, 562–573. Springer Berlin Heidelberg, 2011.</p>
-</dd>
-</dl>
-</p>
+</section>
 <div class="toctree-wrapper compound">
 </div>
-</div>
-</div>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -914,7 +1255,7 @@ Otherwise, you might be classifying participants on e.g. amount of head motion r
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
@@ -924,32 +1265,41 @@ Otherwise, you might be classifying participants on e.g. amount of head motion r
 
               </div>
               
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='right-next' id="next-link" href="02-classification-example.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">An example classification problem</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
         </div>
     </div>
-    
-    
-    <div class='prev-next-bottom'>
-        
-    <a class='right-next' id="next-link" href="02-classification-example.html" title="next page">An example classification problem</a>
-
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Elizabeth DuPre<br/>
+  
+      &copy; Copyright 2020.<br/>
+</p>
+        </footer>
     </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By Elizabeth DuPre<br/>
-        
-            &copy; Copyright 2020.<br/>
-      </p>
-    </div>
-  </footer>
-</main>
+    
+</div>
 
 
       </div>
     </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
 
-    <script src="_static/js/index.js"></script>
-    
+
   </body>
 </html>

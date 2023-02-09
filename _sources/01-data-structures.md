@@ -188,18 +188,18 @@ We'd like to supply these ROIs to a Masker object.
 All Masker objects share the same basic structure and functionality,
 but each is designed to work with a different kind of ROI.
 
-The canonical [`nilearn.input_data.NiftiMasker`](https://nilearn.github.io/modules/generated/nilearn.input_data.NiftiMasker.html) works well if we want to apply a single mask to the data,
+The canonical [`nilearn.maskers.NiftiMasker`](https://nilearn.github.io/modules/generated/nilearn.maskers.NiftiMasker.html) works well if we want to apply a single mask to the data,
 like a single region of interest.
 
 But what if we actually have several ROIs that we'd like to apply to the data all at once?
 If these ROIs are non-overlapping,
 as in "hard" or deterministic parcellations,
-then we can use [`nilearn.input_data.NiftiLabelsMasker`](https://nilearn.github.io/modules/generated/nilearn.input_data.NiftiLabelsMasker.html).
+then we can use [`nilearn.maskers.NiftiLabelsMasker`](https://nilearn.github.io/modules/generated/nilearn.maskers.NiftiLabelsMasker.html).
 Because we're working with "soft" or probabilistic ROIs,
-we can instead supply these ROIs to [`nilearn.input_data.NiftiMapsMasker`](https://nilearn.github.io/modules/generated/nilearn.input_data.NiftiMapsMasker.html).
+we can instead supply these ROIs to [`nilearn.maskers.NiftiMapsMasker`](https://nilearn.github.io/modules/generated/nilearn.maskers.NiftiMapsMasker.html).
 
 For a full list of the available Masker objects,
-see [the Nilearn documentation](https://nilearn.github.io/modules/reference.html#module-nilearn.input_data).
+see [the Nilearn documentation](https://nilearn.github.io/modules/reference.html#module-nilearn.maskers).
 
 ## Applying a Masker object
 
@@ -207,9 +207,9 @@ We can supply our MSDL atlas-defined ROIs to the `NiftiMapsMasker` object,
 along with resampling, filtering, and detrending parameters.
 
 ```{code-cell} python3
-from nilearn import input_data
+from nilearn import maskers
 
-masker = input_data.NiftiMapsMasker(
+masker = maskers.NiftiMapsMasker(
     msdl_atlas.maps, resampling_target="data",
     t_r=2, detrend=True,
     low_pass=0.1, high_pass=0.01).fit()
