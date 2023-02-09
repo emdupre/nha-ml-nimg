@@ -1,2 +1,4 @@
-- file: 01-data-structures
+format: jb-book
+root: 01-data-structures
+chapters:
 - file: 02-classification-example
