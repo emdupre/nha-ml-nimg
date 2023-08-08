@@ -374,11 +374,6 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-brain-development-fmri-dataset-and-msdl-atlas">Load brain development fMRI dataset and MSDL atlas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#region-signals-extraction">Region signals extraction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#roi-to-roi-correlations-of-children">ROI-to-ROI correlations of children</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-partial-correlations">Studying partial correlations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-tangent-space-embedding">Using tangent space embedding</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-connectivity-in-a-classification-analysis">Using connectivity in a classification analysis</a></li>
 </ul>
             </nav>
         </div>
@@ -395,31 +390,37 @@ document.write(`
 <p>In using machine learning on neuroimaging data, appropriate cross-validation methods are critical for drawing meaningful inferences.
 However, a majority of neuroscience researchers are not familiar with how to choose an appropriate method for their data.</p>
 <figure class="align-default" id="cv-usage">
-<a class="reference internal image-reference" href="_images/poldrack-2020-fig3.jpg"><img alt="_images/poldrack-2020-fig3.jpg" src="_images/poldrack-2020-fig3.jpg" style="height: 350px;" /></a>
+<a class="reference internal image-reference" href="_images/poldrack-2020-fig3.jpg"><img alt="_images/poldrack-2020-fig3.jpg" src="_images/poldrack-2020-fig3.jpg" style="height: 250px;" /></a>
 <figcaption>
 <p><span class="caption-number">Fig. 3 </span><span class="caption-text">Figure 3 from <a href="#id1"><span class="problematic" id="id2">Poldrack_2020</span></a>, depicting esults from a review of 100 Studies (2017–2019) claiming prediction on fMRI Data
 Panel A shows prevalence of cross-validation methods used to assess predictive accuracy in this sample.
 Panel B shows a histogram of associated sample sizes.</span><a class="headerlink" href="#cv-usage" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>First, we can formalize the problem to let us give a formalism for confounding structures.
-We adopt the notation used in <a href="#id3"><span class="problematic" id="id4">Little_2017</span></a>
-For <span class="math notranslate nohighlight">\(N\)</span> observations, we consider a variable <span class="math notranslate nohighlight">\(y \in \mathbb{R}^n\)</span> that we are trying to predict from data <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{n \times p}\)</span> in the presence of confounds <span class="math notranslate nohighlight">\(Z \in \mathbb{R}^{n \times k}\)</span>⁠.</p>
-<p>y is then a function of X and Z:</p>
+<p>First, we can formalize the problem that cross-validation is aimed at solving, adopting the notation used in <a href="#id3"><span class="problematic" id="id4">Little_2017</span></a>.</p>
+<p>For <span class="math notranslate nohighlight">\(N\)</span> observations, we can choose a variable <span class="math notranslate nohighlight">\(y \in \mathbb{R}^n\)</span> that we are trying to predict from data <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{n \times p}\)</span> in the presence of confounds <span class="math notranslate nohighlight">\(Z \in \mathbb{R}^{n \times k}\)</span>⁠.
+For example, we may have neuroimaging data for 155 participants, from which we are trying to predict their age group as either a child or an adult.
+There are additional confounding measures in this prediction, both measured and unmeasured.
+For example, motion is a likely confounding variable, as children often move more in the scanner than adults.</p>
+<p>In this notation, we can then consider <span class="math notranslate nohighlight">\(y\)</span> as a function of X and Z:</p>
 <div class="math notranslate nohighlight">
 \[
   y = f(XZ) + \epsilon
 \]</div>
-<p>for linear associations:</p>
+<p>If we assume strictly linear associations, we can re-write this function as a linear combination:</p>
 <div class="math notranslate nohighlight">
 \[
   y = Xw + Zu + \epsilon
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is observation noise. In such model, <span class="math notranslate nohighlight">\(\epsilon\)</span> may be i.i.d. even though the relationship between <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(X\)</span> is not i.i.d, e.g., changing from subject to subject</p>
-<p>The machine learning problem is to estimate from train data {train} = (ytrainXtrain) a function f̂ {train} that predicts best y from X. In other words, we want to minimize an error (y,f̂ (X))⁠. The purpose of cross-validation is to estimate this error.</p>
-<p>The challenge is that we are interested in the error on new, unknown, data, i.e. the expectancy of the error for (y, X) drawn from their unknown distribution: 𝔼(y,X)[(y,f̂ (X))] [2]. This is why evaluation procedures must test predictions of the model on left-out data that should be independent from the data used to train the model.</p>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is observation noise.</p>
+<p>In such model, <span class="math notranslate nohighlight">\(\epsilon\)</span> may be i.i.d. even though the relationship between <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(X\)</span> is not i.i.d; for example, if it changes from subject to subject.</p>
+<p>The machine learning problem is to estimate from train data {train} = (ytrainXtrain) a function <span class="math notranslate nohighlight">\(f̂{train}\)</span> that predicts best <span class="math notranslate nohighlight">\(y\)</span> from <span class="math notranslate nohighlight">\(X\)</span>.
+In other words, we want to minimize an error (y,f̂ (X))⁠.
+The purpose of cross-validation is to estimate this error.</p>
+<p>The challenge is that we are interested in the error on new, unknown, data, i.e. the expectancy of the error for <span class="math notranslate nohighlight">\((y, X)\)</span> drawn from their unknown distribution: 𝔼(y,X)[(y,f̂ (X))].
+This is why evaluation procedures must test predictions of the model on left-out data that should be independent from the data used to train the model.</p>
 <figure class="align-default" id="cv-strategies">
-<a class="reference internal image-reference" href="../images/varoquaux-2016-fig6.jpg"><img alt="../images/varoquaux-2016-fig6.jpg" src="../images/varoquaux-2016-fig6.jpg" style="height: 350px;" /></a>
+<a class="reference internal image-reference" href="_images/varoquaux-2016-fig6.png"><img alt="_images/varoquaux-2016-fig6.png" src="_images/varoquaux-2016-fig6.png" style="height: 350px;" /></a>
 <figcaption>
 <p><span class="caption-number">Fig. 4 </span><span class="caption-text">Figure 6 from <a href="#id5"><span class="problematic" id="id6">Varoquaux_2016</span></a>.
 This figures shows the difference in accuracy measured by cross-validation and on the held-out
@@ -450,6 +451,8 @@ The box gives the quartiles, while the whiskers give the 5 and 95 percentiles.</
 </div>
 </details>
 </div>
+<p>In <span class="xref std std-ref">an-example-classification-problem</span>, we used <code class="docutils literal notranslate"><span class="pre">StratifiedShuffleSplit</span></code> for cross-validation.
+This method preserves the percentage of samples for each class across train and test splits; that is, the percentages of child and adult participants in our classification example.</p>
 <p>Now that we’ve seen how to create a connectome for an individual subject,
 we’re ready to think about how we can use this connectome in a machine learning analysis.
 We’ll keep working with the same <code class="docutils literal notranslate"><span class="pre">development_dataset</span></code>,
@@ -496,16 +499,10 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
   _python_deprecation_warnings()
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47056353c58001c9ac064/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e5af2be3c001801f799/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4703bf2be3c001801fa49/ ...
@@ -517,31 +514,31 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e92a3bc970019f0717f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38c4712b4001a3b5573/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38da743a900176080a2/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47016a3bc970017efe44f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e43f2be3c0017056b8a/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb470413992690018133d8c/ ...
@@ -553,7 +550,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e9a353c58001c9abeac/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38f2286e80018c3e38d/ ...
@@ -565,13 +562,13 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3914712b4001a3b5579/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloaded 4202496 of 6020576 bytes (69.8%,    0.5s remaining) ...done. (3 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4702a353c58001b9cb5ae/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e9b39926900190fad5c/ ...
@@ -583,7 +580,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff391a743a900176080a9/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3914712b400173b5329/ ...
@@ -607,9 +604,21 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3912286e80018c3e393/ ...
 </pre></div>
 </div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3952286e80017c41a1b/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47045a3bc970019f073a0/ ...
+</pre></div>
+</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1875</span><span class="o">/</span><span class="mf">78225428.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1859</span><span class="o">/</span><span class="mf">78225428.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">ConnectivityMeasure</span>
 <span class="g g-Whitespace">      </span><span class="mi">5</span> 
 <span class="ne">----&gt; </span><span class="mi">6</span> <span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
@@ -694,60 +703,39 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <span class="g g-Whitespace">    </span><span class="mi">804</span> 
 
 <span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connectionpool.py</span> in <span class="ni">_make_request</span><span class="nt">(self, conn, method, url, body, headers, retries, timeout, chunked, response_conn, preload_content, decode_content, enforce_content_length)</span>
-<span class="g g-Whitespace">    </span><span class="mi">534</span>         <span class="c1"># Receive the response from the server</span>
-<span class="g g-Whitespace">    </span><span class="mi">535</span>         <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">536</span>             <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">537</span>         <span class="k">except</span> <span class="p">(</span><span class="n">BaseSSLError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">538</span>             <span class="bp">self</span><span class="o">.</span><span class="n">_raise_timeout</span><span class="p">(</span><span class="n">err</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout_value</span><span class="o">=</span><span class="n">read_timeout</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">465</span>             <span class="c1"># Trigger any extra validation we need to do.</span>
+<span class="g g-Whitespace">    </span><span class="mi">466</span>             <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">467</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">_validate_conn</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">468</span>             <span class="k">except</span> <span class="p">(</span><span class="n">SocketTimeout</span><span class="p">,</span> <span class="n">BaseSSLError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">469</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">_raise_timeout</span><span class="p">(</span><span class="n">err</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout_value</span><span class="o">=</span><span class="n">conn</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connection.py</span> in <span class="ni">getresponse</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">459</span> 
-<span class="g g-Whitespace">    </span><span class="mi">460</span>         <span class="c1"># Get the response from http.client.HTTPConnection</span>
-<span class="ne">--&gt; </span><span class="mi">461</span>         <span class="n">httplib_response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">462</span> 
-<span class="g g-Whitespace">    </span><span class="mi">463</span>         <span class="k">try</span><span class="p">:</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connectionpool.py</span> in <span class="ni">_validate_conn</span><span class="nt">(self, conn)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1090</span>         <span class="c1"># Force connect early to allow us to validate the connection.</span>
+<span class="g g-Whitespace">   </span><span class="mi">1091</span>         <span class="k">if</span> <span class="n">conn</span><span class="o">.</span><span class="n">is_closed</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1092</span>             <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">1093</span> 
+<span class="g g-Whitespace">   </span><span class="mi">1094</span>         <span class="k">if</span> <span class="ow">not</span> <span class="n">conn</span><span class="o">.</span><span class="n">is_verified</span><span class="p">:</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/http/client.py</span> in <span class="ni">getresponse</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1371</span>         <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1372</span>             <span class="k">try</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1373</span>                 <span class="n">response</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
-<span class="g g-Whitespace">   </span><span class="mi">1374</span>             <span class="k">except</span> <span class="ne">ConnectionError</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1375</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connection.py</span> in <span class="ni">connect</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">609</span>     <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">610</span>         <span class="n">sock</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span> <span class="o">|</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLSocket</span>
+<span class="ne">--&gt; </span><span class="mi">611</span>         <span class="bp">self</span><span class="o">.</span><span class="n">sock</span> <span class="o">=</span> <span class="n">sock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_conn</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">612</span>         <span class="n">server_hostname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+<span class="g g-Whitespace">    </span><span class="mi">613</span>         <span class="n">tls_in_tls</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/http/client.py</span> in <span class="ni">begin</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">317</span>         <span class="c1"># read until we get a non-100 response</span>
-<span class="g g-Whitespace">    </span><span class="mi">318</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">319</span>             <span class="n">version</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_status</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">320</span>             <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">CONTINUE</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">321</span>                 <span class="k">break</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connection.py</span> in <span class="ni">_new_conn</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">205</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">206</span>                 <span class="n">source_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_address</span><span class="p">,</span>
+<span class="ne">--&gt; </span><span class="mi">207</span>                 <span class="n">socket_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">socket_options</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">208</span>             <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">209</span>         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/http/client.py</span> in <span class="ni">_read_status</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">278</span> 
-<span class="g g-Whitespace">    </span><span class="mi">279</span>     <span class="k">def</span> <span class="nf">_read_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">280</span>         <span class="n">line</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">(</span><span class="n">_MAXLINE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;iso-8859-1&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">281</span>         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_MAXLINE</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">282</span>             <span class="k">raise</span> <span class="n">LineTooLong</span><span class="p">(</span><span class="s2">&quot;status line&quot;</span><span class="p">)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/socket.py</span> in <span class="ni">readinto</span><span class="nt">(self, b)</span>
-<span class="g g-Whitespace">    </span><span class="mi">587</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">588</span>             <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">589</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sock</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">590</span>             <span class="k">except</span> <span class="n">timeout</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">591</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">_timeout_occurred</span> <span class="o">=</span> <span class="kc">True</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/ssl.py</span> in <span class="ni">recv_into</span><span class="nt">(self, buffer, nbytes, flags)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1069</span>                   <span class="s2">&quot;non-zero flags not allowed in calls to recv_into() on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
-<span class="g g-Whitespace">   </span><span class="mi">1070</span>                   <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1071</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1072</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1073</span>             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/ssl.py</span> in <span class="ni">read</span><span class="nt">(self, len, buffer)</span>
-<span class="g g-Whitespace">    </span><span class="mi">927</span>         <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">928</span>             <span class="k">if</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">929</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">930</span>             <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">931</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/util/connection.py</span> in <span class="ni">create_connection</span><span class="nt">(address, timeout, source_address, socket_options)</span>
+<span class="g g-Whitespace">     </span><span class="mi">71</span>             <span class="k">if</span> <span class="n">source_address</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">72</span>                 <span class="n">sock</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">source_address</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">73</span>             <span class="n">sock</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">sa</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">74</span>             <span class="c1"># Break explicitly a reference cycle</span>
+<span class="g g-Whitespace">     </span><span class="mi">75</span>             <span class="n">err</span> <span class="o">=</span> <span class="kc">None</span>
 
 <span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
@@ -755,271 +743,6 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 </div>
 </details>
 </div>
-<p>Now we should have a much better idea what each line above is doing!
-Let’s see how we can use these objects across many subjects,
-not just the first one.</p>
-</section>
-<section id="region-signals-extraction">
-<h2>Region signals extraction<a class="headerlink" href="#region-signals-extraction" title="Permalink to this heading">#</a></h2>
-<p>First, we can loop through the 30 participants and extract a few relevant pieces of information,
-including their functional scan, their confounds file,
-and whether they were a child or adult at the time of their scan.</p>
-<p>Using this information, we can then transform their data using the <code class="docutils literal notranslate"><span class="pre">NiftiMapsMasker</span></code> we created above.
-As we learned last time, it’s really important to correct for known sources of noise!
-So we’ll also pass the relevant confounds file directly to the masker object to clean up each subject’s data.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">pooled_subjects</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># child or adult</span>
-
-<span class="k">for</span> <span class="n">func_file</span><span class="p">,</span> <span class="n">confound_file</span><span class="p">,</span> <span class="n">phenotypic</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-        <span class="n">development_dataset</span><span class="o">.</span><span class="n">func</span><span class="p">,</span>
-        <span class="n">development_dataset</span><span class="o">.</span><span class="n">confounds</span><span class="p">,</span>
-        <span class="n">development_dataset</span><span class="o">.</span><span class="n">phenotypic</span><span class="p">):</span>
-
-    <span class="n">time_series</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">func_file</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="n">confound_file</span><span class="p">)</span>
-    <span class="n">pooled_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">phenotypic</span><span class="p">[</span><span class="s1">&#39;Child_Adult&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;child&#39;</span><span class="p">:</span>
-        <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span>
-
-    <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phenotypic</span><span class="p">[</span><span class="s1">&#39;Child_Adult&#39;</span><span class="p">])</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Data has </span><span class="si">{0}</span><span class="s1"> children.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">children</span><span class="p">)))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>We can see that this data set has 24 children.
-This is roughly proportional to the original participant pool,
-which had 122 children and 33 adults.</p>
-<p>We’ve also created a list in <code class="docutils literal notranslate"><span class="pre">pooled_subjects</span></code> containing all of the cleaned data.
-Remember that each entry of that list should have a shape of (168, 39).
-We can quickly confirm that this is true:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="roi-to-roi-correlations-of-children">
-<h2>ROI-to-ROI correlations of children<a class="headerlink" href="#roi-to-roi-correlations-of-children" title="Permalink to this heading">#</a></h2>
-<p>First, we’ll use the most common kind of connectivity–and the one we used in the last section–correlation.
-It models the full (marginal) connectivity between pairwise ROIs.</p>
-<p><code class="docutils literal notranslate"><span class="pre">correlation_measure</span></code> expects a list of time series,
-so we can directly supply the list of ROI time series we just created.
-It will then compute individual correlation matrices for each subject.
-First, let’s just look at the correlation matrices for our 24 children,
-since we expect these matrices to be similar:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">correlation_matrices</span> <span class="o">=</span> <span class="n">correlation_measure</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Now, all individual coefficients are stacked in a unique 2D matrix.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Correlations of children are stacked in an array of shape </span><span class="si">{0}</span><span class="s1">&#39;</span>
-      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">correlation_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>We can also directly access the average correlation across all fitted subjects using the <code class="docutils literal notranslate"><span class="pre">mean_</span></code> attribute.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean_correlation_matrix</span> <span class="o">=</span> <span class="n">correlation_measure</span><span class="o">.</span><span class="n">mean_</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mean correlation has shape </span><span class="si">{0}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mean_correlation_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Let’s display the functional connectivity matrices of the first 3 children:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">correlation_matrices</span><span class="p">,</span> <span class="n">axes</span><span class="p">)):</span>
-    <span class="n">plotting</span><span class="o">.</span><span class="n">plot_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-                         <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-                         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;correlation, child </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Just as before, we can also display connectome on the brain.
-Here, let’s show the mean connectome over all 24 children.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plotting</span><span class="o">.</span><span class="n">view_connectome</span><span class="p">(</span><span class="n">mean_correlation_matrix</span><span class="p">,</span> <span class="n">msdl_atlas</span><span class="o">.</span><span class="n">region_coords</span><span class="p">,</span>
-                         <span class="n">edge_threshold</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-                         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;mean connectome over all children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="studying-partial-correlations">
-<h2>Studying partial correlations<a class="headerlink" href="#studying-partial-correlations" title="Permalink to this heading">#</a></h2>
-<p>Rather than looking at the correlation-defined functional connectivity matrix,
-we can also study <strong>direct connections</strong> as revealed by partial correlation coefficients.</p>
-<p>To do this, we can use exactly the same procedure as above, just changing the <code class="docutils literal notranslate"><span class="pre">ConnectivityMeasure</span></code> kind:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">partial_correlation_measure</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;partial correlation&#39;</span><span class="p">)</span>
-<span class="n">partial_correlation_matrices</span> <span class="o">=</span> <span class="n">partial_correlation_measure</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span>
-    <span class="n">children</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Right away, we can see that most of direct connections are weaker than full connections for the first three children:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">partial_correlation_matrices</span><span class="p">,</span> <span class="n">axes</span><span class="p">)):</span>
-    <span class="n">plotting</span><span class="o">.</span><span class="n">plot_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-                         <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-                         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;partial correlation, child </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>This is also visible when we display the mean partial correlation connectome:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plotting</span><span class="o">.</span><span class="n">view_connectome</span><span class="p">(</span>
-    <span class="n">partial_correlation_measure</span><span class="o">.</span><span class="n">mean_</span><span class="p">,</span> <span class="n">msdl_atlas</span><span class="o">.</span><span class="n">region_coords</span><span class="p">,</span>
-    <span class="n">edge_threshold</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;mean partial correlation over all children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="using-tangent-space-embedding">
-<h2>Using tangent space embedding<a class="headerlink" href="#using-tangent-space-embedding" title="Permalink to this heading">#</a></h2>
-<p>An alternative method to both correlations and partial correlation is tangent space embedding.
-Tangent space embedding uses <strong>both</strong> correlations and partial correlations to capture
-reproducible connectivity patterns at the group-level.</p>
-<p>Using this method is as easy as changing the kind of <code class="docutils literal notranslate"><span class="pre">ConnectivityMeasure</span></code></p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tangent_measure</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;tangent&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>We fit our children group and get the group connectivity matrix stored as
-in <code class="docutils literal notranslate"><span class="pre">tangent_measure.mean_</span></code>, and individual deviation matrices of each subject
-from it.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tangent_matrices</span> <span class="o">=</span> <span class="n">tangent_measure</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">tangent_matrices</span></code> model individual connectivities as
-<strong>perturbations</strong> of the group connectivity matrix <code class="docutils literal notranslate"><span class="pre">tangent_measure.mean_</span></code>.
-Keep in mind that these subjects-to-group variability matrices do not
-directly reflect individual brain connections. For instance negative
-coefficients can not be interpreted as anticorrelated regions.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">tangent_matrices</span><span class="p">,</span> <span class="n">axes</span><span class="p">)):</span>
-    <span class="n">plotting</span><span class="o">.</span><span class="n">plot_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-                         <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-                         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;tangent offset, child </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>We don’t show the mean connectome here as average tangent matrix cannot be interpreted,
-since individual matrices represent deviations from the mean, which is set to 0.</p>
-</section>
-<section id="using-connectivity-in-a-classification-analysis">
-<h2>Using connectivity in a classification analysis<a class="headerlink" href="#using-connectivity-in-a-classification-analysis" title="Permalink to this heading">#</a></h2>
-<p>We can use these connectivity matrices as features in a classification analysis to distinguish children from adults.
-This classification analysis can be implmented directly in scikit-learn,
-including all of the important considerations like cross-validation and measuring classification accuracy.</p>
-<p>First, we’ll randomly split participants into training and testing sets 15 times.
-<code class="docutils literal notranslate"><span class="pre">StratifiedShuffleSplit</span></code> allows us to preserve the proportion of children-to-adults in the test set.
-We’ll also compute classification accuracies for each of the kinds of functional connectivity we’ve identified:
-correlation, partial correlation, and tangent space embedding.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedShuffleSplit</span>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
-
-<span class="n">kinds</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;correlation&#39;</span><span class="p">,</span> <span class="s1">&#39;partial correlation&#39;</span><span class="p">,</span> <span class="s1">&#39;tangent&#39;</span><span class="p">]</span>
-<span class="n">_</span><span class="p">,</span> <span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedShuffleSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">pooled_subjects</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Now, we can train the scikit-learn <code class="docutils literal notranslate"><span class="pre">LinearSVC</span></code> estimator to on our training set of participants
-and apply the trained classifier on our testing set,
-storing accuracy scores after each cross-validation fold:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
-    <span class="n">scores</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">,</span> <span class="n">classes</span><span class="p">):</span>
-        <span class="c1"># *ConnectivityMeasure* can output the estimated subjects coefficients</span>
-        <span class="c1"># as a 1D arrays through the parameter *vectorize*.</span>
-        <span class="n">connectivity</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1"># build vectorized connectomes for subjects in the train set</span>
-        <span class="n">connectomes</span> <span class="o">=</span> <span class="n">connectivity</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
-        <span class="c1"># fit the classifier</span>
-        <span class="n">classifier</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">connectomes</span><span class="p">,</span> <span class="n">classes</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
-        <span class="c1"># make predictions for the left-out test subjects</span>
-        <span class="n">predictions</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-            <span class="n">connectivity</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">test</span><span class="p">]))</span>
-        <span class="c1"># store the accuracy for this cross-validation fold</span>
-        <span class="n">scores</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">classes</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">predictions</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>After we’ve done this for all of the folds, we can display the results!</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean_scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">kind</span><span class="p">])</span> <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">]</span>
-<span class="n">scores_std</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">kind</span><span class="p">])</span> <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">]</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kinds</span><span class="p">))</span> <span class="o">*</span> <span class="mf">.1</span> <span class="o">+</span> <span class="mf">.1</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">mean_scores</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="n">scores_std</span><span class="p">)</span>
-<span class="n">yticks</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">]</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">yticks</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">.8</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Classification accuracy</span><span class="se">\n</span><span class="s1">(red line = chance level)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>This is a small example to showcase nilearn features. In practice such
-comparisons need to be performed on much larger cohorts and several
-datasets.
-<a href="#id9"><span class="problematic" id="id10">Dadi_2019</span></a> showed that across many cohorts and clinical questions,
-the tangent kind should be preferred.</p>
-<p>Combining nilearn and scikit-learn can allow us to perform many (many) kinds of machine learning analyses,
-not just classification!
-We encourage you to explore the <a class="reference external" href="http://nilearn.github.io/auto_examples/index.html">Examples</a> and
-<a class="reference external" href="http://nilearn.github.io/user_guide.html">User Guides</a> on <a class="reference external" href="http://nilearn.github.io">the Nilearn website</a> to learn more!</p>
 </section>
 </section>
 
@@ -1082,11 +805,6 @@ We encourage you to explore the <a class="reference external" href="http://nilea
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-brain-development-fmri-dataset-and-msdl-atlas">Load brain development fMRI dataset and MSDL atlas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#region-signals-extraction">Region signals extraction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#roi-to-roi-correlations-of-children">ROI-to-ROI correlations of children</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-partial-correlations">Studying partial correlations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-tangent-space-embedding">Using tangent space embedding</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-connectivity-in-a-classification-analysis">Using connectivity in a classification analysis</a></li>
 </ul>
   </nav></div>
 
