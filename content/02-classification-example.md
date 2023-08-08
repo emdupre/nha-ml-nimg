@@ -292,9 +292,10 @@ the tangent kind should be preferred.
 
 Combining nilearn and scikit-learn can allow us to perform many (many) kinds of machine learning analyses,
 not just classification!
-We encourage you to explore the [Examples](http://nilearn.github.io/auto_examples/index.html) and
-[User Guides](http://nilearn.github.io/user_guide.html) on [the Nilearn website](http://nilearn.github.io) to learn more!
+We encourage you to explore the [Examples](https://nilearn.github.io/stable/auto_examples/index.html) and
+[User Guides](https://nilearn.github.io/stable/user_guide.html) on [the Nilearn website](http://nilearn.github.io) to learn more!
 
 ```{bibliography} references.bib
 :style: unsrt
+:filter: docname in docnames
 ```

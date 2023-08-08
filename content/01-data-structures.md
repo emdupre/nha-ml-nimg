@@ -53,7 +53,7 @@ The data set we'll use today was originally collected by [Rebecca Saxe](https://
 
 The nilearn team preprocessed the data set with [fMRIPrep](https://fmriprep.readthedocs.io) and downsampled it to a lower resolution,
 so it'd be easier to work with.
-We can learn a lot about this data set directly [from the Nilearn documentation](https://nilearn.github.io/modules/generated/nilearn.datasets.fetch_development_fmri.html).
+We can learn a lot about this data set directly [from the Nilearn documentation](https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_development_fmri.html).
 For example, we can see that this data set contains over 150 children and adults watching a short Pixar film.
 Let's download the first 30 participants.
 
@@ -310,4 +310,5 @@ Otherwise, you might be classifying participants on e.g. amount of head motion r
 
 ```{bibliography} references.bib
 :style: unsrt
+:filter: docname in docnames
 ```
