@@ -6,7 +6,7 @@ kernelspec:
   display_name: Python 3
   name: python3
 repository:
-  url: https://github.com/emdupre/nha2020-nilearn
+  url: https://github.com/emdupre/nha-ml-nimg
 ---
 
 # An introduction to [`nilearn`](http://nilearn.github.io)
@@ -22,39 +22,18 @@ In this tutorial,
 we'll see how the Python library `nilearn` allows us to easily perform machine learning analyses with neuroimaging data,
 specifically MRI and fMRI.
 
+```{note}
 You may notice that the name `nilearn` is reminiscent of [`scikit-learn`](https://scikit-learn.org),
 a popular Python library for machine learning.
 This is no accident!
 Nilearn and scikit-learn were created by the same team,
 and nilearn is designed to bring machine **LEARN**ing to the NeuroImaging (**NI**) domain.
-
-With that in mind,
-let's briefly consider why we might want specialized tools for working with neuroimaging data.
-When performing a machine learning analysis, our data often look something like this:
-
-```{code-cell} python3
-import pandas as pd
-
-# read_csv can read in just about any plain-text tabular data
-data = pd.read_csv('./data/abide2.tsv', sep='\t')
-data.head()
 ```
-
-You may recognize this data from Tal's tutorial introducing machine learning!
-
-For our purposes, what's most interesting is the structure of this data set.
-That is, the data is structured in a tabular format,
-with pre-extracted features of interest.
-This makes it easier to consider issues such as: which features would we like to predict?
-Or, how should we handle cross-validation?
-
-But if we're starting with neuroimaging data,
-how can create this kind of structured representation?
 
 ## Neuroimaging data
 
-Neuroimaging data does not have a tabular structure.
-Instead, it has both spatial and temporal dependencies between successive data points.
+While common machine learning pipelines assume tabular data, neuroimaging data does not have this structure.
+Instead, can be considered a 4D tensor (3 spatial dimensions + 1 temporal dimension) that has [both spatial and temporal dependencies](https://www.nature.com/articles/s41593-023-01299-3) between successive data points.
 That is, knowing _where_ and _when_ something was measured tells you information about the surrounding data points.
 
 We also know that neuroimaging data contains a lot of noise that's not blood-oxygen-level dependent (BOLD), such as head motion.
