@@ -1,14 +1,18 @@
 ---
 jupytext:
+  formats: md:myst
   text_representation:
+    extension: .md
     format_name: myst
 kernelspec:
   display_name: Python 3
+  language: python
   name: python3
 repository:
   url: https://github.com/emdupre/nha-ml-nimg
 ---
 
+(class-example)=
 # An example classification problem
 
 ```{code-cell} python3

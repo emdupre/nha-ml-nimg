@@ -1,15 +1,25 @@
 ---
 jupytext:
+  formats: md:myst
   text_representation:
+    extension: .md
     format_name: myst
 kernelspec:
   display_name: Python 3
+  language: python
   name: python3
 repository:
   url: https://github.com/emdupre/nha-ml-nimg
 ---
 
 # The importance of appropriate cross-validation
+
+```{code-cell} python3
+:tags: [hide-cell]
+
+import warnings
+warnings.filterwarnings("ignore")
+```
 
 In using machine learning on neuroimaging data, appropriate cross-validation methods are critical for drawing meaningful inferences.
 However, a majority of neuroscience researchers are not familiar with how to choose an appropriate method for their data.
@@ -80,13 +90,7 @@ For inter-subject settings, leave one sample out corresponds to leaving a sessio
 The box gives the quartiles, while the whiskers give the 5 and 95 percentiles.
 ```
 
-```{code-cell} python3
-:tags: [hide-cell]
-
-import warnings
-warnings.filterwarnings("ignore")
-```
-In {ref}`an-example-classification-problem`, we used `StratifiedShuffleSplit` for cross-validation.
+In [our classification example](class-example), we used `StratifiedShuffleSplit` for cross-validation.
 This method preserves the percentage of samples for each class across train and test splits; that is, the percentages of child and adult participants in our classification example.
 
 ## Testing cross-validation schemes in our example dataset.

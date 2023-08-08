@@ -389,6 +389,20 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="the-importance-of-appropriate-cross-validation">
 <h1>The importance of appropriate cross-validation<a class="headerlink" href="#the-importance-of-appropriate-cross-validation" title="Permalink to this heading">#</a></h1>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
 <p>In using machine learning on neuroimaging data, appropriate cross-validation methods are critical for drawing meaningful inferences.
 However, a majority of neuroscience researchers are not familiar with how to choose an appropriate method for their data.</p>
 <figure class="align-default" id="cv-usage">
@@ -444,21 +458,7 @@ For inter-subject settings, leave one sample out corresponds to leaving a sessio
 The box gives the quartiles, while the whiskers give the 5 and 95 percentiles.</span><a class="headerlink" href="#cv-strategies" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<div class="cell tag_hide-cell docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
-<span class="expanded">Hide code cell content</span>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-</div>
-<p>In <span class="xref std std-ref">an-example-classification-problem</span>, we used <code class="docutils literal notranslate"><span class="pre">StratifiedShuffleSplit</span></code> for cross-validation.
+<p>In <a class="reference internal" href="02-classification-example.html#class-example"><span class="std std-ref">our classification example</span></a>, we used <code class="docutils literal notranslate"><span class="pre">StratifiedShuffleSplit</span></code> for cross-validation.
 This method preserves the percentage of samples for each class across train and test splits; that is, the percentages of child and adult participants in our classification example.</p>
 </section>
 <section id="testing-cross-validation-schemes-in-our-example-dataset">
@@ -532,13 +532,13 @@ Again, we’ll derive functional connectivity matrices for each participant.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f1a743a90017608164/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f12286e80016c3c37e/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f34712b4001a3b5612/ ...
@@ -586,7 +586,7 @@ Again, we’ll derive functional connectivity matrices for each participant.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3fb2286e80017c41b72/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3fb2286e80019c3c1b3/ ...
@@ -604,7 +604,7 @@ Again, we’ll derive functional connectivity matrices for each participant.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3fe4712b4001a3b5620/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ff4712b400173b5399/ ...
@@ -616,7 +616,7 @@ Again, we’ll derive functional connectivity matrices for each participant.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff401a743a9001660a104/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff403a743a90017608181/ ...
@@ -628,15 +628,27 @@ Again, we’ll derive functional connectivity matrices for each participant.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4034712b400183b70f6/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4042286e80019c3c1c2/ ...
 </pre></div>
 </div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4052286e80017c41b92/ ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4064712b400183b70fe/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+</pre></div>
+</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1905</span><span class="o">/</span><span class="mf">3687866089.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1925</span><span class="o">/</span><span class="mf">3687866089.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">ConnectivityMeasure</span>
 <span class="g g-Whitespace">      </span><span class="mi">5</span> 
 <span class="ne">----&gt; </span><span class="mi">6</span> <span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">()</span>
@@ -679,102 +691,46 @@ Again, we’ll derive functional connectivity matrices for each participant.</p>
 <span class="g g-Whitespace">    </span><span class="mi">665</span>                 <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 
 <span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">send</span><span class="nt">(self, request, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">723</span>             <span class="c1"># Redirect resolving generator.</span>
-<span class="g g-Whitespace">    </span><span class="mi">724</span>             <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_redirects</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">725</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[</span><span class="n">resp</span> <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">]</span>
-<span class="g g-Whitespace">    </span><span class="mi">726</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">727</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="g g-Whitespace">    </span><span class="mi">682</span>         <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;cert&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">683</span>         <span class="k">if</span> <span class="s2">&quot;proxies&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">684</span>             <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;proxies&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolve_proxies</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxies</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trust_env</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">685</span> 
+<span class="g g-Whitespace">    </span><span class="mi">686</span>         <span class="c1"># It&#39;s possible that users might accidentally send a Request object.</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">&lt;listcomp&gt;</span><span class="nt">(.0)</span>
-<span class="g g-Whitespace">    </span><span class="mi">723</span>             <span class="c1"># Redirect resolving generator.</span>
-<span class="g g-Whitespace">    </span><span class="mi">724</span>             <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_redirects</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">725</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[</span><span class="n">resp</span> <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">]</span>
-<span class="g g-Whitespace">    </span><span class="mi">726</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">727</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/utils.py</span> in <span class="ni">resolve_proxies</span><span class="nt">(request, proxies, trust_env)</span>
+<span class="g g-Whitespace">    </span><span class="mi">878</span> 
+<span class="g g-Whitespace">    </span><span class="mi">879</span>     <span class="k">if</span> <span class="n">trust_env</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">should_bypass_proxies</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">no_proxy</span><span class="o">=</span><span class="n">no_proxy</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">880</span>         <span class="n">environ_proxies</span> <span class="o">=</span> <span class="n">get_environ_proxies</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">no_proxy</span><span class="o">=</span><span class="n">no_proxy</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">881</span> 
+<span class="g g-Whitespace">    </span><span class="mi">882</span>         <span class="n">proxy</span> <span class="o">=</span> <span class="n">environ_proxies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">environ_proxies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">))</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">resolve_redirects</span><span class="nt">(self, resp, req, stream, timeout, verify, cert, proxies, yield_requests, **adapter_kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">272</span>                     <span class="n">proxies</span><span class="o">=</span><span class="n">proxies</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">273</span>                     <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">274</span>                     <span class="o">**</span><span class="n">adapter_kwargs</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">275</span>                 <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">276</span> 
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/utils.py</span> in <span class="ni">get_environ_proxies</span><span class="nt">(url, no_proxy)</span>
+<span class="g g-Whitespace">    </span><span class="mi">831</span>         <span class="k">return</span> <span class="p">{}</span>
+<span class="g g-Whitespace">    </span><span class="mi">832</span>     <span class="k">else</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">833</span>         <span class="k">return</span> <span class="n">getproxies</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">834</span> 
+<span class="g g-Whitespace">    </span><span class="mi">835</span> 
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">send</span><span class="nt">(self, request, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">701</span> 
-<span class="g g-Whitespace">    </span><span class="mi">702</span>         <span class="c1"># Send the request</span>
-<span class="ne">--&gt; </span><span class="mi">703</span>         <span class="n">r</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/urllib/request.py</span> in <span class="ni">getproxies_environment</span><span class="nt">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">2509</span>     <span class="k">if</span> <span class="s1">&#39;REQUEST_METHOD&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">2510</span>         <span class="n">proxies</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">2511</span>     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="g g-Whitespace">   </span><span class="mi">2512</span>         <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;_proxy&#39;</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">2513</span>             <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/_collections_abc.py</span> in <span class="ni">__iter__</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">741</span> 
+<span class="g g-Whitespace">    </span><span class="mi">742</span>     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">743</span>         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">744</span>             <span class="k">yield</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+<span class="g g-Whitespace">    </span><span class="mi">745</span> 
+
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/os.py</span> in <span class="ni">__iter__</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">701</span>         <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">702</span>         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">703</span>             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">decodekey</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">704</span> 
-<span class="g g-Whitespace">    </span><span class="mi">705</span>         <span class="c1"># Total elapsed time of the request (approximately)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/adapters.py</span> in <span class="ni">send</span><span class="nt">(self, request, stream, timeout, verify, cert, proxies)</span>
-<span class="g g-Whitespace">    </span><span class="mi">495</span>                 <span class="n">retries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_retries</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">496</span>                 <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">497</span>                 <span class="n">chunked</span><span class="o">=</span><span class="n">chunked</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">498</span>             <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">499</span> 
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connectionpool.py</span> in <span class="ni">urlopen</span><span class="nt">(self, method, url, body, headers, retries, redirect, assert_same_host, timeout, pool_timeout, release_conn, chunked, body_pos, preload_content, decode_content, **response_kw)</span>
-<span class="g g-Whitespace">    </span><span class="mi">800</span>                 <span class="n">preload_content</span><span class="o">=</span><span class="n">preload_content</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">801</span>                 <span class="n">decode_content</span><span class="o">=</span><span class="n">decode_content</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">802</span>                 <span class="o">**</span><span class="n">response_kw</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">803</span>             <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">804</span> 
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connectionpool.py</span> in <span class="ni">_make_request</span><span class="nt">(self, conn, method, url, body, headers, retries, timeout, chunked, response_conn, preload_content, decode_content, enforce_content_length)</span>
-<span class="g g-Whitespace">    </span><span class="mi">534</span>         <span class="c1"># Receive the response from the server</span>
-<span class="g g-Whitespace">    </span><span class="mi">535</span>         <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">536</span>             <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">537</span>         <span class="k">except</span> <span class="p">(</span><span class="n">BaseSSLError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">538</span>             <span class="bp">self</span><span class="o">.</span><span class="n">_raise_timeout</span><span class="p">(</span><span class="n">err</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout_value</span><span class="o">=</span><span class="n">read_timeout</span><span class="p">)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connection.py</span> in <span class="ni">getresponse</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">459</span> 
-<span class="g g-Whitespace">    </span><span class="mi">460</span>         <span class="c1"># Get the response from http.client.HTTPConnection</span>
-<span class="ne">--&gt; </span><span class="mi">461</span>         <span class="n">httplib_response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">462</span> 
-<span class="g g-Whitespace">    </span><span class="mi">463</span>         <span class="k">try</span><span class="p">:</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/http/client.py</span> in <span class="ni">getresponse</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1371</span>         <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1372</span>             <span class="k">try</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1373</span>                 <span class="n">response</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
-<span class="g g-Whitespace">   </span><span class="mi">1374</span>             <span class="k">except</span> <span class="ne">ConnectionError</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1375</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/http/client.py</span> in <span class="ni">begin</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">317</span>         <span class="c1"># read until we get a non-100 response</span>
-<span class="g g-Whitespace">    </span><span class="mi">318</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">319</span>             <span class="n">version</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_status</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">320</span>             <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">CONTINUE</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">321</span>                 <span class="k">break</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/http/client.py</span> in <span class="ni">_read_status</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">278</span> 
-<span class="g g-Whitespace">    </span><span class="mi">279</span>     <span class="k">def</span> <span class="nf">_read_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">280</span>         <span class="n">line</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">(</span><span class="n">_MAXLINE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;iso-8859-1&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">281</span>         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_MAXLINE</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">282</span>             <span class="k">raise</span> <span class="n">LineTooLong</span><span class="p">(</span><span class="s2">&quot;status line&quot;</span><span class="p">)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/socket.py</span> in <span class="ni">readinto</span><span class="nt">(self, b)</span>
-<span class="g g-Whitespace">    </span><span class="mi">587</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">588</span>             <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">589</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sock</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">590</span>             <span class="k">except</span> <span class="n">timeout</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">591</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">_timeout_occurred</span> <span class="o">=</span> <span class="kc">True</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/ssl.py</span> in <span class="ni">recv_into</span><span class="nt">(self, buffer, nbytes, flags)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1069</span>                   <span class="s2">&quot;non-zero flags not allowed in calls to recv_into() on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
-<span class="g g-Whitespace">   </span><span class="mi">1070</span>                   <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1071</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1072</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1073</span>             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/ssl.py</span> in <span class="ni">read</span><span class="nt">(self, len, buffer)</span>
-<span class="g g-Whitespace">    </span><span class="mi">927</span>         <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">928</span>             <span class="k">if</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">929</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">930</span>             <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">931</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">705</span>     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
 <span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
