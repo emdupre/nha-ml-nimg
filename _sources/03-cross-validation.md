@@ -11,7 +11,6 @@ repository:
 
 # The importance of appropriate cross-validation
 
-
 In using machine learning on neuroimaging data, appropriate cross-validation methods are critical for drawing meaningful inferences.
 However, a majority of neuroscience researchers are not familiar with how to choose an appropriate method for their data.
 
@@ -25,7 +24,12 @@ Panel A shows prevalence of cross-validation methods used to assess predictive a
 Panel B shows a histogram of associated sample sizes.
 ```
 
-First, we can formalize the problem that cross-validation is aimed at solving, adopting the notation used in {cite}`Little_2017`. 
+We briefly overview what cross-validation aims to achieve, as well as several different strategies for cross-validation that are in use with neuroimaging data.
+We then provide examples of appropriate and inappropriate cross-validation within the `development_fmri` dataset. 
+
+## Why cross-validate ?
+
+First, let's formalize the problem that cross-validation aims to solve, using notation from {cite}`Little_2017`. 
 
 For $N$ observations, we can choose a variable $y \in \mathbb{R}^n$ that we are trying to predict from data $X \in \mathbb{R}^{n \times p}$ in the presence of confounds $Z \in \mathbb{R}^{n \times k}$⁠.
 For example, we may have neuroimaging data for 155 participants, from which we are trying to predict their age group as either a child or an adult.
@@ -35,25 +39,34 @@ For example, motion is a likely confounding variable, as children often move mor
 In this notation, we can then consider $y$ as a function of X and Z:
 
 $$
-  y = f(XZ) + \epsilon
-$$
-
-If we assume strictly linear associations, we can re-write this function as a linear combination:
-
-$$
   y = Xw + Zu + \epsilon
 $$
 
-where $\epsilon$ is observation noise.
+where $\epsilon$ is observation noise, and we have assumed a strictly linear relationship between the variables.
 
-In such model, $\epsilon$ may be i.i.d. even though the relationship between $y$ and $X$ is not i.i.d; for example, if it changes from subject to subject.
+In such model, $\epsilon$ may be independent and identically distributed (i.i.d.) even though the relationship between $y$ and $X$ is not i.i.d; for example, if it changes with age group membership.
 
-The machine learning problem is to estimate from train data {train} = (ytrainXtrain) a function $f̂{train}$ that predicts best $y$ from $X$.
-In other words, we want to minimize an error (y,f̂ (X))⁠.
-The purpose of cross-validation is to estimate this error. 
+The machine learning problem is to estimate a function $\hat{f}_{\{ train \}}$ that predicts best $y$ from $X$.
+In other words, we want to minimize an error $\mathcal{E}(y,\hat{f}(X))$⁠.
 
-The challenge is that we are interested in the error on new, unknown, data, i.e. the expectancy of the error for $(y, X)$ drawn from their unknown distribution: 𝔼(y,X)[(y,f̂ (X))].
-This is why evaluation procedures must test predictions of the model on left-out data that should be independent from the data used to train the model.
+The challenge is that we are interested in the error on new, unknown, data.
+Thus, we would like to know the expectaction of the error for $(y, X)$ drawn from their unknown distribution:
+
+$$
+  \mathbb{E}_{(y,X)} [\mathcal{E}(y,\hat{f}(X))].
+$$
+
+From this we note two important points.
+  1. Evaluation procedures _must_ test predictions of the model on held-out data, independent from the data used to train the model.
+  2. Cross-validation procedures that vary the train set by repeating the train-test split many times also allow use to ask a related question: given future data to train a machine learning method on a clinical problem, what is the error that I can expect on new data?
+
+
+## Forms of cross-validation
+
+Given the importance of cross-validation, many different schemes exist.
+The [scikit-learn documentation has a section](https://scikit-learn.org/stable/modules/cross_validation.html) just on this topic, which is worth reviewing in full.
+Here, we briefly highlight several of the schemes in use in neuroimaging.
+
 
 ```{figure} ../images/varoquaux-2016-fig6.png
 ---
@@ -76,27 +89,10 @@ warnings.filterwarnings("ignore")
 In {ref}`an-example-classification-problem`, we used `StratifiedShuffleSplit` for cross-validation.
 This method preserves the percentage of samples for each class across train and test splits; that is, the percentages of child and adult participants in our classification example.
 
-Now that we've seen how to create a connectome for an individual subject,
-we're ready to think about how we can use this connectome in a machine learning analysis.
-We'll keep working with the same `development_dataset`,
-but now we'd like to see if we can predict age group
-(i.e. whether a participant is a child or adult) based on their connectome,
-as defined by the functional connectivity matrix.
+## Testing cross-validation schemes in our example dataset.
 
-We'll also explore whether we're more or less accurate in our predictions based on how we define functional connectivity.
-In this example, we'll consider three different different ways to define functional connectivity
-between our Multi-Subject Dictional Learning (MSDL) regions of interest (ROIs):
-correlation, partial correlation, and tangent space embedding.
-
-To learn more about tangent space embedding and how it compares to standard correlations,
-we recommend {cite}`Dadi_2019`.
-
-## Load brain development fMRI dataset and MSDL atlas
-
-First, we need to set up our minimal environment.
-This will include all the dependencies from the last notebook,
-loading the relevant data using our `nilearn` data set fetchers,
-and instantiated our `NiftiMapsMasker` and `ConnectivityMeasure` objects.
+We'll keep working with the same `development_dataset`, though this time we'll fetch all 155 subjects.
+Again, we'll derive functional connectivity matrices for each participant. 
 
 ```{code-cell} python3
 :tags: [hide-output]
@@ -105,7 +101,7 @@ import matplotlib.pyplot as plt
 from nilearn import (datasets, maskers, plotting)
 from nilearn.connectome import ConnectivityMeasure
 
-development_dataset = datasets.fetch_development_fmri(n_subjects=30)
+development_dataset = datasets.fetch_development_fmri()
 msdl_atlas = datasets.fetch_atlas_msdl()
 
 masker = maskers.NiftiMapsMasker(
@@ -114,6 +110,12 @@ masker = maskers.NiftiMapsMasker(
     low_pass=0.1, high_pass=0.01).fit()
 correlation_measure = ConnectivityMeasure(kind='correlation')
 ```
+
+<!-- 
+```{code-call} python3
+time_series = masker.transform(func_file, confounds=confound_file)
+correlation_matrices = correlation_measure.fit_transform(time_series)
+``` -->
 
 ```{bibliography} references.bib
 :style: unsrt

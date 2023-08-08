@@ -373,7 +373,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-brain-development-fmri-dataset-and-msdl-atlas">Load brain development fMRI dataset and MSDL atlas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-cross-validate">Why cross-validate ?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forms-of-cross-validation">Forms of cross-validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-cross-validation-schemes-in-our-example-dataset">Testing cross-validation schemes in our example dataset.</a></li>
 </ul>
             </nav>
         </div>
@@ -392,12 +394,16 @@ However, a majority of neuroscience researchers are not familiar with how to cho
 <figure class="align-default" id="cv-usage">
 <a class="reference internal image-reference" href="_images/poldrack-2020-fig3.jpg"><img alt="_images/poldrack-2020-fig3.jpg" src="_images/poldrack-2020-fig3.jpg" style="height: 250px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">From <span id="id1">[<a class="reference internal" href="#id8" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">2</a>]</span>, depicting results from a review of 100 Studies (2017–2019) claiming prediction on fMRI Data
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">From <span id="id1">[<a class="reference internal" href="#id7" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">1</a>]</span>, depicting results from a review of 100 Studies (2017–2019) claiming prediction on fMRI Data
 Panel A shows prevalence of cross-validation methods used to assess predictive accuracy in this sample.
 Panel B shows a histogram of associated sample sizes.</span><a class="headerlink" href="#cv-usage" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>First, we can formalize the problem that cross-validation is aimed at solving, adopting the notation used in <span id="id2">[<a class="reference internal" href="#id9" title="Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. GigaScience, 6(5):gix020, 2017.">3</a>]</span>.</p>
+<p>We briefly overview what cross-validation aims to achieve, as well as several different strategies for cross-validation that are in use with neuroimaging data.
+We then provide examples of appropriate and inappropriate cross-validation within the <code class="docutils literal notranslate"><span class="pre">development_fmri</span></code> dataset.</p>
+<section id="why-cross-validate">
+<h2>Why cross-validate ?<a class="headerlink" href="#why-cross-validate" title="Permalink to this heading">#</a></h2>
+<p>First, let’s formalize the problem that cross-validation aims to solve, using notation from <span id="id2">[<a class="reference internal" href="#id8" title="Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. GigaScience, 6(5):gix020, 2017.">2</a>]</span>.</p>
 <p>For <span class="math notranslate nohighlight">\(N\)</span> observations, we can choose a variable <span class="math notranslate nohighlight">\(y \in \mathbb{R}^n\)</span> that we are trying to predict from data <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{n \times p}\)</span> in the presence of confounds <span class="math notranslate nohighlight">\(Z \in \mathbb{R}^{n \times k}\)</span>⁠.
 For example, we may have neuroimaging data for 155 participants, from which we are trying to predict their age group as either a child or an adult.
 There are additional confounding measures in this prediction, both measured and unmeasured.
@@ -405,24 +411,33 @@ For example, motion is a likely confounding variable, as children often move mor
 <p>In this notation, we can then consider <span class="math notranslate nohighlight">\(y\)</span> as a function of X and Z:</p>
 <div class="math notranslate nohighlight">
 \[
-  y = f(XZ) + \epsilon
-\]</div>
-<p>If we assume strictly linear associations, we can re-write this function as a linear combination:</p>
-<div class="math notranslate nohighlight">
-\[
   y = Xw + Zu + \epsilon
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is observation noise.</p>
-<p>In such model, <span class="math notranslate nohighlight">\(\epsilon\)</span> may be i.i.d. even though the relationship between <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(X\)</span> is not i.i.d; for example, if it changes from subject to subject.</p>
-<p>The machine learning problem is to estimate from train data {train} = (ytrainXtrain) a function <span class="math notranslate nohighlight">\(f̂{train}\)</span> that predicts best <span class="math notranslate nohighlight">\(y\)</span> from <span class="math notranslate nohighlight">\(X\)</span>.
-In other words, we want to minimize an error (y,f̂ (X))⁠.
-The purpose of cross-validation is to estimate this error.</p>
-<p>The challenge is that we are interested in the error on new, unknown, data, i.e. the expectancy of the error for <span class="math notranslate nohighlight">\((y, X)\)</span> drawn from their unknown distribution: 𝔼(y,X)[(y,f̂ (X))].
-This is why evaluation procedures must test predictions of the model on left-out data that should be independent from the data used to train the model.</p>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is observation noise, and we have assumed a strictly linear relationship between the variables.</p>
+<p>In such model, <span class="math notranslate nohighlight">\(\epsilon\)</span> may be independent and identically distributed (i.i.d.) even though the relationship between <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(X\)</span> is not i.i.d; for example, if it changes with age group membership.</p>
+<p>The machine learning problem is to estimate a function <span class="math notranslate nohighlight">\(\hat{f}_{\{ train \}}\)</span> that predicts best <span class="math notranslate nohighlight">\(y\)</span> from <span class="math notranslate nohighlight">\(X\)</span>.
+In other words, we want to minimize an error <span class="math notranslate nohighlight">\(\mathcal{E}(y,\hat{f}(X))\)</span>⁠.</p>
+<p>The challenge is that we are interested in the error on new, unknown, data.
+Thus, we would like to know the expectaction of the error for <span class="math notranslate nohighlight">\((y, X)\)</span> drawn from their unknown distribution:</p>
+<div class="math notranslate nohighlight">
+\[
+  \mathbb{E}_{(y,X)} [\mathcal{E}(y,\hat{f}(X))].
+\]</div>
+<p>From this we note two important points.</p>
+<ol class="arabic simple">
+<li><p>Evaluation procedures <em>must</em> test predictions of the model on held-out data, independent from the data used to train the model.</p></li>
+<li><p>Cross-validation procedures that vary the train set by repeating the train-test split many times also allow use to ask a related question: given future data to train a machine learning method on a clinical problem, what is the error that I can expect on new data?</p></li>
+</ol>
+</section>
+<section id="forms-of-cross-validation">
+<h2>Forms of cross-validation<a class="headerlink" href="#forms-of-cross-validation" title="Permalink to this heading">#</a></h2>
+<p>Given the importance of cross-validation, many different schemes exist.
+The <a class="reference external" href="https://scikit-learn.org/stable/modules/cross_validation.html">scikit-learn documentation has a section</a> just on this topic, which is worth reviewing in full.
+Here, we briefly highlight several of the schemes in use in neuroimaging.</p>
 <figure class="align-default" id="cv-strategies">
 <a class="reference internal image-reference" href="_images/varoquaux-2016-fig6.png"><img alt="_images/varoquaux-2016-fig6.png" src="_images/varoquaux-2016-fig6.png" style="height: 400px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">From <span id="id3">[<a class="reference internal" href="#id10" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span>shows the difference in accuracy measured by cross-validation and on the held-out
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">From <span id="id3">[<a class="reference internal" href="#id9" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">3</a>]</span>shows the difference in accuracy measured by cross-validation and on the held-out
 validation set, in intra and inter-subject settings, for different cross-validation strategies:
 (1) leave one sample out, (2) leave one block of samples out (where the block is the natural unit of the experiment: subject or session), and random splits leaving out 20% of the blocks as test data, with (3) 3, (4) 10, or (5) 50 random splits.
 For inter-subject settings, leave one sample out corresponds to leaving a session out.
@@ -445,24 +460,11 @@ The box gives the quartiles, while the whiskers give the 5 and 95 percentiles.</
 </div>
 <p>In <span class="xref std std-ref">an-example-classification-problem</span>, we used <code class="docutils literal notranslate"><span class="pre">StratifiedShuffleSplit</span></code> for cross-validation.
 This method preserves the percentage of samples for each class across train and test splits; that is, the percentages of child and adult participants in our classification example.</p>
-<p>Now that we’ve seen how to create a connectome for an individual subject,
-we’re ready to think about how we can use this connectome in a machine learning analysis.
-We’ll keep working with the same <code class="docutils literal notranslate"><span class="pre">development_dataset</span></code>,
-but now we’d like to see if we can predict age group
-(i.e. whether a participant is a child or adult) based on their connectome,
-as defined by the functional connectivity matrix.</p>
-<p>We’ll also explore whether we’re more or less accurate in our predictions based on how we define functional connectivity.
-In this example, we’ll consider three different different ways to define functional connectivity
-between our Multi-Subject Dictional Learning (MSDL) regions of interest (ROIs):
-correlation, partial correlation, and tangent space embedding.</p>
-<p>To learn more about tangent space embedding and how it compares to standard correlations,
-we recommend <span id="id4">[<a class="reference internal" href="#id6" title="Kamalaker Dadi, Mehdi Rahim, Alexandre Abraham, Darya Chyzhyk, Michael Milham, Bertrand Thirion, Gaël Varoquaux, and Alzheimer's Disease Neuroimaging Initiative. Benchmarking functional connectome-based predictive models for resting-state fMRI. Neuroimage, 192:115–134, May 2019.">1</a>]</span>.</p>
-<section id="load-brain-development-fmri-dataset-and-msdl-atlas">
-<h2>Load brain development fMRI dataset and MSDL atlas<a class="headerlink" href="#load-brain-development-fmri-dataset-and-msdl-atlas" title="Permalink to this heading">#</a></h2>
-<p>First, we need to set up our minimal environment.
-This will include all the dependencies from the last notebook,
-loading the relevant data using our <code class="docutils literal notranslate"><span class="pre">nilearn</span></code> data set fetchers,
-and instantiated our <code class="docutils literal notranslate"><span class="pre">NiftiMapsMasker</span></code> and <code class="docutils literal notranslate"><span class="pre">ConnectivityMeasure</span></code> objects.</p>
+</section>
+<section id="testing-cross-validation-schemes-in-our-example-dataset">
+<h2>Testing cross-validation schemes in our example dataset.<a class="headerlink" href="#testing-cross-validation-schemes-in-our-example-dataset" title="Permalink to this heading">#</a></h2>
+<p>We’ll keep working with the same <code class="docutils literal notranslate"><span class="pre">development_dataset</span></code>, though this time we’ll fetch all 155 subjects.
+Again, we’ll derive functional connectivity matrices for each participant.</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -470,7 +472,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="n">maskers</span><span class="p">,</span> <span class="n">plotting</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">ConnectivityMeasure</span>
 
-<span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">()</span>
 <span class="n">msdl_atlas</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_atlas_msdl</span><span class="p">()</span>
 
 <span class="n">masker</span> <span class="o">=</span> <span class="n">maskers</span><span class="o">.</span><span class="n">NiftiMapsMasker</span><span class="p">(</span>
@@ -491,129 +493,153 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
   _python_deprecation_warnings()
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38c2286e80016c3c2da/ ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3eb2286e80019c3c198/ ...
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38ca743a90018606dfe/ ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ed2286e80017c41b56/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ee2286e80016c3c379/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ee4712b400183b70c3/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3efa743a9001660a0d5/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f14712b4001a3b560e/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f1a743a90017608164/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f12286e80016c3c37e/ ...
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38ca743a9001760809e/ ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f34712b4001a3b5612/ ...
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47056353c58001c9ac064/ ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f7a743a90019606cdf/ ...
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e5af2be3c001801f799/ ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f6a743a90017608171/ ...
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4703bf2be3c001801fa49/ ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f64712b400183b70d8/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f72286e80019c3c1af/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f92286e80018c3e463/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4534712b400183b716d/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3fb2286e80017c41b72/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3fb2286e80019c3c1b3/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3fd4712b400183b70e6/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3fe4712b4001a3b5620/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ff4712b400173b5399/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff401a743a9001660a104/ ...
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e92a3bc970019f0717f/ ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff403a743a90017608181/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4034712b400183b70f6/ ...
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38c4712b4001a3b5573/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38da743a900176080a2/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47016a3bc970017efe44f/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e43f2be3c0017056b8a/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb470413992690018133d8c/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e9a353c58001c9abeac/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38f2286e80018c3e38d/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3914712b4001a3b5579/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4702a353c58001b9cb5ae/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e9b39926900190fad5c/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff391a743a900176080a9/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3914712b400173b5329/ ...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47023353c58001c9ac02b/ ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4042286e80019c3c1c2/ ...
 </pre></div>
 </div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1886</span><span class="o">/</span><span class="mf">78225428.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1905</span><span class="o">/</span><span class="mf">3687866089.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">ConnectivityMeasure</span>
 <span class="g g-Whitespace">      </span><span class="mi">5</span> 
-<span class="ne">----&gt; </span><span class="mi">6</span> <span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">6</span> <span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">()</span>
 <span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">msdl_atlas</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_atlas_msdl</span><span class="p">()</span>
 <span class="g g-Whitespace">      </span><span class="mi">8</span> 
 
@@ -625,11 +651,11 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <span class="g g-Whitespace">   </span><span class="mi">2005</span> 
 
 <span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/datasets/func.py</span> in <span class="ni">_fetch_development_fmri_functional</span><span class="nt">(participants, data_dir, url, resume, verbose)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1847</span>         <span class="p">]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1848</span>         <span class="n">path_to_regressor</span> <span class="o">=</span> <span class="n">_fetch_files</span><span class="p">(</span>
-<span class="ne">-&gt; </span><span class="mi">1849</span>             <span class="n">data_dir</span><span class="p">,</span> <span class="n">regressor_file</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
-<span class="g g-Whitespace">   </span><span class="mi">1850</span>         <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1851</span>         <span class="n">regressors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_to_regressor</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1860</span>         <span class="p">]</span>
+<span class="g g-Whitespace">   </span><span class="mi">1861</span>         <span class="n">path_to_func</span> <span class="o">=</span> <span class="n">_fetch_files</span><span class="p">(</span>
+<span class="ne">-&gt; </span><span class="mi">1862</span>             <span class="n">data_dir</span><span class="p">,</span> <span class="n">func_file</span><span class="p">,</span> <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+<span class="g g-Whitespace">   </span><span class="mi">1863</span>         <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="g g-Whitespace">   </span><span class="mi">1864</span>         <span class="n">funcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_to_func</span><span class="p">)</span>
 
 <span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/datasets/utils.py</span> in <span class="ni">_fetch_files</span><span class="nt">(data_dir, files, resume, verbose, session)</span>
 <span class="g g-Whitespace">    </span><span class="mi">789</span>                 <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
@@ -756,21 +782,22 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 </div>
 </details>
 </div>
-<div class="docutils container" id="id5">
-<div class="citation" id="id6" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">1</a><span class="fn-bracket">]</span></span>
-<p>Kamalaker Dadi, Mehdi Rahim, Alexandre Abraham, Darya Chyzhyk, Michael Milham, Bertrand Thirion, Gaël Varoquaux, and Alzheimer's Disease Neuroimaging Initiative. Benchmarking functional connectome-based predictive models for resting-state fMRI. <em>Neuroimage</em>, 192:115–134, May 2019.</p>
-</div>
-<div class="citation" id="id8" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">2</a><span class="fn-bracket">]</span></span>
+<!-- 
+```{code-call} python3
+time_series = masker.transform(func_file, confounds=confound_file)
+correlation_matrices = correlation_measure.fit_transform(time_series)
+``` -->
+<div class="docutils container" id="id4">
+<div class="citation" id="id7" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p>Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. <em>JAMA psychiatry</em>, 77(5):534–540, 2020.</p>
 </div>
-<div class="citation" id="id9" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">3</a><span class="fn-bracket">]</span></span>
+<div class="citation" id="id8" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. <em>GigaScience</em>, 6(5):gix020, 2017.</p>
 </div>
-<div class="citation" id="id10" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">4</a><span class="fn-bracket">]</span></span>
+<div class="citation" id="id9" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. <em>NeuroImage</em>, 145:166–179, 2017.</p>
 </div>
 </div>
@@ -836,7 +863,9 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-brain-development-fmri-dataset-and-msdl-atlas">Load brain development fMRI dataset and MSDL atlas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-cross-validate">Why cross-validate ?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forms-of-cross-validation">Forms of cross-validation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-cross-validation-schemes-in-our-example-dataset">Testing cross-validation schemes in our example dataset.</a></li>
 </ul>
   </nav></div>
 
