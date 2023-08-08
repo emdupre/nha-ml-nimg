@@ -57,7 +57,7 @@ This is why evaluation procedures must test predictions of the model on left-out
 
 ```{figure} ../images/varoquaux-2016-fig6.png
 ---
-height: 350px
+height: 400px
 name: cv-strategies
 ---
 Figure 6 from {cite}`Varoquaux_2016`.
@@ -121,4 +121,5 @@ correlation_measure = ConnectivityMeasure(kind='correlation')
 
 ```{bibliography} references.bib
 :style: unsrt
+:filter: docname in docnames
 ```

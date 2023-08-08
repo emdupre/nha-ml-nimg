@@ -416,7 +416,7 @@ In this example, we’ll consider three different different ways to define funct
 between our Multi-Subject Dictional Learning (MSDL) regions of interest (ROIs):
 correlation, partial correlation, and tangent space embedding.</p>
 <p>To learn more about tangent space embedding and how it compares to standard correlations,
-we recommend <a href="#id1"><span class="problematic" id="id2">Dadi_2019</span></a>.</p>
+we recommend <span id="id1">[<a class="reference internal" href="03-cross-validation.html#id6" title="Kamalaker Dadi, Mehdi Rahim, Alexandre Abraham, Darya Chyzhyk, Michael Milham, Bertrand Thirion, Gaël Varoquaux, and Alzheimer's Disease Neuroimaging Initiative. Benchmarking functional connectome-based predictive models for resting-state fMRI. Neuroimage, 192:115–134, May 2019.">1</a>]</span>.</p>
 <section id="load-brain-development-fmri-dataset-and-msdl-atlas">
 <h2>Load brain development fMRI dataset and MSDL atlas<a class="headerlink" href="#load-brain-development-fmri-dataset-and-msdl-atlas" title="Permalink to this heading">#</a></h2>
 <p>First, we need to set up our minimal environment.
@@ -454,7 +454,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3832286e80019c3c10f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3822286e80018c3e37b/ ...
@@ -466,13 +466,13 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff382a743a90018606df8/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3814712b4001a3b5561/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3832286e80016c3c2d1/ ...
@@ -484,7 +484,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3842286e80017c419e0/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3854712b4001a3b5568/ ...
@@ -496,7 +496,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4702f39926900171090ee/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e8b353c58001c9abe98/ ...
@@ -532,13 +532,13 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff389a743a9001660a016/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38c2286e80016c3c2da/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38ca743a90018606dfe/ ...
@@ -556,15 +556,9 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47056353c58001c9ac064/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e5af2be3c001801f799/ ...
-</pre></div>
-</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1830</span><span class="o">/</span><span class="mf">78225428.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1837</span><span class="o">/</span><span class="mf">78225428.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">ConnectivityMeasure</span>
 <span class="g g-Whitespace">      </span><span class="mi">5</span> 
 <span class="ne">----&gt; </span><span class="mi">6</span> <span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
@@ -579,11 +573,11 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <span class="g g-Whitespace">   </span><span class="mi">2005</span> 
 
 <span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/datasets/func.py</span> in <span class="ni">_fetch_development_fmri_functional</span><span class="nt">(participants, data_dir, url, resume, verbose)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1860</span>         <span class="p">]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1861</span>         <span class="n">path_to_func</span> <span class="o">=</span> <span class="n">_fetch_files</span><span class="p">(</span>
-<span class="ne">-&gt; </span><span class="mi">1862</span>             <span class="n">data_dir</span><span class="p">,</span> <span class="n">func_file</span><span class="p">,</span> <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
-<span class="g g-Whitespace">   </span><span class="mi">1863</span>         <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1864</span>         <span class="n">funcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_to_func</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1847</span>         <span class="p">]</span>
+<span class="g g-Whitespace">   </span><span class="mi">1848</span>         <span class="n">path_to_regressor</span> <span class="o">=</span> <span class="n">_fetch_files</span><span class="p">(</span>
+<span class="ne">-&gt; </span><span class="mi">1849</span>             <span class="n">data_dir</span><span class="p">,</span> <span class="n">regressor_file</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+<span class="g g-Whitespace">   </span><span class="mi">1850</span>         <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="g g-Whitespace">   </span><span class="mi">1851</span>         <span class="n">regressors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_to_regressor</span><span class="p">)</span>
 
 <span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/datasets/utils.py</span> in <span class="ni">_fetch_files</span><span class="nt">(data_dir, files, resume, verbose, session)</span>
 <span class="g g-Whitespace">    </span><span class="mi">789</span>                 <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
@@ -969,12 +963,20 @@ storing accuracy scores after each cross-validation fold:</p>
 <p>This is a small example to showcase nilearn features. In practice such
 comparisons need to be performed on much larger cohorts and several
 datasets.
-<a href="#id3"><span class="problematic" id="id4">Dadi_2019</span></a> showed that across many cohorts and clinical questions,
+<span id="id2">[<a class="reference internal" href="03-cross-validation.html#id6" title="Kamalaker Dadi, Mehdi Rahim, Alexandre Abraham, Darya Chyzhyk, Michael Milham, Bertrand Thirion, Gaël Varoquaux, and Alzheimer's Disease Neuroimaging Initiative. Benchmarking functional connectome-based predictive models for resting-state fMRI. Neuroimage, 192:115–134, May 2019.">1</a>]</span> showed that across many cohorts and clinical questions,
 the tangent kind should be preferred.</p>
 <p>Combining nilearn and scikit-learn can allow us to perform many (many) kinds of machine learning analyses,
 not just classification!
 We encourage you to explore the <a class="reference external" href="https://nilearn.github.io/stable/auto_examples/index.html">Examples</a> and
 <a class="reference external" href="https://nilearn.github.io/stable/user_guide.html">User Guides</a> on <a class="reference external" href="http://nilearn.github.io">the Nilearn website</a> to learn more!</p>
+<div class="docutils container" id="id3">
+<div class="citation" id="id4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
+<p>Kamalaker Dadi, Mehdi Rahim, Alexandre Abraham, Darya Chyzhyk, Michael Milham, Bertrand Thirion, Gaël Varoquaux, and Alzheimer's Disease Neuroimaging Initiative. Benchmarking functional connectome-based predictive models for resting-state fMRI. <em>Neuroimage</em>, 192:115–134, May 2019.</p>
+</div>
+</div>
+</div>
 </section>
 </section>
 

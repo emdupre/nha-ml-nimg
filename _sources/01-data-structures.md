@@ -310,4 +310,5 @@ Otherwise, you might be classifying participants on e.g. amount of head motion r
 
 ```{bibliography} references.bib
 :style: unsrt
+:filter: docname in docnames
 ```
