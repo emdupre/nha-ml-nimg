@@ -392,7 +392,7 @@ However, a majority of neuroscience researchers are not familiar with how to cho
 <figure class="align-default" id="cv-usage">
 <a class="reference internal image-reference" href="_images/poldrack-2020-fig3.jpg"><img alt="_images/poldrack-2020-fig3.jpg" src="_images/poldrack-2020-fig3.jpg" style="height: 250px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Figure 3 from <span id="id1">[<a class="reference internal" href="#id8" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">2</a>]</span>, depicting esults from a review of 100 Studies (2017–2019) claiming prediction on fMRI Data
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">From <span id="id1">[<a class="reference internal" href="#id8" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">2</a>]</span>, depicting results from a review of 100 Studies (2017–2019) claiming prediction on fMRI Data
 Panel A shows prevalence of cross-validation methods used to assess predictive accuracy in this sample.
 Panel B shows a histogram of associated sample sizes.</span><a class="headerlink" href="#cv-usage" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -422,19 +422,11 @@ This is why evaluation procedures must test predictions of the model on left-out
 <figure class="align-default" id="cv-strategies">
 <a class="reference internal image-reference" href="_images/varoquaux-2016-fig6.png"><img alt="_images/varoquaux-2016-fig6.png" src="_images/varoquaux-2016-fig6.png" style="height: 400px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Figure 6 from <span id="id3">[]</span>.
-This figures shows the difference in accuracy measured by cross-validation and on the held-out
-validation set, in intra and inter-subject settings, for different cross-validation strategies:</span><a class="headerlink" href="#cv-strategies" title="Permalink to this image">#</a></p>
-<div class="legend">
-<ul class="simple">
-<li><p>leave one sample out,</p></li>
-<li><p>leave one block of samples out (where the block is the natural unit of the experiment: subject or
-session)</p></li>
-<li><p>random splits leaving out 20% of the blocks as test data, with 3, 10, or 50 random splits.
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">From <span id="id3">[<a class="reference internal" href="#id10" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span>shows the difference in accuracy measured by cross-validation and on the held-out
+validation set, in intra and inter-subject settings, for different cross-validation strategies:
+(1) leave one sample out, (2) leave one block of samples out (where the block is the natural unit of the experiment: subject or session), and random splits leaving out 20% of the blocks as test data, with (3) 3, (4) 10, or (5) 50 random splits.
 For inter-subject settings, leave one sample out corresponds to leaving a session out.
-The box gives the quartiles, while the whiskers give the 5 and 95 percentiles.</p></li>
-</ul>
-</div>
+The box gives the quartiles, while the whiskers give the 5 and 95 percentiles.</span><a class="headerlink" href="#cv-strategies" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="cell tag_hide-cell docutils container">
@@ -499,10 +491,28 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
   _python_deprecation_warnings()
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47056353c58001c9ac064/ ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38c2286e80016c3c2da/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38ca743a90018606dfe/ ...
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38ca743a9001760809e/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47056353c58001c9ac064/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e5af2be3c001801f799/ ...
@@ -526,7 +536,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38c4712b4001a3b5573/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38da743a900176080a2/ ...
@@ -562,7 +572,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff38f2286e80018c3e38d/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3914712b4001a3b5579/ ...
@@ -586,7 +596,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff391a743a900176080a9/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (3 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3914712b400173b5329/ ...
@@ -600,7 +610,7 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 </div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1868</span><span class="o">/</span><span class="mf">78225428.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1886</span><span class="o">/</span><span class="mf">78225428.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">ConnectivityMeasure</span>
 <span class="g g-Whitespace">      </span><span class="mi">5</span> 
 <span class="ne">----&gt; </span><span class="mi">6</span> <span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
@@ -758,6 +768,10 @@ and instantiated our <code class="docutils literal notranslate"><span class="pre
 <div class="citation" id="id9" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">3</a><span class="fn-bracket">]</span></span>
 <p>Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. <em>GigaScience</em>, 6(5):gix020, 2017.</p>
+</div>
+<div class="citation" id="id10" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">4</a><span class="fn-bracket">]</span></span>
+<p>Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. <em>NeuroImage</em>, 145:166–179, 2017.</p>
 </div>
 </div>
 </div>

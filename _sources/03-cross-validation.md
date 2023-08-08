@@ -20,7 +20,7 @@ However, a majority of neuroscience researchers are not familiar with how to cho
 height: 250px
 name: cv-usage
 ---
-Figure 3 from {cite}`Poldrack_2020`, depicting esults from a review of 100 Studies (2017–2019) claiming prediction on fMRI Data
+From {cite}`Poldrack_2020`, depicting results from a review of 100 Studies (2017–2019) claiming prediction on fMRI Data
 Panel A shows prevalence of cross-validation methods used to assess predictive accuracy in this sample.
 Panel B shows a histogram of associated sample sizes.
 ```
@@ -60,13 +60,9 @@ This is why evaluation procedures must test predictions of the model on left-out
 height: 400px
 name: cv-strategies
 ---
-Figure 6 from {cite}`Varoquaux_2016`.
-This figures shows the difference in accuracy measured by cross-validation and on the held-out
+From {cite}`Varoquaux_2017`shows the difference in accuracy measured by cross-validation and on the held-out
 validation set, in intra and inter-subject settings, for different cross-validation strategies:
-- leave one sample out,
-- leave one block of samples out (where the block is the natural unit of the experiment: subject or
-session)
-- random splits leaving out 20% of the blocks as test data, with 3, 10, or 50 random splits. 
+(1) leave one sample out, (2) leave one block of samples out (where the block is the natural unit of the experiment: subject or session), and random splits leaving out 20% of the blocks as test data, with (3) 3, (4) 10, or (5) 50 random splits. 
 For inter-subject settings, leave one sample out corresponds to leaving a session out.
 The box gives the quartiles, while the whiskers give the 5 and 95 percentiles.
 ```
