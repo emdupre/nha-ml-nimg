@@ -6,7 +6,7 @@ kernelspec:
   display_name: Python 3
   name: python3
 repository:
-  url: https://github.com/emdupre/nha2020-nilearn
+  url: https://github.com/emdupre/nha-ml-nimg
 ---
 
 # An introduction to [`nilearn`](http://nilearn.github.io)

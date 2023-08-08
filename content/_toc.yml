@@ -2,3 +2,4 @@ format: jb-book
 root: 01-data-structures
 chapters:
 - file: 02-classification-example
+- file: 03-cross-validation
