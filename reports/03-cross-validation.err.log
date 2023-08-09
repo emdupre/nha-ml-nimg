@@ -28,12 +28,12 @@ Traceback (most recent call last):
     await self._async_handle_timeout(timeout, cell)
   File "/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nbclient/client.py", line 802, in _async_handle_timeout
     "Cell execution timed out", timeout, cell
-nbclient.exceptions.CellTimeoutError: A cell timed out while it was being executed, after 30 seconds.
+nbclient.exceptions.CellTimeoutError: A cell timed out while it was being executed, after 300 seconds.
 The message was: Cell execution timed out.
 Here is a preview of the cell contents:
 -------------------
-['import numpy as np', 'import matplotlib.pyplot as plt', 'from nilearn import (datasets, maskers, plotting)', 'from nilearn.connectome import ConnectivityMeasure', '']
+['import numpy as np', 'import matplotlib.pyplot as plt', 'from nilearn import (datasets, maskers, plotting)', 'from nilearn.connectome import ConnectivityMeasure', 'from sklearn.metrics import accuracy_score']
 ...
-['masker = maskers.NiftiMapsMasker(', '    msdl_atlas.maps, resampling_target="data",', '    t_r=2, detrend=True,', '    low_pass=0.1, high_pass=0.01).fit()', "correlation_measure = ConnectivityMeasure(kind='correlation')"]
+['    time_series = masker.transform(func_file, confounds=confound_file)', '    pooled_subjects.append(time_series)', "    groups.append(phenotypic['Child_Adult'])", '', 'pooled_subjects = np.asarray(pooled_subjects)']
 -------------------
 
