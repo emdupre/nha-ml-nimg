@@ -34,6 +34,6 @@ Here is a preview of the cell contents:
 -------------------
 ['import numpy as np', 'import matplotlib.pyplot as plt', 'from nilearn import (datasets, maskers, plotting)', 'from nilearn.connectome import ConnectivityMeasure', 'from sklearn.metrics import accuracy_score']
 ...
-['    time_series = masker.transform(func_file, confounds=confound_file)', '    pooled_subjects.append(time_series)', "    groups.append(phenotypic['Child_Adult'])", '', 'pooled_subjects = np.asarray(pooled_subjects)']
+['    pooled_subjects.append(time_series)', "    groups.append(phenotypic['Child_Adult'])", '', '_, classes = np.unique(groups, return_inverse=True)', 'pooled_subjects = np.asarray(pooled_subjects)']
 -------------------
 

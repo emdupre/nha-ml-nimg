@@ -116,6 +116,7 @@ for func_file, confound_file, phenotypic in zip(
     pooled_subjects.append(time_series)
     groups.append(phenotypic['Child_Adult'])
 
+_, classes = np.unique(groups, return_inverse=True)
 pooled_subjects = np.asarray(pooled_subjects)
 ```
 
@@ -137,7 +138,7 @@ for train, test in cv.split(pooled_subjects, groups):
     predictions = classifier.predict(
         connectivity.transform(pooled_subjects[test]))
     strat_scores.append(accuracy_score(classes[test], predictions))
-print(strat_scores)
+print(np.mean(strat_scores))
 ```
 
 
@@ -155,7 +156,7 @@ for train, test in cv.split(pooled_subjects):
     predictions = classifier.predict(
         connectivity.transform(pooled_subjects[test]))
     shuffle_scores.append(accuracy_score(classes[test], predictions))
-print(shuffle_scores)
+print(np.mean(shuffle_scores))
 ```
 
 ## Leave-one-out can give overly optimistic estimates
@@ -205,7 +206,7 @@ This wide confidence bound is a result of an interaction between (1) the large s
 from sklearn.model_selection import LeaveOneOut
 loo_scores = []
 
-cv = LeaveOneOut(random_state=0)
+cv = LeaveOneOut()
 for train, test in cv.split(pooled_subjects):
     connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
     connectomes = connectivity.fit_transform(pooled_subjects[train])
