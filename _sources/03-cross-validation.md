@@ -12,7 +12,7 @@ repository:
   url: https://github.com/emdupre/nha-ml-nimg
 ---
 
-# The importance of cross-validation
+# Evaluating our machine learning models
 
 ```{code-cell} python3
 :tags: [hide-cell]
@@ -21,22 +21,27 @@ import warnings
 warnings.filterwarnings("ignore")
 ```
 
-To date, we have focussed on "feature engineering" quite broadly.
-When applying machine learning to neuroimaging data, however, equally important are (1) the model that we train to generate predictions and (2) how we assess the generalizability of our learned model.
-In this context, appropriate cross-validation methods are critical for drawing meaningful inferences.
-However, many neuroscience researchers are not familiar with how to choose an appropriate cross-validation method for their data.
+Now that we've run a few classifications models, what more could we need to know about machine learning in neuroimaging ?
+A lot, actually !
+Everything that we've done to date falls broadly under the umbrella of "feature engineering."
+When applying machine learning, however, equally important are (1) the model that we train to generate predictions and (2) how we assess the generalizability of our learned model.
+
+In this notebook, we'll focus on (2).
+In particular, we'll highlight the importance of appropriate cross-validation methods.
+First, we can look at a recent review {cite}`Poldrack_2020` showing common cross-validation methods in neuroimaging:
 
 ```{figure} ../images/poldrack-2020-fig3.jpg
 ---
 height: 250px
 name: cv-usage
 ---
-From {cite}`Poldrack_2020`, depicting results from a review of 100 Studies (2017–2019) claiming prediction on fMRI data.
+From {cite}`Poldrack_2020`, depicting results from a review of 100 studies (2017–2019) claiming prediction on fMRI data.
 _Panel A_ shows the prevalence of cross-validation methods in this sample.
 _Panel B_ shows a histogram of associated sample sizes.
 ```
 
-We briefly overview what cross-validation aims to achieve, as well as several different strategies for cross-validation that are in use with neuroimaging data.
+As you can see, many neuroscience researchers are not using cross-validation at all !
+We will briefly overview _why_ cross-validation is so important to achieve, as well as different strategies for cross-validation that are in use with neuroimaging data.
 We then provide examples of appropriate and inappropriate cross-validation within the `development_fmri` dataset. 
 
 ## Why cross-validate ?
@@ -121,16 +126,16 @@ pooled_subjects = np.asarray(pooled_subjects)
 ```
 
 In [our classification example](class-example), we used `StratifiedShuffleSplit` for cross-validation.
-This method preserves the percentage of samples for each class across train and test splits; that is, the percentages of child and adult participants in our classification example.
-What if we don't account for age groups when generating our cross-validation folds ?
-
+This method preserves the percentage of samples for each class across train and test splits;
+that is, the percentages of child and adult participants in our classification example.
 
 ```{code-cell} python3
+from sklearn.metrics import ConfusionMatrixDisplay
 # First, re-generate our cross-validation scores for StratifiedShuffleSplit
 
 strat_scores = []
 
-cv = StratifiedShuffleSplit(n_splits=15, random_state=0, test_size=5)
+cv = StratifiedShuffleSplit(n_splits=5, random_state=0, test_size=30)
 for train, test in cv.split(pooled_subjects, groups):
     connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
     connectomes = connectivity.fit_transform(pooled_subjects[train])
@@ -138,28 +143,143 @@ for train, test in cv.split(pooled_subjects, groups):
     predictions = classifier.predict(
         connectivity.transform(pooled_subjects[test]))
     strat_scores.append(accuracy_score(classes[test], predictions))
-print(np.mean(strat_scores))
+
+print(f'StratifiedShuffleSplit Accuracy: {np.mean(strat_scores):.2f} +/- {np.std(strat_scores):.2f}')
 ```
 
+```{code-cell} python3
+# Then, generate a confusion matrix for the trained classifier
+# We'll plot just the last CV fold for now
+cm = ConfusionMatrixDisplay.from_predictions(classes[test], predictions)
+```
+
+What if we don't account for age groups when generating our cross-validation folds ?
+We can test this by using `KFold`, which does not stratify by group membership.
 
 ```{code-cell} python3
 # Then, compare with cross-validation scores for ShuffleSplit
 
-from sklearn.model_selection import ShuffleSplit
-shuffle_scores = []
+from sklearn.model_selection import KFold
+kfold_scores = []
 
-cv = ShuffleSplit(n_splits=15, random_state=0, test_size=5)
+cv = KFold(n_splits=5)
+for train, ktest in cv.split(pooled_subjects):
+    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
+    connectomes = connectivity.fit_transform(pooled_subjects[train])
+    classifier = LinearSVC().fit(connectomes, classes[train])
+    kfold_predictions = classifier.predict(
+        connectivity.transform(pooled_subjects[ktest]))
+    kfold_scores.append(accuracy_score(classes[ktest], kfold_predictions))
+
+# Then, generate a confusion matrix for the trained classifier
+# We'll plot just the last CV fold for now
+cm = ConfusionMatrixDisplay.from_predictions(classes[ktest], kfold_predictions)
+```
+
+Now our classifer is only predicting the `child` age group label,
+since this is the majority of our dataset !
+
+### Beyond accuracy: The Receiver-Operator Characteristic (ROC) Curve
+
+This exercise also shows the limitations of the _accuracy_ metric.
+It can be useful to look at other metrics, such as the Receiver-Operator Characteristic (ROC) Curve.
+Note that we're showing the ROC Curve for our StratifiedShuffleSplit model;
+our KFold model has an undefined area under the curve,
+since it only predicts one value !
+
+```{code-cell} python3
+from sklearn.metrics import RocCurveDisplay
+
+RocCurveDisplay.from_predictions(
+    classes[test],
+    predictions,
+    color="darkorange",
+    plot_chance_level=True,
+)
+plt.axis("square")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("ROC curve")
+plt.legend()
+plt.show()
+```
+
+ROC curves can seem a bit harder to interpret than accuracy values,
+but we can think about them as defining our classifer's performance in a space of True Positives and False positives.
+
+```{figure} ../images/ROC_curve.png
+---
+height: 400px
+name: roc_curve
+---
+The ROC space for a "better" and "worse" classifier,
+from [Wikipedia](https://en.wikipedia.org/wiki/Receiver_operating_characteristic).
+```
+
+## Small sample sizes give a wide distribution of errors
+
+Another common issue in cross-validation is when we create small test set.
+
+```{figure} ../images/varoquaux-2017-fig1.png
+---
+height: 400px
+name: test-size
+---
+From {cite}`Varoquaux_2018`, this plot shows the distribution of errors between the prediction accuracy as assessed via cross-validation (average across folds) and as measured on a large independent test set for different types of neuroimaging data.
+Accuracy is reported for two reasonable choices of cross-validation strategy: leave-one-out (leave-one-run-out or leave-one-subject-out in data with multiple runs or subjects), or 50-times repeated splitting of 20% of the data.
+The bar and whiskers indicate the median and the 5th and 95th percentile. 
+```
+
+The results show that these confidence bounds extends at least 10% both ways;
+that is, there is a 5% chance that it is 10% above the true generalization accuracy and a 5% chance this it is 10% below.
+This wide confidence bound is a result of an interaction between
+  1. the large sampling noise in neuroimaging data and
+  2. the relatively small sample sizes that we provide to the classifier.
+
+```{code-cell} python3
+from sklearn.metrics import ConfusionMatrixDisplay
+# small test set StratifiedShuffleSplit
+
+small_strat_scores = []
+
+cv = StratifiedShuffleSplit(n_splits=5, random_state=0, test_size=5)
+for train, test in cv.split(pooled_subjects, groups):
+    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
+    connectomes = connectivity.fit_transform(pooled_subjects[train])
+    classifier = LinearSVC().fit(connectomes, classes[train])
+    predictions = classifier.predict(
+        connectivity.transform(pooled_subjects[test]))
+    small_strat_scores.append(accuracy_score(classes[test], predictions))
+
+print(f'Small StratifiedShuffleSplit Accuracy: {np.mean(small_strat_scores):.2f} +/- {np.std(small_strat_scores):.2f}')
+```
+
+```{code-cell} python3
+# Compare with cross-validation scores for leave-one-subject-out
+
+from sklearn.model_selection import LeaveOneOut
+loo_scores = []
+
+cv = LeaveOneOut()
 for train, test in cv.split(pooled_subjects):
     connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
     connectomes = connectivity.fit_transform(pooled_subjects[train])
     classifier = LinearSVC().fit(connectomes, classes[train])
     predictions = classifier.predict(
         connectivity.transform(pooled_subjects[test]))
-    shuffle_scores.append(accuracy_score(classes[test], predictions))
-print(np.mean(shuffle_scores))
+    loo_scores.append(accuracy_score(classes[test], predictions))
+
+print(f'Leave-One-Out Accuracy: {np.mean(loo_scores):.2f} +/- {np.std(loo_scores):.2f}')
 ```
 
-## Leave-one-out can give overly optimistic estimates
+```{code-cell} python3
+import seaborn as sns
+sns.set_theme(style='white')
+
+sns.violinplot(data=[strat_scores, small_strat_scores, loo_scores], orient='h', cut=1)
+```
+
+## Avoiding data leakage between train and test
 
 In {cite}`Varoquaux_2017`, Varoquaux and colleagues evaluated the impact of different cross-validation schemes on derived accuracy values.
 We reproduce their Figure 6 below.
@@ -180,42 +300,6 @@ We see that cross-validation schemes that "leak" information from the train to t
 For example, if we leave-one-session-out for predictions within a participant, we see that our estimated prediction accuracy from cross-validation is much higher than our prediction accuracy on a held-out validation set.
 This is because different sessions from the same participant are highly-correlated;
 that is, participants are likely to show similar patterns of neural responses across sessions.
-
-
-## Small sample sizes give a wide distribution of errors
-
-Another common issue in cross-validation, particularly leave-one-out cross-validation, is the small size of the resulting test set.
-
-```{figure} ../images/varoquaux-2017-fig1.png
----
-height: 400px
-name: test-size
----
-From {cite}`Varoquaux_2018`, this plot shows the distribution of errors between the prediction accuracy as assessed via cross-validation (average across folds) and as measured on a large independent test set for different types of neuroimaging data.
-Accuracy is reported for two reasonable choices of cross-validation strategy: leave-one-out (leave-one-run-out or leave-one-subject-out in data with multiple runs or subjects), or 50-times repeated splitting of 20% of the data.
-The bar and whiskers indicate the median and the 5th and 95th percentile. 
-```
-
-The results show that these confidence bounds extends at least 10% both ways;
-that is, there is a 5% chance that it is 10% above the true generalization accuracy and a 5% chance this it is 10% below.
-This wide confidence bound is a result of an interaction between (1) the large sampling noise in neuroimaging data and (2) the relatively small sample sizes that we provide to the classifier.
-
-```{code-cell} python3
-# Compare with cross-validation scores for leave-one-subject-out
-
-from sklearn.model_selection import LeaveOneOut
-loo_scores = []
-
-cv = LeaveOneOut()
-for train, test in cv.split(pooled_subjects):
-    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
-    connectomes = connectivity.fit_transform(pooled_subjects[train])
-    classifier = LinearSVC().fit(connectomes, classes[train])
-    predictions = classifier.predict(
-        connectivity.transform(pooled_subjects[test]))
-    loo_scores.append(accuracy_score(classes[test], predictions))
-print(loo_scores)
-```
 
 ```{bibliography} references.bib
 :style: unsrt
