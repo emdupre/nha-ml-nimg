@@ -21,7 +21,9 @@ import warnings
 warnings.filterwarnings("ignore")
 ```
 
-In applying machine learning to neuroimaging data, appropriate cross-validation methods are critical for drawing meaningful inferences.
+To date, we have focussed on "feature engineering" quite broadly.
+When applying machine learning to neuroimaging data, however, equally important are (1) the model that we train to generate predictions and (2) how we assess the generalizability of our learned model.
+In this context, appropriate cross-validation methods are critical for drawing meaningful inferences.
 However, many neuroscience researchers are not familiar with how to choose an appropriate cross-validation method for their data.
 
 ```{figure} ../images/poldrack-2020-fig3.jpg
@@ -74,9 +76,87 @@ From this we note two important points.
 
 ## Forms of cross-validation
 
-Given the importance of cross-validation in machine learning, many different general schemes exist.
+Given the importance of cross-validation in machine learning, many different schemes exist.
 The [scikit-learn documentation has a section](https://scikit-learn.org/stable/modules/cross_validation.html) just on this topic, which is worth reviewing in full.
-Here, we briefly highlight several of the cross-validation methods already in use in neuroimaging.
+Here, we briefly highlight how cross-validation impacts our estimates in our example dataset.
+
+## Testing cross-validation schemes in our example dataset.
+
+We'll keep working with the same `development_dataset`, though this time we'll fetch all 155 subjects.
+Again, we'll derive functional connectivity matrices for each participant, though this time we'll only consider the "correlation" measure.
+
+```{code-cell} python3
+:tags: [hide-output]
+import numpy as np
+import matplotlib.pyplot as plt
+from nilearn import (datasets, maskers, plotting)
+from nilearn.connectome import ConnectivityMeasure
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.svm import LinearSVC
+
+development_dataset = datasets.fetch_development_fmri()
+msdl_atlas = datasets.fetch_atlas_msdl()
+
+masker = maskers.NiftiMapsMasker(
+    msdl_atlas.maps, resampling_target="data",
+    t_r=2, detrend=True,
+    low_pass=0.1, high_pass=0.01).fit()
+correlation_measure = ConnectivityMeasure(kind='correlation')
+
+pooled_subjects = []
+groups = []  # child or adult
+
+for func_file, confound_file, phenotypic in zip(
+        development_dataset.func,
+        development_dataset.confounds,
+        development_dataset.phenotypic):
+
+    time_series = masker.transform(func_file, confounds=confound_file)
+    pooled_subjects.append(time_series)
+    groups.append(phenotypic['Child_Adult'])
+
+pooled_subjects = np.asarray(pooled_subjects)
+```
+
+In [our classification example](class-example), we used `StratifiedShuffleSplit` for cross-validation.
+This method preserves the percentage of samples for each class across train and test splits; that is, the percentages of child and adult participants in our classification example.
+What if we don't account for age groups when generating our cross-validation folds ?
+
+
+```{code-cell} python3
+# First, re-generate our cross-validation scores for StratifiedShuffleSplit
+
+strat_scores = []
+
+cv = StratifiedShuffleSplit(n_splits=15, random_state=0, test_size=5)
+for train, test in cv.split(pooled_subjects, groups):
+    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
+    connectomes = connectivity.fit_transform(pooled_subjects[train])
+    classifier = LinearSVC().fit(connectomes, classes[train])
+    predictions = classifier.predict(
+        connectivity.transform(pooled_subjects[test]))
+    strat_scores.append(accuracy_score(classes[test], predictions))
+print(strat_scores)
+```
+
+
+```{code-cell} python3
+# Then, compare with cross-validation scores for ShuffleSplit
+
+from sklearn.model_selection import ShuffleSplit
+shuffle_scores = []
+
+cv = ShuffleSplit(n_splits=15, random_state=0, test_size=5)
+for train, test in cv.split(pooled_subjects):
+    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
+    connectomes = connectivity.fit_transform(pooled_subjects[train])
+    classifier = LinearSVC().fit(connectomes, classes[train])
+    predictions = classifier.predict(
+        connectivity.transform(pooled_subjects[test]))
+    shuffle_scores.append(accuracy_score(classes[test], predictions))
+print(shuffle_scores)
+```
 
 ## Leave-one-out can give overly optimistic estimates
 
@@ -100,9 +180,10 @@ For example, if we leave-one-session-out for predictions within a participant, w
 This is because different sessions from the same participant are highly-correlated;
 that is, participants are likely to show similar patterns of neural responses across sessions.
 
+
 ## Small sample sizes give a wide distribution of errors
 
-Another common issue in leave-one-out cross-validation is the small size of the resulting test set.
+Another common issue in cross-validation, particularly leave-one-out cross-validation, is the small size of the resulting test set.
 
 ```{figure} ../images/varoquaux-2017-fig1.png
 ---
@@ -118,37 +199,21 @@ The results show that these confidence bounds extends at least 10% both ways;
 that is, there is a 5% chance that it is 10% above the true generalization accuracy and a 5% chance this it is 10% below.
 This wide confidence bound is a result of an interaction between (1) the large sampling noise in neuroimaging data and (2) the relatively small sample sizes that we provide to the classifier.
 
-## Testing cross-validation schemes in our example dataset.
-
-We'll keep working with the same `development_dataset`, though this time we'll fetch all 155 subjects.
-Again, we'll derive functional connectivity matrices for each participant. 
-
 ```{code-cell} python3
-:tags: [hide-output]
-import numpy as np
-import matplotlib.pyplot as plt
-from nilearn import (datasets, maskers, plotting)
-from nilearn.connectome import ConnectivityMeasure
+# Compare with cross-validation scores for leave-one-subject-out
 
-development_dataset = datasets.fetch_development_fmri()
-msdl_atlas = datasets.fetch_atlas_msdl()
+from sklearn.model_selection import LeaveOneOut
+loo_scores = []
 
-masker = maskers.NiftiMapsMasker(
-    msdl_atlas.maps, resampling_target="data",
-    t_r=2, detrend=True,
-    low_pass=0.1, high_pass=0.01).fit()
-correlation_measure = ConnectivityMeasure(kind='correlation')
-```
-
-In [our classification example](class-example), we used `StratifiedShuffleSplit` for cross-validation.
-This method preserves the percentage of samples for each class across train and test splits; that is, the percentages of child and adult participants in our classification example.
-
-```{code-call} python3
-func_file = developmental_dataset.func[0]  # take the first subject functional
-confound_file = developmental_datasets.confounds[0]  # and confounds file
-
-time_series = masker.transform(func_file, confounds=confound_file)
-correlation_matrices = correlation_measure.fit_transform(time_series)
+cv = LeaveOneOut(random_state=0)
+for train, test in cv.split(pooled_subjects):
+    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
+    connectomes = connectivity.fit_transform(pooled_subjects[train])
+    classifier = LinearSVC().fit(connectomes, classes[train])
+    predictions = classifier.predict(
+        connectivity.transform(pooled_subjects[test]))
+    loo_scores.append(accuracy_score(classes[test], predictions))
+print(loo_scores)
 ```
 
 ```{bibliography} references.bib

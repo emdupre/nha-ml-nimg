@@ -1,6 +1,7 @@
 ghp-import
 jupyter-book
 jupytext
+docutils==0.17.1
 numpy
 pandas
 matplotlib
