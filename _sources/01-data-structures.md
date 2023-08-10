@@ -29,17 +29,17 @@ specifically MRI and fMRI.
 You may notice that the name `nilearn` is reminiscent of [`scikit-learn`](https://scikit-learn.org),
 a popular Python library for machine learning.
 This is no accident!
-Nilearn and scikit-learn were created by the same team,
-and nilearn is designed to bring machine **LEARN**ing to the NeuroImaging (**NI**) domain.
+Nilearn and scikit-learn were created by overlapping teams,
+and nilearn is designed to bring machine **LEARN**ing to NeuroImaging (**NI**) data.
 ```
 
 ## Neuroimaging data
 
 While common machine learning pipelines assume tabular data, neuroimaging data does not have this structure.
-Instead, can be considered a 4D tensor (3 spatial dimensions + 1 temporal dimension) that has [both spatial and temporal dependencies](https://www.nature.com/articles/s41593-023-01299-3) between successive data points.
+Instead, it has [both spatial and temporal dependencies](https://www.nature.com/articles/s41593-023-01299-3) between successive data points.
 That is, knowing _where_ and _when_ something was measured tells you information about the surrounding data points.
 
-We also know that neuroimaging data contains a lot of noise that's not blood-oxygen-level dependent (BOLD), such as head motion.
+We also know that neuroimaging data contains a lot of signal that's _not_ blood-oxygen-level dependent (BOLD), such as head motion.
 Since we don't think that these other noise sources are related to neuronal firing,
 we often need to consider how we can make sure that our analyses are not driven by these noise sources.
 

@@ -43,25 +43,16 @@ _Panel B_ shows a histogram of associated sample sizes.
 As you can see, many neuroscience researchers are not using cross-validation at all !
 We will briefly overview _why_ cross-validation is so important to achieve, as well as different strategies for cross-validation that are in use with neuroimaging data.
 We then provide examples of appropriate and inappropriate cross-validation within the `development_fmri` dataset. 
+One thing to emphasize, here : best practice is always to have a separate, held-out validation set !
+This will allow us to make more meaningful statements about our learned model,
+but it requires having access to more data.
 
 ## Why cross-validate ?
 
 First, let's formalize the problem that cross-validation aims to solve, using notation from {cite}`Little_2017`. 
 
-For $N$ observations, we can choose a variable $y \in \mathbb{R}^n$ that we are trying to predict from data $X \in \mathbb{R}^{n \times p}$ in the presence of confounds $Z \in \mathbb{R}^{n \times k}$⁠.
+For $N$ observations, we can choose a variable $y \in \mathbb{R}^n$ that we are trying to predict from data $X \in \mathbb{R}^{n \times p}$⁠.
 For example, we may have neuroimaging data for 155 participants, from which we are trying to predict their age group as either a child or an adult.
-There are additional confounding measures in this prediction, both measured and unmeasured.
-For example, motion is a likely confounding variable, as children often move more in the scanner than adults.
-
-In this notation, we can then consider $y$ as a function of X and Z:
-
-$$
-  y = Xw + Zu + \epsilon
-$$
-
-where $\epsilon$ is observation noise, and we have assumed a strictly linear relationship between the variables.
-
-In such model, $\epsilon$ may be independent and identically distributed (i.i.d.) even though the relationship between $y$ and $X$ is not i.i.d; for example, if it changes with age group membership.
 
 The machine learning problem is to estimate a function $\hat{f}_{\{ train \}}$ that predicts best $y$ from $X$.
 In other words, we want to minimize an error $\mathcal{E}(y,\hat{f}(X))$⁠.
@@ -77,7 +68,6 @@ From this we note two important points.
   1. Evaluation procedures _must_ test predictions of the model on held-out data that is independent from the data used to train the model.
   2. Cross-validation procedures that repeating the train-test split many times to vary the training set also allow use to ask a related question:
     given _future_ data to train a machine learning method on a clinical problem, what is the error that I can expect on new data?
-
 
 ## Forms of cross-validation
 
@@ -144,7 +134,7 @@ for train, test in cv.split(pooled_subjects, groups):
         connectivity.transform(pooled_subjects[test]))
     strat_scores.append(accuracy_score(classes[test], predictions))
 
-print(f'StratifiedShuffleSplit Accuracy: {np.mean(strat_scores):.2f} +/- {np.std(strat_scores):.2f}')
+print(f'StratifiedShuffleSplit Accuracy: {np.mean(strat_scores):.2f} ± {np.std(strat_scores):.2f}')
 ```
 
 ```{code-cell} python3
@@ -171,13 +161,17 @@ for train, ktest in cv.split(pooled_subjects):
         connectivity.transform(pooled_subjects[ktest]))
     kfold_scores.append(accuracy_score(classes[ktest], kfold_predictions))
 
+print(f'KFold Accuracy: {np.mean(kfold_scores):.2f} ± {np.std(kfold_scores):.2f}')
+```
+
+```{code-cell} python3
 # Then, generate a confusion matrix for the trained classifier
 # We'll plot just the last CV fold for now
 cm = ConfusionMatrixDisplay.from_predictions(classes[ktest], kfold_predictions)
 ```
 
-Now our classifer is only predicting the `child` age group label,
-since this is the majority of our dataset !
+Now our classifer is only shown the `child` age group label at testing,
+but it's predicting both child and adult labels !
 
 ### Beyond accuracy: The Receiver-Operator Characteristic (ROC) Curve
 
@@ -188,7 +182,7 @@ our KFold model has an undefined area under the curve,
 since it only predicts one value !
 
 ```{code-cell} python3
-from sklearn.metrics import RocCurveDisplay
+from sklearn.metrics import auc, RocCurveDisplay
 
 RocCurveDisplay.from_predictions(
     classes[test],
@@ -216,9 +210,77 @@ The ROC space for a "better" and "worse" classifier,
 from [Wikipedia](https://en.wikipedia.org/wiki/Receiver_operating_characteristic).
 ```
 
+Our ROC curve also provides a useful visualization to look at the variability of our learned model across cross-validation folds !
+
+```{code-cell} python3
+:tags: [hide-input]
+tprs = []
+aucs = []
+mean_fpr = np.linspace(0, 1, 100)
+
+fig, ax = plt.subplots(figsize=(6, 6))
+cv = StratifiedShuffleSplit(n_splits=5, random_state=0, test_size=30)
+
+for fold, (train, test) in enumerate(cv.split(pooled_subjects, groups)):
+    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
+    connectomes = connectivity.fit_transform(pooled_subjects[train])
+    classifier = LinearSVC().fit(connectomes, classes[train])
+    viz = RocCurveDisplay.from_estimator(
+        classifier,
+        connectivity.transform(pooled_subjects[test]),
+        classes[test],
+        name=f"ROC fold {fold}",
+        alpha=0.3,
+        lw=1,
+        ax=ax,
+        plot_chance_level=(fold == 4),  # n_splits - 1
+    )
+    interp_tpr = np.interp(mean_fpr, viz.fpr, viz.tpr)
+    interp_tpr[0] = 0.0
+    tprs.append(interp_tpr)
+    aucs.append(viz.roc_auc)
+
+mean_tpr = np.mean(tprs, axis=0)
+mean_tpr[-1] = 1.0
+mean_auc = auc(mean_fpr, mean_tpr)
+std_auc = np.std(aucs)
+ax.plot(
+    mean_fpr,
+    mean_tpr,
+    color="b",
+    label=f"Mean ROC (AUC = %0.2f ± %0.2f)" % (mean_auc, std_auc),
+    lw=2,
+    alpha=0.8,
+)
+
+std_tpr = np.std(tprs, axis=0)
+tprs_upper = np.minimum(mean_tpr + std_tpr, 1)
+tprs_lower = np.maximum(mean_tpr - std_tpr, 0)
+ax.fill_between(
+    mean_fpr,
+    tprs_lower,
+    tprs_upper,
+    color="grey",
+    alpha=0.2,
+    label=r"± 1 std. dev.",
+)
+
+ax.set(
+    xlim=[-0.05, 1.05],
+    ylim=[-0.05, 1.05],
+    xlabel="False Positive Rate",
+    ylabel="True Positive Rate",
+    title=f"Mean ROC curve with variability",
+)
+ax.axis("square")
+ax.legend(loc="lower right")
+plt.show()
+```
+
+
 ## Small sample sizes give a wide distribution of errors
 
-Another common issue in cross-validation is when we create small test set.
+Another common issue in cross-validation is when we only have access to small test set.
 
 ```{figure} ../images/varoquaux-2017-fig1.png
 ---
@@ -236,6 +298,28 @@ This wide confidence bound is a result of an interaction between
   1. the large sampling noise in neuroimaging data and
   2. the relatively small sample sizes that we provide to the classifier.
 
+We can replicate this idea by systematically decreasing the size of our test set, first to 15 participants.
+
+```{code-cell} python3
+from sklearn.metrics import ConfusionMatrixDisplay
+# med test set StratifiedShuffleSplit
+
+med_strat_scores = []
+
+cv = StratifiedShuffleSplit(n_splits=5, random_state=0, test_size=15)
+for train, test in cv.split(pooled_subjects, groups):
+    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
+    connectomes = connectivity.fit_transform(pooled_subjects[train])
+    classifier = LinearSVC().fit(connectomes, classes[train])
+    predictions = classifier.predict(
+        connectivity.transform(pooled_subjects[test]))
+    med_strat_scores.append(accuracy_score(classes[test], predictions))
+
+print(f'Medium StratifiedShuffleSplit Accuracy: {np.mean(med_strat_scores):.2f} ± {np.std(med_strat_scores):.2f}')
+```
+
+Then to 5.
+
 ```{code-cell} python3
 from sklearn.metrics import ConfusionMatrixDisplay
 # small test set StratifiedShuffleSplit
@@ -251,32 +335,29 @@ for train, test in cv.split(pooled_subjects, groups):
         connectivity.transform(pooled_subjects[test]))
     small_strat_scores.append(accuracy_score(classes[test], predictions))
 
-print(f'Small StratifiedShuffleSplit Accuracy: {np.mean(small_strat_scores):.2f} +/- {np.std(small_strat_scores):.2f}')
+print(f'Small StratifiedShuffleSplit Accuracy: {np.mean(small_strat_scores):.2f} ± {np.std(small_strat_scores):.2f}')
 ```
 
-```{code-cell} python3
-# Compare with cross-validation scores for leave-one-subject-out
-
-from sklearn.model_selection import LeaveOneOut
-loo_scores = []
-
-cv = LeaveOneOut()
-for train, test in cv.split(pooled_subjects):
-    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
-    connectomes = connectivity.fit_transform(pooled_subjects[train])
-    classifier = LinearSVC().fit(connectomes, classes[train])
-    predictions = classifier.predict(
-        connectivity.transform(pooled_subjects[test]))
-    loo_scores.append(accuracy_score(classes[test], predictions))
-
-print(f'Leave-One-Out Accuracy: {np.mean(loo_scores):.2f} +/- {np.std(loo_scores):.2f}')
-```
+Then we can compare the distributions of these accuracy scores for each cross-validation scheme:
 
 ```{code-cell} python3
 import seaborn as sns
 sns.set_theme(style='white')
 
-sns.violinplot(data=[strat_scores, small_strat_scores, loo_scores], orient='h', cut=1)
+ax = sns.violinplot(
+    data=[strat_scores, med_strat_scores, small_strat_scores], 
+    orient='h', 
+    cut=0
+)
+ax.set(
+    yticklabels=[
+        'Stratified Shuffle (30)', 
+        'Stratified Shuffle (15)', 
+        'Stratified Shuffle (5)'
+    ],
+    ylabel='Cross-validation strategy',
+    xlabel='Accuracy'
+);
 ```
 
 ## Avoiding data leakage between train and test
@@ -300,6 +381,27 @@ We see that cross-validation schemes that "leak" information from the train to t
 For example, if we leave-one-session-out for predictions within a participant, we see that our estimated prediction accuracy from cross-validation is much higher than our prediction accuracy on a held-out validation set.
 This is because different sessions from the same participant are highly-correlated;
 that is, participants are likely to show similar patterns of neural responses across sessions.
+
+In our dataset, this isn't a clear problem, since each participant was only sampled once.
+It is, though, something to stay aware of !
+
+```{code-cell} python3
+# Compare with cross-validation scores for leave-one-subject-out
+
+from sklearn.model_selection import LeaveOneOut
+loo_scores = []
+
+cv = LeaveOneOut()
+for train, test in cv.split(pooled_subjects):
+    connectivity = ConnectivityMeasure(kind="correlation", vectorize=True)
+    connectomes = connectivity.fit_transform(pooled_subjects[train])
+    classifier = LinearSVC().fit(connectomes, classes[train])
+    predictions = classifier.predict(
+        connectivity.transform(pooled_subjects[test]))
+    loo_scores.append(accuracy_score(classes[test], predictions))
+
+print(f'Leave-One-Out Accuracy: {np.mean(loo_scores):.2f} ± {np.std(loo_scores):.2f}')
+```
 
 ```{bibliography} references.bib
 :style: unsrt

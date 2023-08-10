@@ -424,21 +424,15 @@ First, we can look at a recent review <span id="id1">[<a class="reference intern
 </figure>
 <p>As you can see, many neuroscience researchers are not using cross-validation at all !
 We will briefly overview <em>why</em> cross-validation is so important to achieve, as well as different strategies for cross-validation that are in use with neuroimaging data.
-We then provide examples of appropriate and inappropriate cross-validation within the <code class="docutils literal notranslate"><span class="pre">development_fmri</span></code> dataset.</p>
+We then provide examples of appropriate and inappropriate cross-validation within the <code class="docutils literal notranslate"><span class="pre">development_fmri</span></code> dataset.
+One thing to emphasize, here : best practice is always to have a separate, held-out validation set !
+This will allow us to make more meaningful statements about our learned model,
+but it requires having access to more data.</p>
 <section id="why-cross-validate">
 <h2>Why cross-validate ?<a class="headerlink" href="#why-cross-validate" title="Permalink to this heading">#</a></h2>
 <p>First, let’s formalize the problem that cross-validation aims to solve, using notation from <span id="id3">[<a class="reference internal" href="#id11" title="Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. GigaScience, 6(5):gix020, 2017.">2</a>]</span>.</p>
-<p>For <span class="math notranslate nohighlight">\(N\)</span> observations, we can choose a variable <span class="math notranslate nohighlight">\(y \in \mathbb{R}^n\)</span> that we are trying to predict from data <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{n \times p}\)</span> in the presence of confounds <span class="math notranslate nohighlight">\(Z \in \mathbb{R}^{n \times k}\)</span>⁠.
-For example, we may have neuroimaging data for 155 participants, from which we are trying to predict their age group as either a child or an adult.
-There are additional confounding measures in this prediction, both measured and unmeasured.
-For example, motion is a likely confounding variable, as children often move more in the scanner than adults.</p>
-<p>In this notation, we can then consider <span class="math notranslate nohighlight">\(y\)</span> as a function of X and Z:</p>
-<div class="math notranslate nohighlight">
-\[
-  y = Xw + Zu + \epsilon
-\]</div>
-<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is observation noise, and we have assumed a strictly linear relationship between the variables.</p>
-<p>In such model, <span class="math notranslate nohighlight">\(\epsilon\)</span> may be independent and identically distributed (i.i.d.) even though the relationship between <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(X\)</span> is not i.i.d; for example, if it changes with age group membership.</p>
+<p>For <span class="math notranslate nohighlight">\(N\)</span> observations, we can choose a variable <span class="math notranslate nohighlight">\(y \in \mathbb{R}^n\)</span> that we are trying to predict from data <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{n \times p}\)</span>⁠.
+For example, we may have neuroimaging data for 155 participants, from which we are trying to predict their age group as either a child or an adult.</p>
 <p>The machine learning problem is to estimate a function <span class="math notranslate nohighlight">\(\hat{f}_{\{ train \}}\)</span> that predicts best <span class="math notranslate nohighlight">\(y\)</span> from <span class="math notranslate nohighlight">\(X\)</span>.
 In other words, we want to minimize an error <span class="math notranslate nohighlight">\(\mathcal{E}(y,\hat{f}(X))\)</span>⁠.</p>
 <p>The challenge is that we are interested in this error on new, unknown, data.
@@ -519,7 +513,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ed2286e80017c41b56/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ee2286e80016c3c379/ ...
@@ -537,7 +531,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3efa743a9001660a0d5/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f14712b4001a3b560e/ ...
@@ -549,7 +543,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f1a743a90017608164/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f12286e80016c3c37e/ ...
@@ -579,13 +573,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f64712b400183b70d8/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f72286e80019c3c1af/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3f92286e80018c3e463/ ...
@@ -597,13 +591,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4534712b400183b716d/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3fb2286e80017c41b72/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3fb2286e80019c3c1b3/ ...
@@ -627,7 +621,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ff4712b400173b5399/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff401a743a9001660a104/ ...
@@ -651,7 +645,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4042286e80019c3c1c2/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4052286e80017c41b92/ ...
@@ -675,7 +669,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff40aa743a9001660a119/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4092286e80017c41ba7/ ...
@@ -699,13 +693,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff40da743a90018606eac/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff40e4712b400173b53a8/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4104712b400173b53ad/ ...
@@ -723,13 +717,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff412a743a9001660a128/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff414a743a90019606cfc/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff416a743a90019606d01/ ...
@@ -771,13 +765,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff41d2286e80018c3e499/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff41da743a900176081a2/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff41ea743a90018606ec7/ ...
@@ -801,7 +795,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4212286e80019c3c1e6/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff424a743a900176081af/ ...
@@ -831,7 +825,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff4292286e80017c41c0f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47057f2be3c0019030a1f/ ...
@@ -855,7 +849,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e7a353c58001a9b3324/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3952286e80016c3c2e7/ ...
@@ -873,7 +867,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47016a3bc970018f1fc88/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e6ba3bc970019f07152/ ...
@@ -885,7 +879,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff395a743a900176080af/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3964712b400193b5b7d/ ...
@@ -915,7 +909,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff39aa743a900176080ba/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb470153992690018133d3b/ ...
@@ -945,7 +939,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4701c3992690018133d49/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e1c3992690018133a9e/ ...
@@ -969,13 +963,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4703039926900160f6b3e/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e4d353c58001b9cb325/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4700af2be3c0017056f69/ ...
@@ -1005,7 +999,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff39ca743a90019606c50/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3a2a743a9001660a048/ ...
@@ -1047,7 +1041,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3a34712b4001a3b55a3/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4703439926900160f6b43/ ...
@@ -1065,13 +1059,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3a34712b400193b5b92/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3a84712b400183b7048/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47020f2be3c0019030968/ ...
@@ -1089,7 +1083,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3a72286e80017c41a54/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3a7a743a90018606e42/ ...
@@ -1107,7 +1101,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e3f353c5800199ac787/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47049353c5800199ac9b4/ ...
@@ -1119,7 +1113,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46eaa353c58001c9abebb/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3a74712b4001a3b55ad/ ...
@@ -1149,13 +1143,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47051f2be3c001601df24/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e12f2be3c001801f75e/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3aca743a9001660a063/ ...
@@ -1167,7 +1161,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ac4712b400183b7051/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47032a3bc970019f07386/ ...
@@ -1269,7 +1263,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3b12286e80016c3c30f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3b34712b400183b7060/ ...
@@ -1287,19 +1281,19 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3b54712b400193b5ba3/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c9e99d006cd47001a5ab599/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3b62286e80016c3c31b/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47011f2be3c001903092f/ ...
@@ -1323,19 +1317,19 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3b94712b4001a3b55bf/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47039a3bc970018f1fcbf/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e983992690017108ed8/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3b92286e80017c41a8e/ ...
@@ -1353,7 +1347,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ba2286e80016c3c325/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3bd2286e80017c41a9e/ ...
@@ -1401,25 +1395,25 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3be4712b400193b5bab/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3bf2286e80017c41aa8/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3be4712b4001a3b55c4/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3c12286e80017c41ab1/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3c34712b400173b5362/ ...
@@ -1431,7 +1425,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3c42286e80017c41ab6/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47010f2be3c0017056f80/ ...
@@ -1461,7 +1455,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3c44712b400183b7071/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3c42286e80017c41abc/ ...
@@ -1473,7 +1467,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4700cf2be3c0017056f70/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e4fa3bc970019f0713b/ ...
@@ -1491,7 +1485,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e75353c58001a9b331b/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3c7a743a90018606e5f/ ...
@@ -1515,7 +1509,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e5ba3bc97001aeff72b/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4702cf2be3c0017056fdb/ ...
@@ -1557,7 +1551,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb470423992690018133d92/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e46a3bc970018f1fa36/ ...
@@ -1575,13 +1569,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e4f353c58001a9b32e9/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4702ff2be3c00190309b0/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e8af2be3c0017056be0/ ...
@@ -1623,19 +1617,19 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3cc2286e80017c41adc/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47027f2be3c0017056fd0/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e38a3bc970018f1fa25/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47028f2be3c001801fa13/ ...
@@ -1653,7 +1647,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47050f2be3c0017057062/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e77f2be3c001601dc4f/ ...
@@ -1665,13 +1659,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4701e39926900171090c7/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e82f2be3c001903063e/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47015f2be3c001801f9df/ ...
@@ -1689,13 +1683,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47013f2be3c0019030935/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e65353c58001b9cb346/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3cea743a90019606c9f/ ...
@@ -1719,7 +1713,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e09a3bc970018f1f9d8/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47044a3bc970018f1fccc/ ...
@@ -1731,7 +1725,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e29f2be3c0017056b6a/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47042f2be3c0017057025/ ...
@@ -1743,7 +1737,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e64a3bc970019f0714b/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4705239926900160f6b74/ ...
@@ -1767,7 +1761,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46dfff2be3c001601dbef/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3ce2286e80016c3c34b/ ...
@@ -1779,7 +1773,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3d12286e80019c3c16f/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47010f2be3c0019030921/ ...
@@ -1821,7 +1815,7 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb470383992690018133d76/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46dfc3992690018133a72/ ...
@@ -1839,31 +1833,31 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e0ea3bc970019f0710c/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3d3a743a90019606caa/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3d34712b400193b5bc7/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3d22286e80017c41af2/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3d52286e80017c41afe/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4704ef2be3c001801fa79/ ...
@@ -1875,13 +1869,13 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e7339926900190fad1a/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4700fa3bc97001aeff8f0/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e16f2be3c0017056b3e/ ...
@@ -1905,159 +1899,175 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4704cf2be3c0017057049/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e34a3bc97001aeff717/ ...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb470553992690018133dbe/ ...
 </pre></div>
 </div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e29f2be3c001601dc17/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3d8a743a90019606cb5/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3d8a743a90018606e75/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3dba743a90018606e7e/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3de4712b4001a3b55f4/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47017f2be3c0017056f8d/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e13f2be3c0017056b37/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4704ca3bc970018f1fcda/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e0b39926900160f693c/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb4704c3992690018133da6/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e1c3992690018133aa2/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3dc4712b4001a3b55f0/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5c8ff3df2286e80018c3e421/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (2 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb47021353c58001b9cb59f/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading data from https://osf.io/download/5cb46e2f353c58001b9cb2f1/ ...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> ...done. (1 seconds, 0 min)
+</pre></div>
+</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_2007</span><span class="o">/</span><span class="mf">1284920250.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> 
-<span class="ne">----&gt; </span><span class="mi">9</span> <span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="n">msdl_atlas</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_atlas_msdl</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span> 
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_1926</span><span class="o">/</span><span class="mf">1284920250.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span>         <span class="n">development_dataset</span><span class="o">.</span><span class="n">phenotypic</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">25</span> 
+<span class="ne">---&gt; </span><span class="mi">26</span>     <span class="n">time_series</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">func_file</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="n">confound_file</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span>     <span class="n">pooled_subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span>     <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phenotypic</span><span class="p">[</span><span class="s1">&#39;Child_Adult&#39;</span><span class="p">])</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/datasets/func.py</span> in <span class="ni">fetch_development_fmri</span><span class="nt">(n_subjects, reduce_confounds, data_dir, resume, verbose, age_group)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2001</span>         <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2002</span>         <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
-<span class="ne">-&gt; </span><span class="mi">2003</span>         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2004</span>     <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2005</span> 
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/maskers/base_masker.py</span> in <span class="ni">transform</span><span class="nt">(self, imgs, confounds, sample_mask)</span>
+<span class="g g-Whitespace">    </span><span class="mi">247</span> 
+<span class="g g-Whitespace">    </span><span class="mi">248</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_single_imgs</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="n">all_confounds</span><span class="p">,</span>
+<span class="ne">--&gt; </span><span class="mi">249</span>                                           <span class="n">sample_mask</span><span class="o">=</span><span class="n">sample_mask</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">250</span> 
+<span class="g g-Whitespace">    </span><span class="mi">251</span>     <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/datasets/func.py</span> in <span class="ni">_fetch_development_fmri_functional</span><span class="nt">(participants, data_dir, url, resume, verbose)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1847</span>         <span class="p">]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1848</span>         <span class="n">path_to_regressor</span> <span class="o">=</span> <span class="n">_fetch_files</span><span class="p">(</span>
-<span class="ne">-&gt; </span><span class="mi">1849</span>             <span class="n">data_dir</span><span class="p">,</span> <span class="n">regressor_file</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
-<span class="g g-Whitespace">   </span><span class="mi">1850</span>         <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1851</span>         <span class="n">regressors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_to_regressor</span><span class="p">)</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/maskers/nifti_maps_masker.py</span> in <span class="ni">transform_single_imgs</span><span class="nt">(self, imgs, confounds, sample_mask)</span>
+<span class="g g-Whitespace">    </span><span class="mi">567</span>             <span class="n">memory_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_level</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">568</span>             <span class="c1"># kwargs</span>
+<span class="ne">--&gt; </span><span class="mi">569</span>             <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">570</span>         <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">571</span>         <span class="bp">self</span><span class="o">.</span><span class="n">labels_</span> <span class="o">=</span> <span class="n">labels_</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/datasets/utils.py</span> in <span class="ni">_fetch_files</span><span class="nt">(data_dir, files, resume, verbose, session)</span>
-<span class="g g-Whitespace">    </span><span class="mi">789</span>                 <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">790</span>                 <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">791</span>                 <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">792</span>             <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">793</span>     <span class="c1"># There are two working directories here:</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/joblib/memory.py</span> in <span class="ni">__call__</span><span class="nt">(self, *args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">351</span> 
+<span class="g g-Whitespace">    </span><span class="mi">352</span>     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">353</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">354</span> 
+<span class="g g-Whitespace">    </span><span class="mi">355</span>     <span class="k">def</span> <span class="nf">call_and_shelve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/datasets/utils.py</span> in <span class="ni">_fetch_files</span><span class="nt">(data_dir, files, resume, verbose, session)</span>
-<span class="g g-Whitespace">    </span><span class="mi">852</span>                 <span class="n">password</span><span class="o">=</span><span class="n">opts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">    </span><span class="mi">853</span>                 <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">854</span>                 <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">855</span>             <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">856</span>             <span class="k">if</span> <span class="s2">&quot;move&quot;</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/maskers/base_masker.py</span> in <span class="ni">_filter_and_extract</span><span class="nt">(imgs, extraction_function, parameters, memory_level, memory, verbose, confounds, sample_mask, copy, dtype)</span>
+<span class="g g-Whitespace">    </span><span class="mi">106</span>     <span class="n">region_signals</span><span class="p">,</span> <span class="n">aux</span> <span class="o">=</span> <span class="n">cache</span><span class="p">(</span><span class="n">extraction_function</span><span class="p">,</span> <span class="n">memory</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">107</span>                                 <span class="n">func_memory_level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="ne">--&gt; </span><span class="mi">108</span>                                 <span class="n">memory_level</span><span class="o">=</span><span class="n">memory_level</span><span class="p">)(</span><span class="n">imgs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">109</span> 
+<span class="g g-Whitespace">    </span><span class="mi">110</span>     <span class="c1"># Temporal</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/datasets/utils.py</span> in <span class="ni">_fetch_file</span><span class="nt">(url, data_dir, resume, overwrite, md5sum, username, password, verbose, session)</span>
-<span class="g g-Whitespace">    </span><span class="mi">661</span>             <span class="n">prepped</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare_request</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">662</span>             <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
-<span class="ne">--&gt; </span><span class="mi">663</span>                 <span class="n">prepped</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">_REQUESTS_TIMEOUT</span>
-<span class="g g-Whitespace">    </span><span class="mi">664</span>             <span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">665</span>                 <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/joblib/memory.py</span> in <span class="ni">__call__</span><span class="nt">(self, *args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">351</span> 
+<span class="g g-Whitespace">    </span><span class="mi">352</span>     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">353</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">354</span> 
+<span class="g g-Whitespace">    </span><span class="mi">355</span>     <span class="k">def</span> <span class="nf">call_and_shelve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">send</span><span class="nt">(self, request, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">723</span>             <span class="c1"># Redirect resolving generator.</span>
-<span class="g g-Whitespace">    </span><span class="mi">724</span>             <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_redirects</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">725</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[</span><span class="n">resp</span> <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">]</span>
-<span class="g g-Whitespace">    </span><span class="mi">726</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">727</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/maskers/nifti_maps_masker.py</span> in <span class="ni">__call__</span><span class="nt">(self, imgs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">21</span>         <span class="k">return</span> <span class="n">signal_extraction</span><span class="o">.</span><span class="n">img_to_signals_maps</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">22</span>             <span class="n">imgs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resampled_maps_img_</span><span class="p">,</span>
+<span class="ne">---&gt; </span><span class="mi">23</span>             <span class="n">mask_img</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_resampled_mask_img_</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span> 
+<span class="g g-Whitespace">     </span><span class="mi">25</span> 
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">&lt;listcomp&gt;</span><span class="nt">(.0)</span>
-<span class="g g-Whitespace">    </span><span class="mi">723</span>             <span class="c1"># Redirect resolving generator.</span>
-<span class="g g-Whitespace">    </span><span class="mi">724</span>             <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_redirects</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">725</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[</span><span class="n">resp</span> <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">]</span>
-<span class="g g-Whitespace">    </span><span class="mi">726</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">727</span>             <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/regions/signal_extraction.py</span> in <span class="ni">img_to_signals_maps</span><span class="nt">(imgs, maps_img, mask_img)</span>
+<span class="g g-Whitespace">    </span><span class="mi">435</span>         <span class="n">maps_mask</span> <span class="o">=</span> <span class="n">_utils</span><span class="o">.</span><span class="n">as_ndarray</span><span class="p">(</span><span class="n">maps_mask</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">436</span> 
+<span class="ne">--&gt; </span><span class="mi">437</span>     <span class="n">data</span> <span class="o">=</span> <span class="n">_safe_get_data</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">ensure_finite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">438</span>     <span class="n">region_signals</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">maps_data</span><span class="p">[</span><span class="n">maps_mask</span><span class="p">,</span> <span class="p">:],</span> <span class="n">data</span><span class="p">[</span><span class="n">maps_mask</span><span class="p">,</span> <span class="p">:])[</span>
+<span class="g g-Whitespace">    </span><span class="mi">439</span>         <span class="mi">0</span>
 
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">resolve_redirects</span><span class="nt">(self, resp, req, stream, timeout, verify, cert, proxies, yield_requests, **adapter_kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">272</span>                     <span class="n">proxies</span><span class="o">=</span><span class="n">proxies</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">273</span>                     <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">274</span>                     <span class="o">**</span><span class="n">adapter_kwargs</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">275</span>                 <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">276</span> 
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/sessions.py</span> in <span class="ni">send</span><span class="nt">(self, request, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">701</span> 
-<span class="g g-Whitespace">    </span><span class="mi">702</span>         <span class="c1"># Send the request</span>
-<span class="ne">--&gt; </span><span class="mi">703</span>         <span class="n">r</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">704</span> 
-<span class="g g-Whitespace">    </span><span class="mi">705</span>         <span class="c1"># Total elapsed time of the request (approximately)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/requests/adapters.py</span> in <span class="ni">send</span><span class="nt">(self, request, stream, timeout, verify, cert, proxies)</span>
-<span class="g g-Whitespace">    </span><span class="mi">495</span>                 <span class="n">retries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_retries</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">496</span>                 <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">497</span>                 <span class="n">chunked</span><span class="o">=</span><span class="n">chunked</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">498</span>             <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">499</span> 
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connectionpool.py</span> in <span class="ni">urlopen</span><span class="nt">(self, method, url, body, headers, retries, redirect, assert_same_host, timeout, pool_timeout, release_conn, chunked, body_pos, preload_content, decode_content, **response_kw)</span>
-<span class="g g-Whitespace">    </span><span class="mi">800</span>                 <span class="n">preload_content</span><span class="o">=</span><span class="n">preload_content</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">801</span>                 <span class="n">decode_content</span><span class="o">=</span><span class="n">decode_content</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">802</span>                 <span class="o">**</span><span class="n">response_kw</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">803</span>             <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">804</span> 
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connectionpool.py</span> in <span class="ni">_make_request</span><span class="nt">(self, conn, method, url, body, headers, retries, timeout, chunked, response_conn, preload_content, decode_content, enforce_content_length)</span>
-<span class="g g-Whitespace">    </span><span class="mi">534</span>         <span class="c1"># Receive the response from the server</span>
-<span class="g g-Whitespace">    </span><span class="mi">535</span>         <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">536</span>             <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">537</span>         <span class="k">except</span> <span class="p">(</span><span class="n">BaseSSLError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">538</span>             <span class="bp">self</span><span class="o">.</span><span class="n">_raise_timeout</span><span class="p">(</span><span class="n">err</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout_value</span><span class="o">=</span><span class="n">read_timeout</span><span class="p">)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/urllib3/connection.py</span> in <span class="ni">getresponse</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">459</span> 
-<span class="g g-Whitespace">    </span><span class="mi">460</span>         <span class="c1"># Get the response from http.client.HTTPConnection</span>
-<span class="ne">--&gt; </span><span class="mi">461</span>         <span class="n">httplib_response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">462</span> 
-<span class="g g-Whitespace">    </span><span class="mi">463</span>         <span class="k">try</span><span class="p">:</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/http/client.py</span> in <span class="ni">getresponse</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1371</span>         <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1372</span>             <span class="k">try</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1373</span>                 <span class="n">response</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
-<span class="g g-Whitespace">   </span><span class="mi">1374</span>             <span class="k">except</span> <span class="ne">ConnectionError</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1375</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/http/client.py</span> in <span class="ni">begin</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">317</span>         <span class="c1"># read until we get a non-100 response</span>
-<span class="g g-Whitespace">    </span><span class="mi">318</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">319</span>             <span class="n">version</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_status</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">320</span>             <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">CONTINUE</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">321</span>                 <span class="k">break</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/http/client.py</span> in <span class="ni">_read_status</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">278</span> 
-<span class="g g-Whitespace">    </span><span class="mi">279</span>     <span class="k">def</span> <span class="nf">_read_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">280</span>         <span class="n">line</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">(</span><span class="n">_MAXLINE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;iso-8859-1&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">281</span>         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_MAXLINE</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">282</span>             <span class="k">raise</span> <span class="n">LineTooLong</span><span class="p">(</span><span class="s2">&quot;status line&quot;</span><span class="p">)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/socket.py</span> in <span class="ni">readinto</span><span class="nt">(self, b)</span>
-<span class="g g-Whitespace">    </span><span class="mi">587</span>         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">588</span>             <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">589</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sock</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">590</span>             <span class="k">except</span> <span class="n">timeout</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">591</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">_timeout_occurred</span> <span class="o">=</span> <span class="kc">True</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/ssl.py</span> in <span class="ni">recv_into</span><span class="nt">(self, buffer, nbytes, flags)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1069</span>                   <span class="s2">&quot;non-zero flags not allowed in calls to recv_into() on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
-<span class="g g-Whitespace">   </span><span class="mi">1070</span>                   <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1071</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1072</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1073</span>             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
-
-<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/ssl.py</span> in <span class="ni">read</span><span class="nt">(self, len, buffer)</span>
-<span class="g g-Whitespace">    </span><span class="mi">927</span>         <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">928</span>             <span class="k">if</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">929</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">930</span>             <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">931</span>                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<span class="nn">/opt/hostedtoolcache/Python/3.7.17/x64/lib/python3.7/site-packages/nilearn/_utils/niimg.py</span> in <span class="ni">_safe_get_data</span><span class="nt">(img, ensure_finite, copy_data)</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span>     <span class="c1"># typically the line below can double memory usage</span>
+<span class="g g-Whitespace">     </span><span class="mi">55</span>     <span class="c1"># that&#39;s why we invoke a forced call to the garbage collector</span>
+<span class="ne">---&gt; </span><span class="mi">56</span>     <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">57</span> 
+<span class="g g-Whitespace">     </span><span class="mi">58</span>     <span class="n">data</span> <span class="o">=</span> <span class="n">_get_data</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 
 <span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
@@ -2084,7 +2094,7 @@ that is, the percentages of child and adult participants in our classification e
         <span class="n">connectivity</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">test</span><span class="p">]))</span>
     <span class="n">strat_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">classes</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">predictions</span><span class="p">))</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;StratifiedShuffleSplit Accuracy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> +/- </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;StratifiedShuffleSplit Accuracy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> ± </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2116,15 +2126,22 @@ We can test this by using <code class="docutils literal notranslate"><span class
         <span class="n">connectivity</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">ktest</span><span class="p">]))</span>
     <span class="n">kfold_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">classes</span><span class="p">[</span><span class="n">ktest</span><span class="p">],</span> <span class="n">kfold_predictions</span><span class="p">))</span>
 
-<span class="c1"># Then, generate a confusion matrix for the trained classifier</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;KFold Accuracy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">kfold_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> ± </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">kfold_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Then, generate a confusion matrix for the trained classifier</span>
 <span class="c1"># We&#39;ll plot just the last CV fold for now</span>
 <span class="n">cm</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="o">.</span><span class="n">from_predictions</span><span class="p">(</span><span class="n">classes</span><span class="p">[</span><span class="n">ktest</span><span class="p">],</span> <span class="n">kfold_predictions</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Now our classifer is only predicting the <code class="docutils literal notranslate"><span class="pre">child</span></code> age group label,
-since this is the majority of our dataset !</p>
+<p>Now our classifer is only shown the <code class="docutils literal notranslate"><span class="pre">child</span></code> age group label at testing,
+but it’s predicting both child and adult labels !</p>
 <section id="beyond-accuracy-the-receiver-operator-characteristic-roc-curve">
 <h3>Beyond accuracy: The Receiver-Operator Characteristic (ROC) Curve<a class="headerlink" href="#beyond-accuracy-the-receiver-operator-characteristic-roc-curve" title="Permalink to this heading">#</a></h3>
 <p>This exercise also shows the limitations of the <em>accuracy</em> metric.
@@ -2134,7 +2151,7 @@ our KFold model has an undefined area under the curve,
 since it only predicts one value !</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">RocCurveDisplay</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">auc</span><span class="p">,</span> <span class="n">RocCurveDisplay</span>
 
 <span class="n">RocCurveDisplay</span><span class="o">.</span><span class="n">from_predictions</span><span class="p">(</span>
     <span class="n">classes</span><span class="p">[</span><span class="n">test</span><span class="p">],</span>
@@ -2161,11 +2178,85 @@ but we can think about them as defining our classifer’s performance in a space
 from <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">Wikipedia</a>.</span><a class="headerlink" href="#roc-curve" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
+<p>Our ROC curve also provides a useful visualization to look at the variability of our learned model across cross-validation folds !</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tprs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">aucs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">mean_fpr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedShuffleSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">fold</span><span class="p">,</span> <span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">,</span> <span class="n">groups</span><span class="p">)):</span>
+    <span class="n">connectivity</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">connectomes</span> <span class="o">=</span> <span class="n">connectivity</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
+    <span class="n">classifier</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">connectomes</span><span class="p">,</span> <span class="n">classes</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
+    <span class="n">viz</span> <span class="o">=</span> <span class="n">RocCurveDisplay</span><span class="o">.</span><span class="n">from_estimator</span><span class="p">(</span>
+        <span class="n">classifier</span><span class="p">,</span>
+        <span class="n">connectivity</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">test</span><span class="p">]),</span>
+        <span class="n">classes</span><span class="p">[</span><span class="n">test</span><span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;ROC fold </span><span class="si">{</span><span class="n">fold</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">plot_chance_level</span><span class="o">=</span><span class="p">(</span><span class="n">fold</span> <span class="o">==</span> <span class="mi">4</span><span class="p">),</span>  <span class="c1"># n_splits - 1</span>
+    <span class="p">)</span>
+    <span class="n">interp_tpr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">mean_fpr</span><span class="p">,</span> <span class="n">viz</span><span class="o">.</span><span class="n">fpr</span><span class="p">,</span> <span class="n">viz</span><span class="o">.</span><span class="n">tpr</span><span class="p">)</span>
+    <span class="n">interp_tpr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">tprs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">interp_tpr</span><span class="p">)</span>
+    <span class="n">aucs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">viz</span><span class="o">.</span><span class="n">roc_auc</span><span class="p">)</span>
+
+<span class="n">mean_tpr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">tprs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">mean_tpr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">mean_auc</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">mean_fpr</span><span class="p">,</span> <span class="n">mean_tpr</span><span class="p">)</span>
+<span class="n">std_auc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">aucs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">mean_fpr</span><span class="p">,</span>
+    <span class="n">mean_tpr</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Mean ROC (AUC = %0.2f ± %0.2f)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mean_auc</span><span class="p">,</span> <span class="n">std_auc</span><span class="p">),</span>
+    <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">std_tpr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">tprs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">tprs_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">mean_tpr</span> <span class="o">+</span> <span class="n">std_tpr</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">tprs_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">mean_tpr</span> <span class="o">-</span> <span class="n">std_tpr</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+    <span class="n">mean_fpr</span><span class="p">,</span>
+    <span class="n">tprs_lower</span><span class="p">,</span>
+    <span class="n">tprs_upper</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;± 1 std. dev.&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">],</span>
+    <span class="n">ylim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">],</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;False Positive Rate&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;True Positive Rate&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Mean ROC curve with variability&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
 </section>
 </section>
 <section id="small-sample-sizes-give-a-wide-distribution-of-errors">
 <h2>Small sample sizes give a wide distribution of errors<a class="headerlink" href="#small-sample-sizes-give-a-wide-distribution-of-errors" title="Permalink to this heading">#</a></h2>
-<p>Another common issue in cross-validation is when we create small test set.</p>
+<p>Another common issue in cross-validation is when we only have access to small test set.</p>
 <figure class="align-default" id="test-size">
 <a class="reference internal image-reference" href="_images/varoquaux-2017-fig1.png"><img alt="_images/varoquaux-2017-fig1.png" src="_images/varoquaux-2017-fig1.png" style="height: 400px;" /></a>
 <figcaption>
@@ -2181,6 +2272,29 @@ This wide confidence bound is a result of an interaction between</p>
 <li><p>the large sampling noise in neuroimaging data and</p></li>
 <li><p>the relatively small sample sizes that we provide to the classifier.</p></li>
 </ol>
+<p>We can replicate this idea by systematically decreasing the size of our test set, first to 15 participants.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
+<span class="c1"># med test set StratifiedShuffleSplit</span>
+
+<span class="n">med_strat_scores</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedShuffleSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+    <span class="n">connectivity</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">connectomes</span> <span class="o">=</span> <span class="n">connectivity</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
+    <span class="n">classifier</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">connectomes</span><span class="p">,</span> <span class="n">classes</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+        <span class="n">connectivity</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">test</span><span class="p">]))</span>
+    <span class="n">med_strat_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">classes</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">predictions</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Medium StratifiedShuffleSplit Accuracy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">med_strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> ± </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">med_strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then to 5.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
@@ -2197,38 +2311,31 @@ This wide confidence bound is a result of an interaction between</p>
         <span class="n">connectivity</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">test</span><span class="p">]))</span>
     <span class="n">small_strat_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">classes</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">predictions</span><span class="p">))</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Small StratifiedShuffleSplit Accuracy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">small_strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> +/- </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">small_strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Small StratifiedShuffleSplit Accuracy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">small_strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> ± </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">small_strat_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compare with cross-validation scores for leave-one-subject-out</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">LeaveOneOut</span>
-<span class="n">loo_scores</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="n">cv</span> <span class="o">=</span> <span class="n">LeaveOneOut</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">):</span>
-    <span class="n">connectivity</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">connectomes</span> <span class="o">=</span> <span class="n">connectivity</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
-    <span class="n">classifier</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">connectomes</span><span class="p">,</span> <span class="n">classes</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
-    <span class="n">predictions</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-        <span class="n">connectivity</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">test</span><span class="p">]))</span>
-    <span class="n">loo_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">classes</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">predictions</span><span class="p">))</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Leave-One-Out Accuracy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">loo_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> +/- </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">loo_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
+<p>Then we can compare the distributions of these accuracy scores for each cross-validation scheme:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
 
-<span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">strat_scores</span><span class="p">,</span> <span class="n">small_strat_scores</span><span class="p">,</span> <span class="n">loo_scores</span><span class="p">],</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">strat_scores</span><span class="p">,</span> <span class="n">med_strat_scores</span><span class="p">,</span> <span class="n">small_strat_scores</span><span class="p">],</span> 
+    <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> 
+    <span class="n">cut</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">yticklabels</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;Stratified Shuffle (30)&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;Stratified Shuffle (15)&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;Stratified Shuffle (5)&#39;</span>
+    <span class="p">],</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Cross-validation strategy&#39;</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Accuracy&#39;</span>
+<span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -2252,6 +2359,29 @@ The box gives the quartiles, while the whiskers give the 5 and 95 percentiles.</
 For example, if we leave-one-session-out for predictions within a participant, we see that our estimated prediction accuracy from cross-validation is much higher than our prediction accuracy on a held-out validation set.
 This is because different sessions from the same participant are highly-correlated;
 that is, participants are likely to show similar patterns of neural responses across sessions.</p>
+<p>In our dataset, this isn’t a clear problem, since each participant was only sampled once.
+It is, though, something to stay aware of !</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compare with cross-validation scores for leave-one-subject-out</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">LeaveOneOut</span>
+<span class="n">loo_scores</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">cv</span> <span class="o">=</span> <span class="n">LeaveOneOut</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">):</span>
+    <span class="n">connectivity</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">connectomes</span> <span class="o">=</span> <span class="n">connectivity</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
+    <span class="n">classifier</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">connectomes</span><span class="p">,</span> <span class="n">classes</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+        <span class="n">connectivity</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pooled_subjects</span><span class="p">[</span><span class="n">test</span><span class="p">]))</span>
+    <span class="n">loo_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">classes</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">predictions</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Leave-One-Out Accuracy: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">loo_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> ± </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">loo_scores</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="docutils container" id="id7">
 <dl class="citation">
 <dt class="label" id="id10"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
