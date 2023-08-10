@@ -65,7 +65,7 @@ Now we should have a much better idea what each line above is doing!
 Let's see how we can use these objects across many subjects,
 not just the first one.
 
-## Region signals extraction
+## Building our dataset
 
 First, we can loop through the 30 participants and extract a few relevant pieces of information,
 including their functional scan, their confounds file,
@@ -83,7 +83,8 @@ groups = []  # child or adult
 for func_file, confound_file, phenotypic in zip(
         development_dataset.func,
         development_dataset.confounds,
-        development_dataset.phenotypic):
+        development_dataset.phenotypic
+    ):
 
     time_series = masker.transform(func_file, confounds=confound_file)
     pooled_subjects.append(time_series)
@@ -93,7 +94,7 @@ for func_file, confound_file, phenotypic in zip(
 
     groups.append(phenotypic['Child_Adult'])
 
-print('Data has {0} children.'.format(len(children)))
+print(f'Data has {len(children)} children.')
 ```
 
 We can see that this data set has 24 children.
@@ -108,7 +109,7 @@ We can quickly confirm that this is true:
 print(pooled_subjects[0].shape)
 ```
 
-## ROI-to-ROI correlations of children
+## ROI-to-ROI correlations in children
 
 First, we'll use the most common kind of connectivity--and the one we used in the last section--correlation.
 It models the full (marginal) connectivity between pairwise ROIs.
