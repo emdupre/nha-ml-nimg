@@ -1,25 +1,33 @@
 ---
 jupytext:
-  formats: md:myst
   text_representation:
     extension: .md
     format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.15.0
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
-repository:
-  url: https://github.com/emdupre/nha-ml-nimg
 ---
 
 (class-example)=
 # An example classification problem
 
-```{code-cell} python3
+```{code-cell} ipython3
 :tags: [hide-cell]
 
 import warnings
 warnings.filterwarnings("ignore")
+```
+
+```{code-cell} ipython3
+:tags: [hide-cell]
+import os
+from nilearn import datasets
+
+os.environ["NILEARN_SHARED_DATA"] = "~/shared/data/nilearn_data"
+datasets.get_data_dirs()
 ```
 
 Now that we've seen how to create a connectome for an individual subject,
@@ -44,8 +52,9 @@ This will include all the dependencies from the last notebook,
 loading the relevant data using our `nilearn` data set fetchers,
 and instantiated our `NiftiMapsMasker` and `ConnectivityMeasure` objects.
 
-```{code-cell} python3
+```{code-cell} ipython3
 :tags: [hide-output]
+
 import numpy as np
 import matplotlib.pyplot as plt
 from nilearn import (datasets, maskers, plotting)
@@ -75,15 +84,15 @@ Using this information, we can then transform their data using the `NiftiMapsMas
 As we learned last time, it's really important to correct for known sources of noise!
 So we'll also pass the relevant confounds file directly to the masker object to clean up each subject's data.
 
-```{code-cell} python3
+```{code-cell} ipython3
 children = []
 pooled_subjects = []
 groups = []  # child or adult
 
-for func_file, confound_file, phenotypic in zip(
+for func_file, confound_file, (_, phenotypic) in zip(
         development_dataset.func,
         development_dataset.confounds,
-        development_dataset.phenotypic
+        development_dataset.phenotypic.iterrows()
     ):
 
     time_series = masker.transform(func_file, confounds=confound_file)
@@ -105,7 +114,7 @@ We've also created a list in `pooled_subjects` containing all of the cleaned dat
 Remember that each entry of that list should have a shape of (168, 39).
 We can quickly confirm that this is true:
 
-```{code-cell} python3
+```{code-cell} ipython3
 print(pooled_subjects[0].shape)
 ```
 
@@ -120,27 +129,27 @@ It will then compute individual correlation matrices for each subject.
 First, let's just look at the correlation matrices for our 24 children,
 since we expect these matrices to be similar:
 
-```{code-cell} python3
+```{code-cell} ipython3
 correlation_matrices = correlation_measure.fit_transform(children)
 ```
 
 Now, all individual coefficients are stacked in a unique 2D matrix.
 
-```{code-cell} python3
+```{code-cell} ipython3
 print('Correlations of children are stacked in an array of shape {0}'
       .format(correlation_matrices.shape))
 ```
 
 We can also directly access the average correlation across all fitted subjects using the `mean_` attribute.
 
-```{code-cell} python3
+```{code-cell} ipython3
 mean_correlation_matrix = correlation_measure.mean_
 print('Mean correlation has shape {0}.'.format(mean_correlation_matrix.shape))
 ```
 
 Let's display the functional connectivity matrices of the first 3 children:
 
-```{code-cell} python3
+```{code-cell} ipython3
 _, axes = plt.subplots(1, 3, figsize=(15, 5))
 for i, (matrix, ax) in enumerate(zip(correlation_matrices, axes)):
     plotting.plot_matrix(matrix, colorbar=False, axes=ax,
@@ -151,7 +160,7 @@ for i, (matrix, ax) in enumerate(zip(correlation_matrices, axes)):
 Just as before, we can also display connectome on the brain.
 Here, let's show the mean connectome over all 24 children.
 
-```{code-cell} python3
+```{code-cell} ipython3
 plotting.view_connectome(mean_correlation_matrix, msdl_atlas.region_coords,
                          edge_threshold=0.2,
                          title='mean connectome over all children')
@@ -164,7 +173,7 @@ we can also study **direct connections** as revealed by partial correlation coef
 
 To do this, we can use exactly the same procedure as above, just changing the `ConnectivityMeasure` kind:
 
-```{code-cell} python3
+```{code-cell} ipython3
 partial_correlation_measure = ConnectivityMeasure(kind='partial correlation')
 partial_correlation_matrices = partial_correlation_measure.fit_transform(
     children)
@@ -172,7 +181,7 @@ partial_correlation_matrices = partial_correlation_measure.fit_transform(
 
 Right away, we can see that most of direct connections are weaker than full connections for the first three children:
 
-```{code-cell} python3
+```{code-cell} ipython3
 _, axes = plt.subplots(1, 3, figsize=(15, 5))
 for i, (matrix, ax) in enumerate(zip(partial_correlation_matrices, axes)):
     plotting.plot_matrix(matrix, colorbar=False, axes=ax,
@@ -182,7 +191,7 @@ for i, (matrix, ax) in enumerate(zip(partial_correlation_matrices, axes)):
 
 This is also visible when we display the mean partial correlation connectome:
 
-```{code-cell} python3
+```{code-cell} ipython3
 plotting.view_connectome(
     partial_correlation_measure.mean_, msdl_atlas.region_coords,
     edge_threshold=0.2,
@@ -197,7 +206,7 @@ reproducible connectivity patterns at the group-level.
 
 Using this method is as easy as changing the kind of `ConnectivityMeasure`
 
-```{code-cell} python3
+```{code-cell} ipython3
 tangent_measure = ConnectivityMeasure(kind='tangent')
 ```
 
@@ -205,7 +214,7 @@ We fit our children group and get the group connectivity matrix stored as
 in `tangent_measure.mean_`, and individual deviation matrices of each subject
 from it.
 
-```{code-cell} python3
+```{code-cell} ipython3
 tangent_matrices = tangent_measure.fit_transform(children)
 ```
 
@@ -215,7 +224,7 @@ Keep in mind that these subjects-to-group variability matrices do not
 directly reflect individual brain connections. For instance negative
 coefficients can not be interpreted as anticorrelated regions.
 
-```{code-cell} python3
+```{code-cell} ipython3
 _, axes = plt.subplots(1, 3, figsize=(15, 5))
 for i, (matrix, ax) in enumerate(zip(tangent_matrices, axes)):
     plotting.plot_matrix(matrix, colorbar=False, axes=ax,
@@ -237,7 +246,7 @@ First, we'll randomly split participants into training and testing sets 15 times
 We'll also compute classification accuracies for each of the kinds of functional connectivity we've identified:
 correlation, partial correlation, and tangent space embedding.
 
-```{code-cell} python3
+```{code-cell} ipython3
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.svm import LinearSVC
@@ -252,7 +261,7 @@ Now, we can train the scikit-learn `LinearSVC` estimator to on our training set 
 and apply the trained classifier on our testing set,
 storing accuracy scores after each cross-validation fold:
 
-```{code-cell} python3
+```{code-cell} ipython3
 scores = {}
 for kind in kinds:
     scores[kind] = []
@@ -273,7 +282,7 @@ for kind in kinds:
 
 After we've done this for all of the folds, we can display the results!
 
-```{code-cell} python3
+```{code-cell} ipython3
 mean_scores = [np.mean(scores[kind]) for kind in kinds]
 scores_std = [np.std(scores[kind]) for kind in kinds]
 

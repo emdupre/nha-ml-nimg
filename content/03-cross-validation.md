@@ -1,24 +1,32 @@
 ---
 jupytext:
-  formats: md:myst
   text_representation:
     extension: .md
     format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.15.0
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
-repository:
-  url: https://github.com/emdupre/nha-ml-nimg
 ---
 
 # Evaluating our machine learning models
 
-```{code-cell} python3
+```{code-cell} ipython3
 :tags: [hide-cell]
 
 import warnings
 warnings.filterwarnings("ignore")
+```
+
+```{code-cell} ipython3
+:tags: [hide-cell]
+import os
+from nilearn import datasets
+
+os.environ["NILEARN_SHARED_DATA"] = "~/shared/data/nilearn_data"
+datasets.get_data_dirs()
 ```
 
 Now that we've run a few classifications models, what more could we need to know about machine learning in neuroimaging ?
@@ -80,8 +88,9 @@ Here, we briefly highlight how cross-validation impacts our estimates in our exa
 We'll keep working with the same `development_dataset`, though this time we'll fetch all 155 subjects.
 Again, we'll derive functional connectivity matrices for each participant, though this time we'll only consider the "correlation" measure.
 
-```{code-cell} python3
+```{code-cell} ipython3
 :tags: [hide-output]
+
 import numpy as np
 import matplotlib.pyplot as plt
 from nilearn import (datasets, maskers, plotting)
@@ -102,10 +111,10 @@ correlation_measure = ConnectivityMeasure(kind='correlation')
 pooled_subjects = []
 groups = []  # child or adult
 
-for func_file, confound_file, phenotypic in zip(
+for func_file, confound_file, (_, phenotypic) in zip(
         development_dataset.func,
         development_dataset.confounds,
-        development_dataset.phenotypic):
+        development_dataset.phenotypic.iterrows()):
 
     time_series = masker.transform(func_file, confounds=confound_file)
     pooled_subjects.append(time_series)
@@ -119,7 +128,7 @@ In [our classification example](class-example), we used `StratifiedShuffleSplit`
 This method preserves the percentage of samples for each class across train and test splits;
 that is, the percentages of child and adult participants in our classification example.
 
-```{code-cell} python3
+```{code-cell} ipython3
 from sklearn.metrics import ConfusionMatrixDisplay
 # First, re-generate our cross-validation scores for StratifiedShuffleSplit
 
@@ -137,7 +146,7 @@ for train, test in cv.split(pooled_subjects, groups):
 print(f'StratifiedShuffleSplit Accuracy: {np.mean(strat_scores):.2f} ± {np.std(strat_scores):.2f}')
 ```
 
-```{code-cell} python3
+```{code-cell} ipython3
 # Then, generate a confusion matrix for the trained classifier
 # We'll plot just the last CV fold for now
 cm = ConfusionMatrixDisplay.from_predictions(classes[test], predictions)
@@ -146,7 +155,7 @@ cm = ConfusionMatrixDisplay.from_predictions(classes[test], predictions)
 What if we don't account for age groups when generating our cross-validation folds ?
 We can test this by using `KFold`, which does not stratify by group membership.
 
-```{code-cell} python3
+```{code-cell} ipython3
 # Then, compare with cross-validation scores for ShuffleSplit
 
 from sklearn.model_selection import KFold
@@ -164,14 +173,11 @@ for train, ktest in cv.split(pooled_subjects):
 print(f'KFold Accuracy: {np.mean(kfold_scores):.2f} ± {np.std(kfold_scores):.2f}')
 ```
 
-```{code-cell} python3
+```{code-cell} ipython3
 # Then, generate a confusion matrix for the trained classifier
 # We'll plot just the last CV fold for now
 cm = ConfusionMatrixDisplay.from_predictions(classes[ktest], kfold_predictions)
 ```
-
-Now our classifer is only shown the `child` age group label at testing,
-but it's predicting both child and adult labels !
 
 ### Beyond accuracy: The Receiver-Operator Characteristic (ROC) Curve
 
@@ -181,7 +187,7 @@ Note that we're showing the ROC Curve for our StratifiedShuffleSplit model;
 our KFold model has an undefined area under the curve,
 since it only predicts one value !
 
-```{code-cell} python3
+```{code-cell} ipython3
 from sklearn.metrics import auc, RocCurveDisplay
 
 RocCurveDisplay.from_predictions(
@@ -212,8 +218,9 @@ from [Wikipedia](https://en.wikipedia.org/wiki/Receiver_operating_characteristic
 
 Our ROC curve also provides a useful visualization to look at the variability of our learned model across cross-validation folds !
 
-```{code-cell} python3
+```{code-cell} ipython3
 :tags: [hide-input]
+
 tprs = []
 aucs = []
 mean_fpr = np.linspace(0, 1, 100)
@@ -277,7 +284,6 @@ ax.legend(loc="lower right")
 plt.show()
 ```
 
-
 ## Small sample sizes give a wide distribution of errors
 
 Another common issue in cross-validation is when we only have access to small test set.
@@ -300,7 +306,7 @@ This wide confidence bound is a result of an interaction between
 
 We can replicate this idea by systematically decreasing the size of our test set, first to 15 participants.
 
-```{code-cell} python3
+```{code-cell} ipython3
 from sklearn.metrics import ConfusionMatrixDisplay
 # med test set StratifiedShuffleSplit
 
@@ -320,7 +326,7 @@ print(f'Medium StratifiedShuffleSplit Accuracy: {np.mean(med_strat_scores):.2f} 
 
 Then to 5.
 
-```{code-cell} python3
+```{code-cell} ipython3
 from sklearn.metrics import ConfusionMatrixDisplay
 # small test set StratifiedShuffleSplit
 
@@ -340,7 +346,7 @@ print(f'Small StratifiedShuffleSplit Accuracy: {np.mean(small_strat_scores):.2f}
 
 Then we can compare the distributions of these accuracy scores for each cross-validation scheme:
 
-```{code-cell} python3
+```{code-cell} ipython3
 import seaborn as sns
 sns.set_theme(style='white')
 
@@ -385,7 +391,7 @@ that is, participants are likely to show similar patterns of neural responses ac
 In our dataset, this isn't a clear problem, since each participant was only sampled once.
 It is, though, something to stay aware of !
 
-```{code-cell} python3
+```{code-cell} ipython3
 # Compare with cross-validation scores for leave-one-subject-out
 
 from sklearn.model_selection import LeaveOneOut

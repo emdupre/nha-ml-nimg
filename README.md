@@ -1,4 +1,3 @@
-# NeuroHackademy : Machine Learning for Neuroimaging
+# NeuroHackademy 2025: Machine Learning for Neuroimaging
 
-Materials presented at NeuroHackademy 2023 to introduce machine learning for neuroimaging.
-This tutorial heavily depends on the [Nilearn](https://nilearn.github.io) library.
+Materials presented at NeuroHackademy 2025 to introduce the software `nilearn` for statistical and machine learning analysis of neuroimaging data.
