@@ -438,11 +438,11 @@ Everything that we’ve done to date falls broadly under the umbrella of “feat
 When applying machine learning, however, equally important are (1) the model that we train to generate predictions and (2) how we assess the generalizability of our learned model.</p>
 <p>In this notebook, we’ll focus on (2).
 In particular, we’ll highlight the importance of appropriate cross-validation methods.
-First, we can look at a recent review <span id="id1">[<a class="reference internal" href="#id10" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">1</a>]</span> showing common cross-validation methods in neuroimaging:</p>
+First, we can look at a recent review <span id="id1">[<a class="reference internal" href="#id11" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">1</a>]</span> showing common cross-validation methods in neuroimaging:</p>
 <figure class="align-default" id="cv-usage">
 <a class="reference internal image-reference" href="_images/poldrack-2020-fig3.jpg"><img alt="_images/poldrack-2020-fig3.jpg" src="_images/poldrack-2020-fig3.jpg" style="height: 250px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">From <span id="id2">[<a class="reference internal" href="#id10" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">1</a>]</span>, depicting results from a review of 100 studies (2017–2019) claiming prediction on fMRI data.
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">From <span id="id2">[<a class="reference internal" href="#id11" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">1</a>]</span>, depicting results from a review of 100 studies (2017–2019) claiming prediction on fMRI data.
 <em>Panel A</em> shows the prevalence of cross-validation methods in this sample.
 <em>Panel B</em> shows a histogram of associated sample sizes.</span><a class="headerlink" href="#cv-usage" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -455,7 +455,7 @@ This will allow us to make more meaningful statements about our learned model,
 but it requires having access to more data.</p>
 <section id="why-cross-validate">
 <h2>Why cross-validate ?<a class="headerlink" href="#why-cross-validate" title="Permalink to this heading">#</a></h2>
-<p>First, let’s formalize the problem that cross-validation aims to solve, using notation from <span id="id3">[<a class="reference internal" href="#id11" title="Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. GigaScience, 6(5):gix020, 2017.">2</a>]</span>.</p>
+<p>First, let’s formalize the problem that cross-validation aims to solve, using notation from <span id="id3">[<a class="reference internal" href="#id12" title="Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. GigaScience, 6(5):gix020, 2017.">2</a>]</span>.</p>
 <p>For <span class="math notranslate nohighlight">\(N\)</span> observations, we can choose a variable <span class="math notranslate nohighlight">\(y \in \mathbb{R}^n\)</span> that we are trying to predict from data <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{n \times p}\)</span>⁠.
 For example, we may have neuroimaging data for 155 participants, from which we are trying to predict their age group as either a child or an adult.</p>
 <p>The machine learning problem is to estimate a function <span class="math notranslate nohighlight">\(\hat{f}_{\{ train \}}\)</span> that predicts best <span class="math notranslate nohighlight">\(y\)</span> from <span class="math notranslate nohighlight">\(X\)</span>.
@@ -739,7 +739,7 @@ from <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_
 <figure class="align-default" id="test-size">
 <a class="reference internal image-reference" href="_images/varoquaux-2017-fig1.png"><img alt="_images/varoquaux-2017-fig1.png" src="_images/varoquaux-2017-fig1.png" style="height: 400px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">From <span id="id4">[<a class="reference internal" href="#id13" title="Gaël Varoquaux. Cross-validation failure: small sample sizes lead to large error bars. Neuroimage, 180:68–77, 2018.">3</a>]</span>, this plot shows the distribution of errors between the prediction accuracy as assessed via cross-validation (average across folds) and as measured on a large independent test set for different types of neuroimaging data.
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">From <span id="id4">[<a class="reference internal" href="#id14" title="Gaël Varoquaux. Cross-validation failure: small sample sizes lead to large error bars. Neuroimage, 180:68–77, 2018.">3</a>]</span>, this plot shows the distribution of errors between the prediction accuracy as assessed via cross-validation (average across folds) and as measured on a large independent test set for different types of neuroimaging data.
 Accuracy is reported for two reasonable choices of cross-validation strategy: leave-one-out (leave-one-run-out or leave-one-subject-out in data with multiple runs or subjects), or 50-times repeated splitting of 20% of the data.
 The bar and whiskers indicate the median and the 5th and 95th percentile.</span><a class="headerlink" href="#test-size" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -835,12 +835,12 @@ This wide confidence bound is a result of an interaction between</p>
 </section>
 <section id="avoiding-data-leakage-between-train-and-test">
 <h2>Avoiding data leakage between train and test<a class="headerlink" href="#avoiding-data-leakage-between-train-and-test" title="Permalink to this heading">#</a></h2>
-<p>In <span id="id5">[<a class="reference internal" href="#id12" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span>, Varoquaux and colleagues evaluated the impact of different cross-validation schemes on derived accuracy values.
+<p>In <span id="id5">[<a class="reference internal" href="#id13" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span>, Varoquaux and colleagues evaluated the impact of different cross-validation schemes on derived accuracy values.
 We reproduce their Figure 6 below.</p>
 <figure class="align-default" id="cv-strategies">
 <a class="reference internal image-reference" href="_images/varoquaux-2016-fig6.png"><img alt="_images/varoquaux-2016-fig6.png" src="_images/varoquaux-2016-fig6.png" style="height: 400px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">From <span id="id6">[<a class="reference internal" href="#id12" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span> shows the difference in accuracy measured by cross-validation and on the held-out
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">From <span id="id6">[<a class="reference internal" href="#id13" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span> shows the difference in accuracy measured by cross-validation and on the held-out
 validation set, in intra and inter-subject settings, for different cross-validation strategies:
 (1) leave one sample out, (2) leave one block of samples out (where the block is the natural unit of the experiment: subject or session), and random splits leaving out 20% of the blocks as test data, with (3) 3, (4) 10, or (5) 50 random splits.
 For inter-subject settings, leave one sample out corresponds to leaving a session out.
@@ -881,16 +881,16 @@ It is, though, something to stay aware of !</p>
 </div>
 <div class="docutils container" id="id7">
 <dl class="citation">
-<dt class="label" id="id10"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
+<dt class="label" id="id11"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
 <dd><p>Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. <em>JAMA psychiatry</em>, 77(5):534–540, 2020.</p>
 </dd>
-<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
+<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
 <dd><p>Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. <em>GigaScience</em>, 6(5):gix020, 2017.</p>
 </dd>
-<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id4">3</a></span></dt>
+<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id4">3</a></span></dt>
 <dd><p>Gaël Varoquaux. Cross-validation failure: small sample sizes lead to large error bars. <em>Neuroimage</em>, 180:68–77, 2018.</p>
 </dd>
-<dt class="label" id="id12"><span class="brackets">4</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id6">2</a>)</span></dt>
+<dt class="label" id="id13"><span class="brackets">4</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id6">2</a>)</span></dt>
 <dd><p>Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. <em>NeuroImage</em>, 145:166–179, 2017.</p>
 </dd>
 </dl>
