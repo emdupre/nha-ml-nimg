@@ -5,3 +5,4 @@ chapters:
 - file: 03-cross-validation
 - file: 04-statistical-analysis
 - file: 05-glm-for-decoding
+- file: 06-alignment-inter-subject
