@@ -3,63 +3,61 @@
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Evaluating our machine learning models &#8212; NHA2025: ML for Neuroimaging</title>
+    <title>Evaluating our machine learning models &#8212; NHA2026: ML for Neuroimaging</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="_static/scripts/sphinx-book-theme.js"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -77,19 +75,23 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -111,12 +113,20 @@ const thebe_selector_output = ".output, .cell_output"
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -131,9 +141,13 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
+  
+    
   
 
 <a class="navbar-brand logo" href="01-data-structures.html">
+  
   
   
   
@@ -143,12 +157,23 @@ const thebe_selector_output = ".output, .cell_output"
       
     
     
-    <img src="_static/nilearn-logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="_static/nilearn-logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+    <img src="_static/nilearn-logo.png" class="logo__image only-light" alt="NHA2026: ML for Neuroimaging - Home"/>
+    <script>document.write(`<img src="_static/nilearn-logo.png" class="logo__image only-dark" alt="NHA2026: ML for Neuroimaging - Home"/>`);</script>
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -163,6 +188,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Evaluating our machine learning models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-statistical-analysis.html">Statistical analysis in <code class="docutils literal notranslate"><span class="pre">nilearn</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="05-glm-for-decoding.html">Putting it together: General Linear Models for Decoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-alignment-inter-subject.html">Generalizability across subjects : Functional alignment with <code class="docutils literal notranslate"><span class="pre">fmralign</span></code></a></li>
 </ul>
 
     </div>
@@ -178,7 +204,7 @@ const thebe_selector_output = ".output, .cell_output"
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -187,14 +213,14 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -219,14 +245,14 @@ const thebe_selector_output = ".output, .cell_output"
       
       <li><a href="https://mybinder.org/v2/gh/emdupre/nha-ml-nimg/main?urlpath=tree/content/03-cross-validation.md" target="_blank"
    class="btn btn-sm dropdown-item"
-   title="Launch onBinder"
+   title="Launch on Binder"
    data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
 <span class="btn__icon-container">
   
-    <img src="_static/images/logo_binder.svg">
+    <img alt="Binder logo" src="_static/images/logo_binder.svg">
   </span>
 <span class="btn__text-container">Binder</span>
 </a>
@@ -235,16 +261,16 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://hub.neurohackademy.org/hub/user-redirect/git-pull?repo=https%3A//github.com/emdupre/nha-ml-nimg&urlpath=tree/nha-ml-nimg/content/03-cross-validation.md&branch=main" target="_blank"
+      <li><a href="https://neurohackademy.2i2c.cloud/hub/hub/user-redirect/git-pull?repo=https%3A//github.com/emdupre/nha-ml-nimg&urlpath=tree/nha-ml-nimg/content/03-cross-validation.md&branch=main" target="_blank"
    class="btn btn-sm dropdown-item"
-   title="Launch onJupyterHub"
+   title="Launch on JupyterHub"
    data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
 <span class="btn__icon-container">
   
-    <img src="_static/images/logo_jupyterhub.svg">
+    <img alt="JupyterHub logo" src="_static/images/logo_jupyterhub.svg">
   </span>
 <span class="btn__text-container">JupyterHub</span>
 </a>
@@ -335,26 +361,28 @@ const thebe_selector_output = ".output, .cell_output"
 </button>
 
 
+
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
 
+
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -392,18 +420,18 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="evaluating-our-machine-learning-models">
 <h1>Evaluating our machine learning models<a class="headerlink" href="#evaluating-our-machine-learning-models" title="Permalink to this heading">#</a></h1>
 <div class="cell tag_hide-cell docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
-<span class="expanded">Hide code cell content</span>
+<p class="collapsed admonition-title">Show code cell content</p>
+<p class="expanded admonition-title">Hide code cell content</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -411,14 +439,14 @@ document.write(`
 </details>
 </div>
 <div class="cell tag_hide-cell docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
-<span class="expanded">Hide code cell content</span>
+<p class="collapsed admonition-title">Show code cell content</p>
+<p class="expanded admonition-title">Hide code cell content</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nilearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span>
 
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;NILEARN_SHARED_DATA&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;~/shared/data/nilearn_data&quot;</span>
 <span class="n">datasets</span><span class="o">.</span><span class="n">get_data_dirs</span><span class="p">()</span>
@@ -438,11 +466,11 @@ Everything that we’ve done to date falls broadly under the umbrella of “feat
 When applying machine learning, however, equally important are (1) the model that we train to generate predictions and (2) how we assess the generalizability of our learned model.</p>
 <p>In this notebook, we’ll focus on (2).
 In particular, we’ll highlight the importance of appropriate cross-validation methods.
-First, we can look at a recent review <span id="id1">[<a class="reference internal" href="#id10" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">1</a>]</span> showing common cross-validation methods in neuroimaging:</p>
+First, we can look at a recent review <span id="id1">[<a class="reference internal" href="#id15" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">1</a>]</span> showing common cross-validation methods in neuroimaging:</p>
 <figure class="align-default" id="cv-usage">
 <a class="reference internal image-reference" href="_images/poldrack-2020-fig3.jpg"><img alt="_images/poldrack-2020-fig3.jpg" src="_images/poldrack-2020-fig3.jpg" style="height: 250px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">From <span id="id2">[<a class="reference internal" href="#id10" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">1</a>]</span>, depicting results from a review of 100 studies (2017–2019) claiming prediction on fMRI data.
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">From <span id="id2">[<a class="reference internal" href="#id15" title="Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. JAMA psychiatry, 77(5):534–540, 2020.">1</a>]</span>, depicting results from a review of 100 studies (2017–2019) claiming prediction on fMRI data.
 <em>Panel A</em> shows the prevalence of cross-validation methods in this sample.
 <em>Panel B</em> shows a histogram of associated sample sizes.</span><a class="headerlink" href="#cv-usage" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -455,7 +483,7 @@ This will allow us to make more meaningful statements about our learned model,
 but it requires having access to more data.</p>
 <section id="why-cross-validate">
 <h2>Why cross-validate ?<a class="headerlink" href="#why-cross-validate" title="Permalink to this heading">#</a></h2>
-<p>First, let’s formalize the problem that cross-validation aims to solve, using notation from <span id="id3">[<a class="reference internal" href="#id11" title="Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. GigaScience, 6(5):gix020, 2017.">2</a>]</span>.</p>
+<p>First, let’s formalize the problem that cross-validation aims to solve, using notation from <span id="id3">[<a class="reference internal" href="#id16" title="Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. GigaScience, 6(5):gix020, 2017.">2</a>]</span>.</p>
 <p>For <span class="math notranslate nohighlight">\(N\)</span> observations, we can choose a variable <span class="math notranslate nohighlight">\(y \in \mathbb{R}^n\)</span> that we are trying to predict from data <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{n \times p}\)</span>⁠.
 For example, we may have neuroimaging data for 155 participants, from which we are trying to predict their age group as either a child or an adult.</p>
 <p>The machine learning problem is to estimate a function <span class="math notranslate nohighlight">\(\hat{f}_{\{ train \}}\)</span> that predicts best <span class="math notranslate nohighlight">\(y\)</span> from <span class="math notranslate nohighlight">\(X\)</span>.
@@ -485,13 +513,13 @@ Here, we briefly highlight how cross-validation impacts our estimates in our exa
 Again, we’ll derive functional connectivity matrices for each participant, though this time we’ll only consider the “correlation” measure.</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="n">maskers</span><span class="p">,</span> <span class="n">plotting</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">ConnectivityMeasure</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedShuffleSplit</span>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nilearn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="n">maskers</span><span class="p">,</span> <span class="n">plotting</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nilearn.connectome</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConnectivityMeasure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedShuffleSplit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearSVC</span>
 
 <span class="n">development_dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span><span class="p">()</span>
 <span class="n">msdl_atlas</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_atlas_msdl</span><span class="p">()</span>
@@ -519,19 +547,21 @@ Again, we’ll derive functional connectivity matrices for each participant, tho
 </pre></div>
 </div>
 </div>
-<details class="hide below-input">
+<details class="admonition hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
-<span class="expanded">Hide code cell output</span>
+<p class="collapsed admonition-title">Show code cell output</p>
+<p class="expanded admonition-title">Hide code cell output</p>
 </summary>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[fetch_development_fmri] Dataset found in /Users/emdupre/nilearn_data/development_fmri
-[fetch_development_fmri] Dataset found in /Users/emdupre/nilearn_data/development_fmri/development_fmri
-[fetch_development_fmri] Dataset found in /Users/emdupre/nilearn_data/development_fmri/development_fmri
-[fetch_atlas_msdl] Dataset found in /Users/emdupre/nilearn_data/msdl_atlas
-</pre></div>
-</div>
-</div>
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080; font-weight: bold">[</span><span style="color: #000080; text-decoration-color: #000080">fetch_development_fmri</span><span style="color: #000080; text-decoration-color: #000080; font-weight: bold">]</span> Dataset directory found: <span style="color: #800080; text-decoration-color: #800080">/Users/emdupre/nilearn_data/</span><span style="color: #ff00ff; text-decoration-color: #ff00ff">development_fmri</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080; font-weight: bold">[</span><span style="color: #000080; text-decoration-color: #000080">fetch_development_fmri</span><span style="color: #000080; text-decoration-color: #000080; font-weight: bold">]</span> Dataset directory found: <span style="color: #800080; text-decoration-color: #800080">/Users/emdupre/nilearn_data/development_fmri/</span><span style="color: #ff00ff; text-decoration-color: #ff00ff">development_fmri</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080; font-weight: bold">[</span><span style="color: #000080; text-decoration-color: #000080">fetch_development_fmri</span><span style="color: #000080; text-decoration-color: #000080; font-weight: bold">]</span> Dataset directory found: <span style="color: #800080; text-decoration-color: #800080">/Users/emdupre/nilearn_data/development_fmri/</span><span style="color: #ff00ff; text-decoration-color: #ff00ff">development_fmri</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #000080; text-decoration-color: #000080; font-weight: bold">[</span><span style="color: #000080; text-decoration-color: #000080">fetch_atlas_msdl</span><span style="color: #000080; text-decoration-color: #000080; font-weight: bold">]</span> Dataset directory found: <span style="color: #800080; text-decoration-color: #800080">/Users/emdupre/nilearn_data/</span><span style="color: #ff00ff; text-decoration-color: #ff00ff">msdl_atlas</span>
+</pre>
+</div></div>
 </details>
 </div>
 <p>In <a class="reference internal" href="02-classification-example.html#class-example"><span class="std std-ref">our classification example</span></a>, we used <code class="docutils literal notranslate"><span class="pre">StratifiedShuffleSplit</span></code> for cross-validation.
@@ -539,7 +569,7 @@ This method preserves the percentage of samples for each class across train and 
 that is, the percentages of child and adult participants in our classification example.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
 <span class="c1"># First, re-generate our cross-validation scores for StratifiedShuffleSplit</span>
 
 <span class="n">strat_scores</span> <span class="o">=</span> <span class="p">[]</span>
@@ -572,7 +602,7 @@ that is, the percentages of child and adult participants in our classification e
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a2b33efbe3f1bfe4dfb36304b631d6ce69f5b6bd783574e1cbd03c692875e1f9.png" src="_images/a2b33efbe3f1bfe4dfb36304b631d6ce69f5b6bd783574e1cbd03c692875e1f9.png" />
+<img alt="_images/687b07a8974f51570fa830bb05f805895e9758910a180168e14e441f9a65f526.png" src="_images/687b07a8974f51570fa830bb05f805895e9758910a180168e14e441f9a65f526.png" />
 </div>
 </div>
 <p>What if we don’t account for age groups when generating our cross-validation folds ?
@@ -581,7 +611,7 @@ We can test this by using <code class="docutils literal notranslate"><span class
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Then, compare with cross-validation scores for ShuffleSplit</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">KFold</span>
 <span class="n">kfold_scores</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="n">cv</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -612,7 +642,7 @@ We can test this by using <code class="docutils literal notranslate"><span class
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/d934ef1eef4074ffebec2b0ac31f669b3db8b783d98860a01d6b051a05a4d0a0.png" src="_images/d934ef1eef4074ffebec2b0ac31f669b3db8b783d98860a01d6b051a05a4d0a0.png" />
+<img alt="_images/fe7afc98b0c811f32f39968e17494d7b6d003439942d3cecada52db17d582b7e.png" src="_images/fe7afc98b0c811f32f39968e17494d7b6d003439942d3cecada52db17d582b7e.png" />
 </div>
 </div>
 <section id="beyond-accuracy-the-receiver-operator-characteristic-roc-curve">
@@ -624,7 +654,7 @@ our KFold model has an undefined area under the curve,
 since it only predicts one value !</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">auc</span><span class="p">,</span> <span class="n">RocCurveDisplay</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">auc</span><span class="p">,</span> <span class="n">RocCurveDisplay</span>
 
 <span class="n">RocCurveDisplay</span><span class="o">.</span><span class="n">from_predictions</span><span class="p">(</span>
     <span class="n">classes</span><span class="p">[</span><span class="n">test</span><span class="p">],</span>
@@ -642,7 +672,7 @@ since it only predicts one value !</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/53b25c4fba8632f54e722221872a4e713cee1c1877126eb947799b455600b2f5.png" src="_images/53b25c4fba8632f54e722221872a4e713cee1c1877126eb947799b455600b2f5.png" />
+<img alt="_images/113692012b6cec83f207d1c193caf670ab112df22188c701b7519bd0b2dd9403.png" src="_images/113692012b6cec83f207d1c193caf670ab112df22188c701b7519bd0b2dd9403.png" />
 </div>
 </div>
 <p>ROC curves can seem a bit harder to interpret than accuracy values,
@@ -656,10 +686,10 @@ from <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_
 </figure>
 <p>Our ROC curve also provides a useful visualization to look at the variability of our learned model across cross-validation folds !</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tprs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -728,7 +758,7 @@ from <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/4e80224081d020c3f4249d4a68f18263c144724ec2798e9e6179216d37e747bd.png" src="_images/4e80224081d020c3f4249d4a68f18263c144724ec2798e9e6179216d37e747bd.png" />
+<img alt="_images/2f4633216d30b6cc92dd740c44606d591947637aa304f0a3bcf8abd7d611fb08.png" src="_images/2f4633216d30b6cc92dd740c44606d591947637aa304f0a3bcf8abd7d611fb08.png" />
 </div>
 </div>
 </section>
@@ -739,7 +769,7 @@ from <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_
 <figure class="align-default" id="test-size">
 <a class="reference internal image-reference" href="_images/varoquaux-2017-fig1.png"><img alt="_images/varoquaux-2017-fig1.png" src="_images/varoquaux-2017-fig1.png" style="height: 400px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">From <span id="id4">[<a class="reference internal" href="#id13" title="Gaël Varoquaux. Cross-validation failure: small sample sizes lead to large error bars. Neuroimage, 180:68–77, 2018.">3</a>]</span>, this plot shows the distribution of errors between the prediction accuracy as assessed via cross-validation (average across folds) and as measured on a large independent test set for different types of neuroimaging data.
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">From <span id="id4">[<a class="reference internal" href="#id18" title="Gaël Varoquaux. Cross-validation failure: small sample sizes lead to large error bars. Neuroimage, 180:68–77, 2018.">3</a>]</span>, this plot shows the distribution of errors between the prediction accuracy as assessed via cross-validation (average across folds) and as measured on a large independent test set for different types of neuroimaging data.
 Accuracy is reported for two reasonable choices of cross-validation strategy: leave-one-out (leave-one-run-out or leave-one-subject-out in data with multiple runs or subjects), or 50-times repeated splitting of 20% of the data.
 The bar and whiskers indicate the median and the 5th and 95th percentile.</span><a class="headerlink" href="#test-size" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -754,7 +784,7 @@ This wide confidence bound is a result of an interaction between</p>
 <p>We can replicate this idea by systematically decreasing the size of our test set, first to 15 participants.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
 <span class="c1"># med test set StratifiedShuffleSplit</span>
 
 <span class="n">med_strat_scores</span> <span class="o">=</span> <span class="p">[]</span>
@@ -781,7 +811,7 @@ This wide confidence bound is a result of an interaction between</p>
 <p>Then to 5.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
 <span class="c1"># small test set StratifiedShuffleSplit</span>
 
 <span class="n">small_strat_scores</span> <span class="o">=</span> <span class="p">[]</span>
@@ -808,7 +838,7 @@ This wide confidence bound is a result of an interaction between</p>
 <p>Then we can compare the distributions of these accuracy scores for each cross-validation scheme:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
 
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span>
@@ -829,18 +859,18 @@ This wide confidence bound is a result of an interaction between</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/baeaabadaf7552dd7d646a5bc5e64d7284cd7c3ea799afcb4c20ebcde9630223.png" src="_images/baeaabadaf7552dd7d646a5bc5e64d7284cd7c3ea799afcb4c20ebcde9630223.png" />
+<img alt="_images/96a5b7d55e51f03ac11c1004449d77cc755f0d91c42beb1948eed242f3580547.png" src="_images/96a5b7d55e51f03ac11c1004449d77cc755f0d91c42beb1948eed242f3580547.png" />
 </div>
 </div>
 </section>
 <section id="avoiding-data-leakage-between-train-and-test">
 <h2>Avoiding data leakage between train and test<a class="headerlink" href="#avoiding-data-leakage-between-train-and-test" title="Permalink to this heading">#</a></h2>
-<p>In <span id="id5">[<a class="reference internal" href="#id12" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span>, Varoquaux and colleagues evaluated the impact of different cross-validation schemes on derived accuracy values.
+<p>In <span id="id5">[<a class="reference internal" href="#id17" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span>, Varoquaux and colleagues evaluated the impact of different cross-validation schemes on derived accuracy values.
 We reproduce their Figure 6 below.</p>
 <figure class="align-default" id="cv-strategies">
 <a class="reference internal image-reference" href="_images/varoquaux-2016-fig6.png"><img alt="_images/varoquaux-2016-fig6.png" src="_images/varoquaux-2016-fig6.png" style="height: 400px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">From <span id="id6">[<a class="reference internal" href="#id12" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span> shows the difference in accuracy measured by cross-validation and on the held-out
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">From <span id="id6">[<a class="reference internal" href="#id17" title="Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. NeuroImage, 145:166–179, 2017.">4</a>]</span> shows the difference in accuracy measured by cross-validation and on the held-out
 validation set, in intra and inter-subject settings, for different cross-validation strategies:
 (1) leave one sample out, (2) leave one block of samples out (where the block is the natural unit of the experiment: subject or session), and random splits leaving out 20% of the blocks as test data, with (3) 3, (4) 10, or (5) 50 random splits.
 For inter-subject settings, leave one sample out corresponds to leaving a session out.
@@ -857,7 +887,7 @@ It is, though, something to stay aware of !</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compare with cross-validation scores for leave-one-subject-out</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">LeaveOneOut</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">LeaveOneOut</span>
 <span class="n">loo_scores</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="n">cv</span> <span class="o">=</span> <span class="n">LeaveOneOut</span><span class="p">()</span>
@@ -874,23 +904,23 @@ It is, though, something to stay aware of !</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Leave-One-Out Accuracy: 0.95 ± 0.21
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Leave-One-Out Accuracy: 0.95 ± 0.22
 </pre></div>
 </div>
 </div>
 </div>
 <div class="docutils container" id="id7">
 <dl class="citation">
-<dt class="label" id="id10"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
+<dt class="label" id="id15"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
 <dd><p>Russell A Poldrack, Grace Huckins, and Gaël Varoquaux. Establishment of best practices for evidence for prediction: a review. <em>JAMA psychiatry</em>, 77(5):534–540, 2020.</p>
 </dd>
-<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
 <dd><p>Max A Little, Gaël Varoquaux, Sohrab Saeb, Luca Lonini, Arun Jayaraman, David C Mohr, and Konrad P Kording. Using and understanding cross-validation strategies. perspectives on saeb et al. <em>GigaScience</em>, 6(5):gix020, 2017.</p>
 </dd>
-<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id4">3</a></span></dt>
+<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id4">3</a></span></dt>
 <dd><p>Gaël Varoquaux. Cross-validation failure: small sample sizes lead to large error bars. <em>Neuroimage</em>, 180:68–77, 2018.</p>
 </dd>
-<dt class="label" id="id12"><span class="brackets">4</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id6">2</a>)</span></dt>
+<dt class="label" id="id17"><span class="brackets">4</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id6">2</a>)</span></dt>
 <dd><p>Gaël Varoquaux, Pradeep Reddy Raamana, Denis A Engemann, Andrés Hoyos-Idrobo, Yannick Schwartz, and Bertrand Thirion. Assessing and tuning brain decoders: cross-validation, caveats, and guidelines. <em>NeuroImage</em>, 145:166–179, 2017.</p>
 </dd>
 </dl>
@@ -923,11 +953,10 @@ It is, though, something to stay aware of !</p>
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer d-print-none">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="02-classification-example.html"
@@ -947,10 +976,7 @@ It is, though, something to stay aware of !</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -958,6 +984,7 @@ It is, though, something to stay aware of !</p>
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -994,9 +1021,10 @@ By Elizabeth DuPre
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
-      © Copyright 2025.
+      © Copyright 2026.
       <br/>
     
   </p>
@@ -1020,8 +1048,8 @@ By Elizabeth DuPre
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

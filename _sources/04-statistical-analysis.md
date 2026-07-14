@@ -34,7 +34,7 @@ Alternatively, we may not be interested in doing machine learning at all,
 but instead performing statistical analysis using methods such as the General Linear Model (GLM).
 
 In this example, we'll perform a GLM analysis of a dataset provided by the Haxby Lab,
-in which participants were shown a number different categories of visual images.
+in which participants were shown a number different categories of visual images {cite}`Haxby2001-sr`.
 
 In this example, we'll focus on within-participant analyses, taking advantage of the large number of stimuli each participant saw.
 In reviewing this material, I'd encourage you to try to change the participant used in this example to see how the results change !
@@ -116,7 +116,6 @@ events
 You may notice that the two columns in the CSV are `labels` and `chunks`.
 As all runs have been concatenated into a single nii file, the run identifier is indicated in the `chunk` label.
 Each entry in the CSV corresponds to the presentation of a single image, whose visual category is given by the `label` identifier.
-Note that this means that each image was presented for a full TR, without any jitter in the presentation.
 
 We can identify the unique runs and visual categories in this `session_target` CSV and compare them against our known stimuli.
 
@@ -132,6 +131,41 @@ runs = events["chunks"].to_numpy()
 unique_runs = events["chunks"].unique()
 print(unique_runs)
 ```
+
+Using this information, we can create a model of our knowledge of events that occurred during the functional run.
+In general, there are many different ways to define these events:
+
+```{figure} ../images/stimulation-time-diagram.png
+---
+height: 250px
+name: stimulation-time-diagram
+---
+From the [Nilearn User guide](https://nilearn.github.io/stable/glm/glm_intro.html),
+this image illustrates how we can think about a single fMRI run as comprised of different events.
+We know, though, that the fMRI signal contains both neural and non-neural information,
+so we do not expect our fMRI time courses to neatly follow this event structure!
+Still, this understanding can be useful for modelling the signal.
+```
+
+Note that the structure of our CSVs means that each image was presented for a full TR, without any jitter in the presentation.
+
+## Understanding the General Linear Model
+
+The General Linear Model (GLM) can be understood using the following formula :
+
+$$
+Y = \beta_1 X_1 + \beta_2 X_2 + ... + \beta_n X_n + \epsilon
+$$
+
+This tells us that :
+- we're going to model each voxels observed activity, $Y$, as 
+- a linear combination of $n$ regressors $X$, each of which 
+- are weighted by a unique parameter estimate, $\beta$.
+- We also include an error term, $\epsilon$, which is the residual information not captured by our regressors.
+
+In order to fit this model, therefore, we need our $Y$ and our $X$'s.
+We have access to $Y$ through the `haxby_dataset.func` attribute, though we of course need to get it into a reasonable format for machine learning and statistical analysis (as discussed in the previous tutorials).
+To define our $X$ values, we will create "design matrices," which include both timing information of the events of interest, as well as information on known sources of noise, such as cosine regressors or other confounds.
 
 ## Generate design matrices for each run
 
@@ -191,7 +225,7 @@ plotting.plot_design_matrix(X1)
 ```
 
 One thing to note: You may remember from our previous example with `development_dataset` that it's really important to include confound information such as head motion.
-Unfortunately, this dataset is older (published in 2001!) and so its head motion information is no longer available.
+Unfortunately, this dataset is older (published in 2001! {cite}`Haxby2001-sr`) and so its head motion information is no longer available.
 In real data, you want to make sure to include confound information when you create your design matrices.
 
 ## Run First-Level General Linear Models (GLMs)
@@ -246,4 +280,9 @@ report = glm.generate_report(
     bg_img=mean_img_,
 )
 report
+```
+
+```{bibliography} references.bib
+:style: unsrt
+:filter: docname in docnames
 ```
