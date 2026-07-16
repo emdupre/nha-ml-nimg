@@ -40,7 +40,7 @@ import pandas as pd
 
 from nilearn.datasets import fetch_haxby
 
-haxby_dataset = fetch_haxby(subjects=(3,))
+haxby_dataset = fetch_haxby(subjects=(2,))
 
 # set TR in seconds, following information in the original paper
 t_r = 2.5

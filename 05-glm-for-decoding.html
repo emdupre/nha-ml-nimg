@@ -259,7 +259,7 @@
       
       
       
-      <li><a href="https://neurohackademy.2i2c.cloud/hub/hub/user-redirect/git-pull?repo=https%3A//github.com/emdupre/nha-ml-nimg&urlpath=tree/nha-ml-nimg/content/05-glm-for-decoding.md&branch=main" target="_blank"
+      <li><a href="https://neurohackademy.2i2c.cloud/hub/user-redirect/git-pull?repo=https%3A//github.com/emdupre/nha-ml-nimg&urlpath=tree/nha-ml-nimg/content/05-glm-for-decoding.md&branch=main" target="_blank"
    class="btn btn-sm dropdown-item"
    title="Launch on JupyterHub"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -464,7 +464,7 @@ document.write(`
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">nilearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_haxby</span>
 
-<span class="n">haxby_dataset</span> <span class="o">=</span> <span class="n">fetch_haxby</span><span class="p">(</span><span class="n">subjects</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
+<span class="n">haxby_dataset</span> <span class="o">=</span> <span class="n">fetch_haxby</span><span class="p">(</span><span class="n">subjects</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
 
 <span class="c1"># set TR in seconds, following information in the original paper</span>
 <span class="n">t_r</span> <span class="o">=</span> <span class="mf">2.5</span>
@@ -597,7 +597,7 @@ Using all of these, we can perform a Support Vector Classifier (SVC) analysis us
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Classification accuracy: 0.8393 / Chance level: 0.125
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Classification accuracy: 0.7530 / Chance level: 0.125
 </pre></div>
 </div>
 </div>
@@ -667,7 +667,7 @@ This will show which voxels are most involved in the fixed effects statistical m
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5079d6dc51eae60662484eda3e2ad1ad4f00fc01cfe6fc845678b4c291f2608e.png" src="_images/5079d6dc51eae60662484eda3e2ad1ad4f00fc01cfe6fc845678b4c291f2608e.png" />
+<img alt="_images/d9e9a8679fd963a0df8698bbce6421de9579fff2e7ac29cbf7a097833704207b.png" src="_images/d9e9a8679fd963a0df8698bbce6421de9579fff2e7ac29cbf7a097833704207b.png" />
 </div>
 </div>
 <p>OK, now that we have this map as a baseline, let’s do the same plotting projection for the weight map for the “Face” condition.
@@ -679,14 +679,14 @@ We can see that the <code class="docutils literal notranslate"><span class="pre"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;bottle&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x177b84530&gt;,
- &#39;cat&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x177c160c0&gt;,
- &#39;chair&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x177c1c9b0&gt;,
- &#39;face&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x177c273b0&gt;,
- &#39;house&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x177c12990&gt;,
- &#39;scissors&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x177c2a6c0&gt;,
- &#39;scrambledpix&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x177c2ab40&gt;,
- &#39;shoe&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x177c2acf0&gt;}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;bottle&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x14a7624e0&gt;,
+ &#39;cat&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x14f16c710&gt;,
+ &#39;chair&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x14a7c6990&gt;,
+ &#39;face&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x14f1759d0&gt;,
+ &#39;house&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x14f17c320&gt;,
+ &#39;scissors&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x14f17eff0&gt;,
+ &#39;scrambledpix&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x14f17c380&gt;,
+ &#39;shoe&#39;: &lt;nibabel.nifti1.Nifti1Image at 0x14a7e8980&gt;}
 </pre></div>
 </div>
 </div>
@@ -713,7 +713,7 @@ We can see that the <code class="docutils literal notranslate"><span class="pre"
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/835e3a322d5115ee4253ef90c04cf5664349d660168b988e72bc7d178b5d0657.png" src="_images/835e3a322d5115ee4253ef90c04cf5664349d660168b988e72bc7d178b5d0657.png" />
+<img alt="_images/0f7bab41d6b2ab43b981f40bc8ba14037f7a417343d72bb22c9ba39a4ff9e4dd.png" src="_images/0f7bab41d6b2ab43b981f40bc8ba14037f7a417343d72bb22c9ba39a4ff9e4dd.png" />
 </div>
 </div>
 <p>This map looks somewhat similar, but involves voxels from many other regions of the brain than just the Fusiform Face Area (FFA)!
