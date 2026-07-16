@@ -69,8 +69,7 @@ plot_roi(
     resampled_mask_visual,
     title="Visual regions mask extracted from atlas",
     cut_coords=(8, -80, 9),
-    colorbar=True,
-    cmap="Paired",
+    cmap="winter",
 )
 ```
 
